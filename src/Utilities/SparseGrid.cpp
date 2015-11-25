@@ -83,7 +83,7 @@ void SparseGrid::Draw(SDLManager* sdlmanager)
 	}
 }
 
-std::vector<QuadElement> SparseGrid::QueryRange(const SDL_Rect& boundary)
+std::vector<QuadElement> SparseGrid::QueryRange(const SDL_Rect& boundary) const
 {
 	std::vector<QuadElement> entitiesinrange;
 

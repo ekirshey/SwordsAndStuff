@@ -116,10 +116,10 @@ bool SDLManager::ReadEventQueue()
         if( event.type == SDL_QUIT )
             returnvalue = true;
 
-        /* If a button on the mouse is pressed. */
+        // If a button on the mouse is pressed.
         if (event.type == SDL_MOUSEBUTTONDOWN)
         {
-            /* If the left button was pressed. */
+            // If the left button was pressed. 
             if (event.button.button == SDL_BUTTON_LEFT)
                 mousestate_[LEFT_MOUSEBUTTON] = true;
             if (event.button.button == SDL_BUTTON_RIGHT)
@@ -129,13 +129,14 @@ bool SDLManager::ReadEventQueue()
 
         if (event.type == SDL_MOUSEBUTTONUP)
         {
-            /* If the left button was pressed. */
+            // If the left button was pressed. 
             if (event.button.button == SDL_BUTTON_LEFT)
                 mousestate_[LEFT_MOUSEBUTTON] = false;
             if (event.button.button == SDL_BUTTON_RIGHT)
                 mousestate_[RIGHT_MOUSEBUTTON] = false;
 
         }
+
     }
 
     return returnvalue;

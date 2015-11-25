@@ -16,10 +16,10 @@ public:
 
 	uint_fast64_t UniqueBits() const { return ID; }
 
-	double Target() const { return target_; }
+	uint_fast64_t Target() const { return target_; }
 	bool HasTarget() const { return hastarget_; }
 
-	void SetTarget(double target) { target_ = target; }
+	void SetTarget(uint_fast64_t target) { target_ = target; }
 	void SetTargetState(bool hastarget) { hastarget_ = hastarget; }
 
 private:

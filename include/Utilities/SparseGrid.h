@@ -19,7 +19,7 @@ public:
 	void clear();
 	void Draw(SDLManager* sdlmanager);
 
-	std::vector<QuadElement> QueryRange(const SDL_Rect& boundary);
+	std::vector<QuadElement> QueryRange(const SDL_Rect& boundary) const;
 private:
 	SDL_Rect boundary_;
 

@@ -37,7 +37,7 @@ void RenderSystem::BeforeObjectProcessing()
 	SDL_GetRendererInfo(sdlmanager_->GetRenderer(), &x);
 	std::cout << x.name << " " << x.flags<< std::endl;
 */
-	GetECSManager()->ClearTagVector("ONSCREEN"); // Rebuild the onscreen list
+	//GetECSManager()->ClearTagVector("ONSCREEN"); // Rebuild the onscreen list
 
     //if ( gameworld_ != nullptr && camera_ != nullptr)
     //    gameworld_->Render(sdlmanager_,camera_);
@@ -97,7 +97,7 @@ void RenderSystem::ProcessEntity(uint_fast64_t entity)
 	{
 		if (SDL_HasIntersection(&cullrect, &camerarect))
 		{
-			GetECSManager()->AssignEntityTag(entity, "ONSCREEN");
+			//GetECSManager()->AssignEntityTag(entity, "ONSCREEN");
 			if (anglecomponent != nullptr)
 			{
 				SDL_Point center = { (cliprect.w / 2), (cliprect.h / 2) };

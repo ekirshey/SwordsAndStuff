@@ -1,11 +1,13 @@
 #include <iostream>
+#include <vector>
 #include "../../include/Systems/PlayerTargetingSystem.h"
 #include "../../include/Components/RenderComponent.h"
 #include "../../include/ECSFramework/ECSManager.h"
+#include "../../include/GameWorld/GameWorld.h"
 
 // EKNOTE probably replace the reticule stop with a factory or something later
-PlayerTargetingSystem::PlayerTargetingSystem(ECSManager* ECSManager, const SDLManager& sdlmanager, std::string reticule) : 
-	System(ECSManager), sdlmanager_(&sdlmanager), reticuleimage_(reticule), player_(NOTARGET), targetreticuleid_(NOTARGET), playertargetingcomponent_(nullptr)
+PlayerTargetingSystem::PlayerTargetingSystem(ECSManager* ECSManager, const SDLManager& sdlmanager, const GameWorld& gameworld, std::string reticule) :
+	System(ECSManager), sdlmanager_(&sdlmanager), gameworld_(&gameworld), reticuleimage_(reticule), player_(NOTARGET), targetreticuleid_(NOTARGET), playertargetingcomponent_(nullptr)
 {
 
 }
@@ -74,10 +76,23 @@ void PlayerTargetingSystem::ProcessEntities()
 	if (mousestate[LEFT_MOUSEBUTTON] == true)
 	{
 		SDL_GetMouseState(&mouseX, &mouseY);
-		std::vector<uint_fast64_t> onscreenentities = GetECSManager()->GetAssociatedEntities("ONSCREEN");
 		playertargetingcomponent_->SetTarget(NOTARGET);
 		playertargetingcomponent_->SetTargetState(false);
+
+		SDL_Rect queryrect{ mouseX, mouseY, 1, 1 };
+		std::vector<QuadElement> elements = gameworld_->SparseGridQueryRange(queryrect);
+
+		for (int i = 0; i < elements.size(); i++)
+		{
+			if (SDL_HasIntersection(&elements[i].boundingrectangle->Rectangle(), &queryrect))
+			{
+				playertargetingcomponent_->SetTarget(elements[i].entityid);
+				playertargetingcomponent_->SetTargetState(true);
+				break;
+			}
+		}
 		
+/*
 		for (int i = 0; i < onscreenentities.size(); i++)
 		{
 			targetboundingrectangle = static_cast<BoundingRectangleComponent*>
@@ -94,6 +109,7 @@ void PlayerTargetingSystem::ProcessEntities()
 			}
 
 		}
+*/
 	}
 
 	keyboardstate = sdlmanager_->GetKeyBoardState();

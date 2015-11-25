@@ -48,8 +48,8 @@ void ObjectManager::Initialize(SDLManager* sdlmanager, GameWorld* gameworld, Cam
 	// Build systems and entities
 	ecsmanager_.AddSystem(new InputSystem(&ecsmanager_, sdlmanager ),priority++);
 	ecsmanager_.AddSystem(new MovementSystem(&ecsmanager_, gameworld), priority++);
-	ecsmanager_.AddSystem(new PlayerTargetingSystem(&ecsmanager_, *sdlmanager, "..\\..\\..\\media\\reticule.png"), priority++);	// EKNOTE I want to make sure I use the last onscreen list before objects move
 	ecsmanager_.AddSystem(new CollisionSystem(&ecsmanager_, gameworld), priority++);
+	ecsmanager_.AddSystem(new PlayerTargetingSystem(&ecsmanager_, *sdlmanager, *gameworld, "..\\..\\..\\media\\reticule.png"), priority++);	
 	cameraindex = ecsmanager_.AddSystem(new CameraSystem(&ecsmanager_,camera), priority++);
 	ecsmanager_.AddSystem(new RenderSystem(&ecsmanager_, sdlmanager, gameworld, camera), priority++);
 
@@ -77,7 +77,7 @@ void ObjectManager::Initialize(SDLManager* sdlmanager, GameWorld* gameworld, Cam
 		std::cout << "Failed to set camera focus, camera doesnt exist" << std::endl;
 		
 	
-	path = "..\\..\\..\\media\\Wikimedia\\Pawns.png";
+	path =  "..\\..\\..\\media\\Wikimedia\\Pawns.png";
 	// Monster
 	int monsterentity;
 	int mod;
@@ -96,7 +96,7 @@ void ObjectManager::Initialize(SDLManager* sdlmanager, GameWorld* gameworld, Cam
 			ecsmanager_.AssignEntityTag(monsterentity, "MONSTER");
 			//std::cout << monsterentity << std::endl;
 			// EKNOTE Would actually check this in the future even though for one frame idk if it matters
-			ecsmanager_.AssignEntityTag(monsterentity, "ONSCREEN");
+			//ecsmanager_.AssignEntityTag(monsterentity, "ONSCREEN");
 		}
 	int i = 18;
 	int j = 12;
@@ -112,7 +112,9 @@ void ObjectManager::Initialize(SDLManager* sdlmanager, GameWorld* gameworld, Cam
 	ecsmanager_.AssignEntityTag(monsterentity, "MONSTER");
 	//std::cout << monsterentity << std::endl;
 	// EKNOTE Would actually check this in the future even though for one frame idk if it matters
-	ecsmanager_.AssignEntityTag(monsterentity, "ONSCREEN");
+	//ecsmanager_.AssignEntityTag(monsterentity, "ONSCREEN");
+
+#ifdef FOO
 	int treeentity;
 	treeentity = ecsmanager_.CreateEntity();
 	rect = { 0,0,222,223 };
@@ -122,6 +124,7 @@ void ObjectManager::Initialize(SDLManager* sdlmanager, GameWorld* gameworld, Cam
 	ecsmanager_.AddComponentToEntity(treeentity, new BoundingRectangleComponent(411,411,40,40));
 	ecsmanager_.AssignEntityTag(treeentity, "STATICOBJECT");
 	std::cout << treeentity << std::endl;
+#endif
 }
 
 void ObjectManager::Update(int elapsedtime)

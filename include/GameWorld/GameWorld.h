@@ -39,7 +39,7 @@ class GameWorld
 
 		// Temp SparseGrid functions
 		bool SparseGridInsert(QuadElement entity) { return sparsegrid_->Insert(entity); }
-		std::vector<QuadElement> SparseGridQueryRange(const SDL_Rect& rect) { return sparsegrid_->QueryRange(rect); }
+		std::vector<QuadElement> SparseGridQueryRange(const SDL_Rect& rect) const { return sparsegrid_->QueryRange(rect); }
 		void ClearSparseGrid() { sparsegrid_->clear(); }
 		void DrawSparseGrid(SDLManager* sdlmanager) { sparsegrid_->Draw(sdlmanager); }
     private:
