@@ -5,6 +5,9 @@
 #include "../../include/ECSFramework/Component.h"
 #include "../Config/ComponentDefines.h"
 
+struct Spell {
+
+};
 
 class SpellbookComponent : public Component
 {
