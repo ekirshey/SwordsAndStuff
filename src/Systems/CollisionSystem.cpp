@@ -9,7 +9,7 @@ CollisionSystem::CollisionSystem(ECSManager* ECSManager, GameWorld* gameworld) :
 {
 	// Set up Collision Callback dictionary
 	collisioncallbacks_[VelocityComponentID] = VelocityCollision;
-
+	SetSystemName("CollisionSystem");
 }
 
 CollisionSystem::~CollisionSystem()

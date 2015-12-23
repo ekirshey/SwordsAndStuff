@@ -16,7 +16,7 @@
 
 ShootingSystem::ShootingSystem(ECSManager* ECSManager) : ProcessingSystem(ECSManager)
 {
-
+	SetSystemName("ShootingSystem");
 }
 
 ShootingSystem::~ShootingSystem()

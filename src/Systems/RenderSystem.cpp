@@ -11,7 +11,7 @@
 
 RenderSystem::RenderSystem(ECSManager* ECSManager, SDLManager* sdlmanager) : ProcessingSystem(ECSManager), sdlmanager_(sdlmanager), gameworld_(nullptr)
 {
-
+	SetSystemName("RenderSystem");
 }
 
 RenderSystem::RenderSystem(ECSManager* ECSManager, SDLManager* sdlmanager, GameWorld* gameworld, Camera* camera)
@@ -23,6 +23,8 @@ RenderSystem::RenderSystem(ECSManager* ECSManager, SDLManager* sdlmanager, GameW
 
 	gameworld_->Render(sdlmanager_);	// Build map texture
 	SDL_SetRenderTarget(sdlmanager_->GetRenderer(), NULL);
+
+	SetSystemName("RenderSystem");
 }
 
 RenderSystem::~RenderSystem()

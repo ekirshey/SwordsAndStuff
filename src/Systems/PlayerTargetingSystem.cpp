@@ -9,12 +9,12 @@
 PlayerTargetingSystem::PlayerTargetingSystem(ECSManager* ECSManager, const SDLManager& sdlmanager, const GameWorld& gameworld, std::string reticule) :
 	System(ECSManager), sdlmanager_(&sdlmanager), gameworld_(&gameworld), reticuleimage_(reticule), player_(NOTARGET), targetreticuleid_(NOTARGET), playertargetingcomponent_(nullptr)
 {
-
+	SetSystemName("PlayerTargetingSystem");
 }
 
 PlayerTargetingSystem::~PlayerTargetingSystem()
 {
-
+	
 }
 
 void PlayerTargetingSystem::UpdateTargetReticule()

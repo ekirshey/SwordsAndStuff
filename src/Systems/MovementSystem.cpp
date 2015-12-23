@@ -4,13 +4,15 @@
 #include "../../include/Components/PositionComponent.h"
 #include "../../include/Components/VelocityComponent.h"
 #include "../../include/Components/BoundingRectangleComponent.h"
+#include "../../include/Components/InputComponent.h"
 #include "../../include/Config/ComponentDefines.h"
+
 
 #include <chrono>
 
 MovementSystem::MovementSystem(ECSManager* ECSManager, GameWorld* gameworld) : ProcessingSystem(ECSManager), gameworld_(gameworld)
 {
-
+	SetSystemName("MovementSystem");
 }
 
 MovementSystem::~MovementSystem()
@@ -57,11 +59,30 @@ void MovementSystem::ProcessEntity(uint_fast64_t entity)
     VelocityComponent* velocitycomponent;
     BoundingRectangleComponent* boundingrectanglecomponent;
 	CollisionComponent* collisioncomponent;
+	InputComponent* inputcomponent;
 
     // Get Relevant Component Data
     positioncomponent = static_cast<PositionComponent*>(GetECSManager()->GetEntityComponent(entity,PositionComponentID));
     velocitycomponent = static_cast<VelocityComponent*>(GetECSManager()->GetEntityComponent(entity,VelocityComponentID));
     boundingrectanglecomponent = static_cast<BoundingRectangleComponent*>(GetECSManager()->GetEntityComponent(entity,BoundingRectangleComponentID));
+	inputcomponent = static_cast<InputComponent*>(GetECSManager()->GetEntityComponent(entity, InputComponent::ID));
+
+	// This is the player so adjust his velocity based on inputs
+	if (inputcomponent != nullptr)
+	{
+		int velocity = 1.0 * ElapsedTime()*.25;
+		velocitycomponent->SetXVelocity(0);
+		if (inputcomponent->Pressed("MOVE_LEFT"))
+			velocitycomponent->SetXVelocity(-1 * velocity);
+		if (inputcomponent->Pressed("MOVE_RIGHT"))
+			velocitycomponent->SetXVelocity(velocity);
+
+		velocitycomponent->SetYVelocity(0);
+		if (inputcomponent->Pressed("MOVE_UP"))
+			velocitycomponent->SetYVelocity(-1 * velocity);
+		if (inputcomponent->Pressed("MOVE_DOWN"))
+			velocitycomponent->SetYVelocity(velocity);
+	}
 
     // Update position
     positioncomponent->SetX(positioncomponent->X() + velocitycomponent->XVelocity());

@@ -11,7 +11,7 @@
 CameraSystem::CameraSystem(ECSManager* ECSManager, Camera* camera) : System(ECSManager), camera_(camera),
 	focus_(NOTARGET), focusposition_(nullptr), focusvelocity_(nullptr)
 {
-
+	SetSystemName("CameraSystem");
 }
 
 CameraSystem::~CameraSystem()
