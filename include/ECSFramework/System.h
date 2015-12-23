@@ -4,6 +4,7 @@
 #include <cstdint>
 #include <vector>
 #include <queue>
+#include <string>
 
 class ECSManager;
 
@@ -37,11 +38,15 @@ public:
 	int ElapsedTime() { return elapsedtime_; }
 	void SetElapsedTime(int elapsedtime) { elapsedtime_ = elapsedtime; }
 
+	std::string SystemName() { return systemname_; }
+	void SetSystemName(std::string name) { systemname_ = name; }
+
 private:
 	std::vector<uint_fast64_t> relevantentities_;
 	uint_fast64_t entitycount_;
 	ECSManager* ecsmanager_;
 	int elapsedtime_;
+	std::string systemname_;	// For debugging purposes
 
 
 };
