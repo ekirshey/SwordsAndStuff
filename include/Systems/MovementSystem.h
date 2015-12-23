@@ -5,8 +5,6 @@
 #include "../Config/ComponentDefines.h"
 #include "../GameWorld/GameWorld.h"
 
-// TODO: Have movementsystem implement a class that overwrites add and remove. when an object is added it will check if it is on screen and add it to a separate vector
-// ACTUALLY no, movement needs to move every single object, this is relevant for draw type systems, render etc
 class MovementSystem : public ProcessingSystem
 {
     public:

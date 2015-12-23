@@ -30,11 +30,11 @@ class BoundingRectangleComponent : public Component
 
 		SDL_Rect Rectangle() const { return SDL_Rect{ x_, y_, width_, height_ }; }
 
-private:
-	int x_;
-	int y_;
-	int width_;
-	int height_;
+	private:
+		int x_;
+		int y_;
+		int width_;
+		int height_;
 
 };
 

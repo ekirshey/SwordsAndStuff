@@ -17,6 +17,10 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
+# VS project files
+*.vcxproj
+*.vcxproj.filters
+
 # =========================
 # Operating System Files
 # =========================

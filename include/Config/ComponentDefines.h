@@ -28,3 +28,5 @@ RPGStatsComponent               0x400
 #define ItemStatsComponentID              0x200       // NOT SURE IF THIS WILL STAY A COMPONENT
 #define RPGStatsComponentID               0x400
 #define CollisionComponentID			  0x800
+#define SpellbookComponentID			  0x1000
+#define SpellCastingComponentID			  0x2000
