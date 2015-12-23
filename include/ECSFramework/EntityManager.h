@@ -30,8 +30,6 @@ class EntityManager
 
 		inline Component* EntityManager::GetEntityComponent(uint_fast64_t UUID, uint_fast64_t componentid)
 		{
-			//PositionComponent* p = static_cast<PositionComponent*>(entitylist_[UUID].at(componentid).get());
-			//std::cout << "COOL " << p->X() << " " <<  p->Y() << std::endl;
 			int convertedcomponentid = fastlog(componentid);
 			if (entitylist_[UUID][convertedcomponentid] != nullptr)
 				return entitylist_[UUID][convertedcomponentid].get();

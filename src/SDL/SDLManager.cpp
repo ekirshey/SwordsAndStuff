@@ -53,7 +53,7 @@ bool SDLManager::Initialize()
 		else
         {
             //Create renderer for window
-			renderer_ = SDL_CreateRenderer( window_,  -1, SDL_RENDERER_ACCELERATED );
+			renderer_ = SDL_CreateRenderer( window_,  -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 			if( renderer_ == NULL )
 			{
 				std::cout << "Renderer could not be created! SDL Error: " << SDL_GetError() << std::endl;
@@ -108,36 +108,17 @@ void SDLManager::ClearScreen()
 bool SDLManager::ReadEventQueue()
 {
     bool returnvalue = false;
+	SDL_PumpEvents();
 
-     //Handle events on queue
-    while( SDL_PollEvent( &event ) != 0 )
-    {
-        //User requests quit
-        if( event.type == SDL_QUIT )
-            returnvalue = true;
+	if (SDL_GetMouseState(NULL, NULL) & SDL_BUTTON(SDL_BUTTON_LEFT))
+		mousestate_[LEFT_MOUSEBUTTON] = true;
+	else
+		mousestate_[LEFT_MOUSEBUTTON] = false;
 
-        // If a button on the mouse is pressed.
-        if (event.type == SDL_MOUSEBUTTONDOWN)
-        {
-            // If the left button was pressed. 
-            if (event.button.button == SDL_BUTTON_LEFT)
-                mousestate_[LEFT_MOUSEBUTTON] = true;
-            if (event.button.button == SDL_BUTTON_RIGHT)
-                mousestate_[RIGHT_MOUSEBUTTON] = true;
-
-        }
-
-        if (event.type == SDL_MOUSEBUTTONUP)
-        {
-            // If the left button was pressed. 
-            if (event.button.button == SDL_BUTTON_LEFT)
-                mousestate_[LEFT_MOUSEBUTTON] = false;
-            if (event.button.button == SDL_BUTTON_RIGHT)
-                mousestate_[RIGHT_MOUSEBUTTON] = false;
-
-        }
-
-    }
+	if (SDL_GetMouseState(NULL, NULL) & SDL_BUTTON(SDL_BUTTON_RIGHT))
+		mousestate_[RIGHT_MOUSEBUTTON] = true;
+	else
+		mousestate_[RIGHT_MOUSEBUTTON] = false;
 
     return returnvalue;
 

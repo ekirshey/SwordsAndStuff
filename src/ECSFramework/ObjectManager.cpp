@@ -89,7 +89,12 @@ void ObjectManager::Initialize(SDLManager* sdlmanager, GameWorld* gameworld, Cam
 			if (j % 2 == 0) mod = 1;
 			rect = { (i % 5) * 22,mod * 28,22,28 };
 			ecsmanager_.AddComponentToEntity(monsterentity, new PositionComponent((50+i*40) + i * 23, 50 + j * 29)); // TODO MAgic numbers
-			ecsmanager_.AddComponentToEntity(monsterentity, new VelocityComponent(0, 0));
+			/*if (i <= 4)
+				ecsmanager_.AddComponentToEntity(monsterentity, new VelocityComponent(1, 0));
+			else if (i >= 5)
+				ecsmanager_.AddComponentToEntity(monsterentity, new VelocityComponent(-1, 0));
+			else*/
+				ecsmanager_.AddComponentToEntity(monsterentity, new VelocityComponent(0, 0));
 			ecsmanager_.AddComponentToEntity(monsterentity, new BoundingRectangleComponent((55 + i*40) + i * 23, 55 + j * 29, 20, 21));//30,30
 			//ecsmanager_.AddComponentToEntity(monsterentity, new CollisionComponent());
 			ecsmanager_.AddComponentToEntity(monsterentity, new RenderComponent(path, rect));

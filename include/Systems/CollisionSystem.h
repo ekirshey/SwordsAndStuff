@@ -22,6 +22,8 @@ class CollisionSystem : public ProcessingSystem
 		void HandleCollision(uint_fast64_t entityA, uint_fast64_t entityB);
 		std::unordered_map<uint_fast64_t, std::function<void(int, int)>> collisioncallbacks_;
 
+		void SpatialCollision(uint_fast64_t entityA, uint_fast64_t entityB);
+
 		GameWorld* gameworld_;
 };
 

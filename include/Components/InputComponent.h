@@ -3,13 +3,13 @@
 
 #include "../../include/ECSFramework/Component.h"
 #include "../Config/ComponentDefines.h"
-
+#include <SDL.h>
 class InputComponent : public Component
 {
     public:
         static const uint_fast64_t ID = InputComponentID;
 
-        InputComponent() {}
+		InputComponent() {}
         InputComponent(const PositionComponent& c) {}
 
         virtual ~InputComponent() {}
@@ -17,6 +17,7 @@ class InputComponent : public Component
         uint_fast64_t UniqueBits() const {return ID;}
 
     private:
+
 
 };
 

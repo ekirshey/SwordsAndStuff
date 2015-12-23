@@ -5,7 +5,7 @@
 #include <sstream>
 
 // TODO
-const int SCREEN_FPS = 60;
+const int SCREEN_FPS = 1000;
 const int SCREEN_TICK_PER_FRAME = 1000 / SCREEN_FPS;
 
 // Im doing this pretty barebones for now since this isn't the main focus of this quicky game project.
@@ -68,7 +68,7 @@ void GameStateManager::Run()
             }
 
             framecounter++;
-
+/*
             int frameTicks = SDL_GetTicks() - currenttime;
 
             if( frameTicks < SCREEN_TICK_PER_FRAME )
@@ -76,7 +76,7 @@ void GameStateManager::Run()
                 //Wait remaining time
                 SDL_Delay( SCREEN_TICK_PER_FRAME - frameTicks );
             }
-
+*/
         }   // End Main Loop
 
         sdlmanager_.Close();
