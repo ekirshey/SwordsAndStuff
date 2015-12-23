@@ -15,7 +15,7 @@ class RenderComponent : public Component
         RenderComponent(std::string path, SDL_Rect cliprect) : imagepath_(path), clip_(cliprect) {}
         RenderComponent(const RenderComponent& c) :  imagepath_(c.ImagePath()), clip_(c.ClipRect()) {}
 
-        virtual ~RenderComponent() {}
+        ~RenderComponent() {}
 
         uint_fast64_t UniqueBits() const {return ID;}
 

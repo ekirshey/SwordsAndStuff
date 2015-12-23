@@ -40,7 +40,7 @@ class InputComponent : public Component
 
         InputComponent(const InputComponent& c) {}
 
-        virtual ~InputComponent() {}
+        ~InputComponent() {}
 
         uint_fast64_t UniqueBits() const {return ID;}
 

@@ -15,7 +15,7 @@ class RenderSystem : public ProcessingSystem
                                                             // Unlike the component ID this can be duplicated
         RenderSystem(ECSManager* ECSManager, SDLManager* sdlmanager);
         RenderSystem(ECSManager* ECSManager, SDLManager* sdlmanager, GameWorld* gameworld, Camera* camera);
-        virtual ~RenderSystem();
+        ~RenderSystem();
 
         uint_fast64_t ComponentBits() {return RenderSystem::COMPONENTIDS;}    // TODO: Is this necessary or is just accessing the variable directly better?
 

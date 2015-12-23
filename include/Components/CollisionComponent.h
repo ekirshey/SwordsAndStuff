@@ -12,7 +12,7 @@ public:
 	CollisionComponent(int x, int y) : x_(x), y_(y) {}
 	CollisionComponent(const CollisionComponent& c) : x_(c.X()), y_(c.Y()) {}
 
-	virtual ~CollisionComponent() {}
+	~CollisionComponent() {}
 
 	uint_fast64_t UniqueBits() const { return ID; }
 

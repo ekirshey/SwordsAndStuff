@@ -14,7 +14,7 @@ class PlayerTargetingSystem : public System
 public:
 	static const uint_fast64_t COMPONENTIDS = 0x00;      // No ids cause it just grabs the component
 	PlayerTargetingSystem(ECSManager* ECSManager, const SDLManager& sdlmanager, const GameWorld& gameworld, std::string reticule);
-	virtual ~PlayerTargetingSystem();
+	~PlayerTargetingSystem();
 
 	uint_fast64_t ComponentBits() { return PlayerTargetingSystem::COMPONENTIDS; }    // TODO: Is this necessary or is just accessing the variable directly better?
 

@@ -13,7 +13,7 @@ class ItemStatsComponent : public Component
         //ItemStatsComponent(int x, int y, int width, int height) : x_(x), y_(y), width_(width), height_(height) {}
         //ItemStatsComponent(const ItemStatsComponent& c) : x_(c.X()), y_(c.Y()), width_(c.Width()), height_(c.Height()) {}
 
-        virtual ~ItemStatsComponent() {}
+        ~ItemStatsComponent() {}
 
         uint_fast64_t UniqueBits() const {return ID;}
 

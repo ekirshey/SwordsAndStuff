@@ -13,7 +13,7 @@ class AngleComponent : public Component
         AngleComponent(double angle) : angle_(angle) {}
         AngleComponent(const AngleComponent& c) : angle_(c.Angle()) {}
 
-        virtual ~AngleComponent() {}
+        ~AngleComponent() {}
 
         uint_fast64_t UniqueBits() const {return ID;}
 

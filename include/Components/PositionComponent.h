@@ -13,7 +13,7 @@ class PositionComponent : public Component
         PositionComponent(int x, int y) : x_(x), y_(y) {}
         PositionComponent(const PositionComponent& c) : x_(c.X()), y_(c.Y()) {}
 
-        virtual ~PositionComponent() {}
+        ~PositionComponent() {}
 
         uint_fast64_t UniqueBits() const {return ID;}
 

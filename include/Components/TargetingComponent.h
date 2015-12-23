@@ -12,7 +12,7 @@ public:
 	TargetingComponent() : target_(NOTARGET), hastarget_(false) {}
 	TargetingComponent(const TargetingComponent& c) : target_(c.Target()), hastarget_(c.HasTarget()) {}
 
-	virtual ~TargetingComponent() {}
+	~TargetingComponent() {}
 
 	uint_fast64_t UniqueBits() const { return ID; }
 

@@ -15,7 +15,7 @@ class InventoryComponent : public Component
         InventoryComponent(int maxinventorysize) : maxinventorysize_(maxinventorysize) {}
         InventoryComponent(const InventoryComponent& c) : maxinventorysize_(c.MaxInventorySize()){}
 
-        virtual ~InventoryComponent() {}
+        ~InventoryComponent() {}
 
         uint_fast64_t UniqueBits() const {return ID;}
 

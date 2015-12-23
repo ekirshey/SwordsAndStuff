@@ -11,7 +11,7 @@ class ShootingSystem : public ProcessingSystem
     public:
         static const uint_fast64_t COMPONENTIDS = 0x40;      // TODO adjust this appropriately
         ShootingSystem(ECSManager* ECSManager);
-        virtual ~ShootingSystem();
+        ~ShootingSystem();
 
         uint_fast64_t ComponentBits() {return ShootingSystem::COMPONENTIDS;}    // TODO: Is this necessary or is just accessing the variable directly better?
 

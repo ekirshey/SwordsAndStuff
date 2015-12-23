@@ -11,7 +11,7 @@ class SpellbookComponent : public Component
 	public:
 		static const uint_fast64_t ID = SpellbookComponentID;
 		SpellbookComponent() {}
-		virtual ~SpellbookComponent() {}
+		~SpellbookComponent() {}
 
 	private:
 		// Holds spell name and its "description" description might become a custom type and not a string

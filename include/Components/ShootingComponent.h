@@ -13,7 +13,7 @@ class ShootingComponent : public Component
         ShootingComponent(int cooldown) : cooldown_(cooldown) {shotsfired_ = false; timeoflastshot_= 0;}
         ShootingComponent(const ShootingComponent& c) : cooldown_(c.Cooldown())  {shotsfired_ = false; timeoflastshot_= 0;}
 
-        virtual ~ShootingComponent() {}
+        ~ShootingComponent() {}
 
         uint_fast64_t UniqueBits() const {return ID;}
 

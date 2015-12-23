@@ -14,7 +14,7 @@ public:
 	static const uint_fast64_t COMPONENTIDS = 0x0;
 	System(ECSManager* ecsmanager);
 
-	~System() {}
+	virtual ~System() {}
 
 	void Update(int elapsedtime);
 	virtual void ProcessEntities() = 0;

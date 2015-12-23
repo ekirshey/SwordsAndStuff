@@ -13,7 +13,7 @@ class VelocityComponent : public Component
         VelocityComponent(int xvelocity, int yvelocity) : xvelocity_(xvelocity), yvelocity_(yvelocity) {}
         VelocityComponent(const VelocityComponent& c) : xvelocity_(c.XVelocity()), yvelocity_(c.YVelocity()) {}
 
-        virtual ~VelocityComponent() {}
+        ~VelocityComponent() {}
 
         uint_fast64_t UniqueBits() const {return ID;}
 

@@ -37,7 +37,7 @@ class RPGStatsComponent : public Component
             DerivedStats();
         }
 
-        virtual ~RPGStatsComponent() {}
+        ~RPGStatsComponent() {}
 
         uint_fast64_t UniqueBits() const {return ID;}
 

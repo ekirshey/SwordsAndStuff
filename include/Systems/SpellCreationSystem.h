@@ -11,7 +11,7 @@ class SpellCreationSystem : public ProcessingSystem
 		static const uint_fast64_t COMPONENTIDS = PositionComponentID;
 		// Unlike the component ID this can be duplicated
 		SpellCreationSystem(ECSManager* ECSManager);
-		virtual ~SpellCreationSystem();
+		~SpellCreationSystem();
 
 		uint_fast64_t ComponentBits() { return SpellCreationSystem::COMPONENTIDS; }    // TODO: Is this necessary or is just accessing the variable directly better?
 
