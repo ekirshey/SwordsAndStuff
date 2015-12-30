@@ -1,21 +1,21 @@
 #ifndef SPELLCREATIONSYSTEM_H
 #define SPELLCREATIONSYSTEM_H
 
-#include "../Systems/ProcessingSystem.h"
+#include "../Systems/QueueSystem.h"
 #include "../Config/ComponentDefines.h"
 
 
-class SpellCreationSystem : public ProcessingSystem
+class SpellCreationSystem : public QueueSystem
 {
 	public:
 		static const uint_fast64_t COMPONENTIDS = PositionComponentID;
 		// Unlike the component ID this can be duplicated
-		SpellCreationSystem(ECSManager* ECSManager);
+		SpellCreationSystem(MessageQueue* messagequeue);
 		~SpellCreationSystem();
 
 		uint_fast64_t ComponentBits() { return SpellCreationSystem::COMPONENTIDS; }    // TODO: Is this necessary or is just accessing the variable directly better?
 
-		void ProcessEntity(uint_fast64_t entity);
+		void ProcessMessage(Message* data);
 
 	private:
 

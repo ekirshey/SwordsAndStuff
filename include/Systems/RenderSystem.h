@@ -13,8 +13,8 @@ class RenderSystem : public ProcessingSystem
     public:
         static const uint_fast64_t COMPONENTIDS = 0x5;      // This means the System operates on all Entities with a "1" Component. In this example thats position
                                                             // Unlike the component ID this can be duplicated
-        RenderSystem(ECSManager* ECSManager, SDLManager* sdlmanager);
-        RenderSystem(ECSManager* ECSManager, SDLManager* sdlmanager, GameWorld* gameworld, Camera* camera);
+        RenderSystem(SDLManager* sdlmanager);
+        RenderSystem(SDLManager* sdlmanager, GameWorld* gameworld, Camera* camera);
         ~RenderSystem();
 
         uint_fast64_t ComponentBits() {return RenderSystem::COMPONENTIDS;}    // TODO: Is this necessary or is just accessing the variable directly better?

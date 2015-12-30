@@ -14,7 +14,7 @@ class CameraSystem : public System
 {
     public:
         static const uint_fast64_t COMPONENTIDS = 0x00;      // No ids cause it just grabs the component
-        CameraSystem(ECSManager* ECSManager, Camera* camera);
+        CameraSystem(Camera* camera);
         ~CameraSystem();
 
         uint_fast64_t ComponentBits() {return CameraSystem::COMPONENTIDS;}    // TODO: Is this necessary or is just accessing the variable directly better?

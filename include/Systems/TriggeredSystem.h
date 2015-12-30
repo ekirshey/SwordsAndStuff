@@ -8,7 +8,7 @@
 class TriggeredSystem : public System
 {
     public:
-        TriggeredSystem(ECSManager* ECSManager);
+        TriggeredSystem();
         virtual ~TriggeredSystem();
 
         virtual void ProcessEntity(uint_fast64_t entity) = 0;

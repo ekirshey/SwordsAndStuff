@@ -8,7 +8,7 @@
 
 #define NOTARGET 0x7FFFFFFFFFFFFFFF
 
-CameraSystem::CameraSystem(ECSManager* ECSManager, Camera* camera) : System(ECSManager), camera_(camera),
+CameraSystem::CameraSystem(Camera* camera) : camera_(camera),
 	focus_(NOTARGET), focusposition_(nullptr), focusvelocity_(nullptr)
 {
 	SetSystemName("CameraSystem");
@@ -24,8 +24,8 @@ bool CameraSystem::SetFocus(uint_fast64_t focus)
 	bool focusset = false;
 	focus_ = focus;
 
-	focusposition_ = static_cast<PositionComponent*>(GetECSManager()->GetEntityComponent(focus_, PositionComponent::ID));
-	focusvelocity_ = static_cast<VelocityComponent*>(GetECSManager()->GetEntityComponent(focus_, VelocityComponent::ID));
+	focusposition_ = GetEntity<PositionComponent*>(focus_, PositionComponent::ID);
+	focusvelocity_ = GetEntity<VelocityComponent*>(focus_, VelocityComponent::ID);
 	
 	if (focusposition_ != nullptr && focusvelocity_ != nullptr)
 		focusset = true;

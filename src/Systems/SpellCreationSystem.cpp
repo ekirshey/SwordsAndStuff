@@ -1,21 +1,20 @@
 #include <iostream>
 #include "../../include/ECSFramework/ECSManager.h"
 #include "../../include/Systems/SpellCreationSystem.h"
+#include "../../include/ECSFramework/MessageTypes.h"
 
 
-SpellCreationSystem::SpellCreationSystem(ECSManager* ECSManager) : ProcessingSystem(ECSManager)
-{
+SpellCreationSystem::SpellCreationSystem(MessageQueue* messagequeue) : QueueSystem(messagequeue) {
 	SetSystemName("SpellCreationSystem");
+	
 }
 
-SpellCreationSystem::~SpellCreationSystem()
-{
+SpellCreationSystem::~SpellCreationSystem() {
 	//dtor
 }
 
 
-void SpellCreationSystem::ProcessEntity(uint_fast64_t entity)
-{
+void SpellCreationSystem::ProcessMessage(Message* data) {
 	/*
 		Check spellcastingcomponent
 			If a spell is being cast
@@ -31,5 +30,7 @@ void SpellCreationSystem::ProcessEntity(uint_fast64_t entity)
 			If spellname contains NOCAST
 				Finish processing
 	*/
+
+	EntityMessage* msg = static_cast<EntityMessage*>(data);
 
 }

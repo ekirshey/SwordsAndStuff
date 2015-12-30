@@ -10,7 +10,7 @@
 
 #include <chrono>
 
-MovementSystem::MovementSystem(ECSManager* ECSManager, GameWorld* gameworld) : ProcessingSystem(ECSManager), gameworld_(gameworld)
+MovementSystem::MovementSystem(GameWorld* gameworld) : gameworld_(gameworld)
 {
 	SetSystemName("MovementSystem");
 }
@@ -38,11 +38,11 @@ void MovementSystem::AfterObjectProcessing()
 	for (int i = 0; i < staticobjects.size(); i++)
 	{
 		entitytoinsert.entityid = staticobjects[i];
-		entitytoinsert.boundingrectangle = static_cast<BoundingRectangleComponent*>(GetECSManager()->GetEntityComponent(staticobjects[i], BoundingRectangleComponentID));
+		entitytoinsert.boundingrectangle = GetEntity<BoundingRectangleComponent*>(staticobjects[i], BoundingRectangleComponentID);
 
 		if (entitytoinsert.boundingrectangle != nullptr)
 		{
-			entitytoinsert.positioncomponent = static_cast<PositionComponent*>(GetECSManager()->GetEntityComponent(staticobjects[i], PositionComponentID));
+			entitytoinsert.positioncomponent = GetEntity<PositionComponent*>(staticobjects[i], PositionComponentID);
 			entitytoinsert.velocitycomponent = nullptr; // static objects dont have a collision component
 
 			gameworld_->SparseGridInsert(entitytoinsert);
@@ -62,10 +62,10 @@ void MovementSystem::ProcessEntity(uint_fast64_t entity)
 	InputComponent* inputcomponent;
 
     // Get Relevant Component Data
-    positioncomponent = static_cast<PositionComponent*>(GetECSManager()->GetEntityComponent(entity,PositionComponentID));
-    velocitycomponent = static_cast<VelocityComponent*>(GetECSManager()->GetEntityComponent(entity,VelocityComponentID));
-    boundingrectanglecomponent = static_cast<BoundingRectangleComponent*>(GetECSManager()->GetEntityComponent(entity,BoundingRectangleComponentID));
-	inputcomponent = static_cast<InputComponent*>(GetECSManager()->GetEntityComponent(entity, InputComponent::ID));
+    positioncomponent = GetEntity<PositionComponent*>(entity,PositionComponentID);
+    velocitycomponent = GetEntity<VelocityComponent*>(entity,VelocityComponentID);
+    boundingrectanglecomponent = GetEntity<BoundingRectangleComponent*>(entity,BoundingRectangleComponentID);
+	inputcomponent = GetEntity<InputComponent*>(entity, InputComponent::ID);
 
 	// This is the player so adjust his velocity based on inputs
 	if (inputcomponent != nullptr)

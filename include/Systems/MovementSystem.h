@@ -10,7 +10,7 @@ class MovementSystem : public ProcessingSystem
     public:
         static const uint_fast64_t COMPONENTIDS = PositionComponentID | VelocityComponentID | BoundingRectangleComponentID; 
                                                             // Unlike the component ID this can be duplicated
-        MovementSystem(ECSManager* ECSManager, GameWorld* gameworld);
+        MovementSystem(GameWorld* gameworld);
         ~MovementSystem();
 
         uint_fast64_t ComponentBits() {return MovementSystem::COMPONENTIDS;}    // TODO: Is this necessary or is just accessing the variable directly better?

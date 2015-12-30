@@ -9,7 +9,7 @@ class InputSystem : public ProcessingSystem
     public:
         static const uint_fast64_t COMPONENTIDS = 0x13;     // Input Component, Angle Component, Position Component
 
-        InputSystem(ECSManager* ECSManager, SDLManager* sdlmanager);
+        InputSystem(SDLManager* sdlmanager);
         ~InputSystem();
 
         uint_fast64_t ComponentBits() {return InputSystem::COMPONENTIDS;}    // TODO: Is this necessary or is just accessing the variable directly better?

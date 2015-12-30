@@ -12,6 +12,7 @@ class System
 {
 public:
 	static const uint_fast64_t COMPONENTIDS = 0x0;
+	System() {}
 	System(ECSManager* ecsmanager);
 
 	virtual ~System() {}
@@ -40,6 +41,12 @@ public:
 
 	std::string SystemName() { return systemname_; }
 	void SetSystemName(std::string name) { systemname_ = name; }
+
+	template<typename T>
+	T GetEntity(uint_fast64_t entityID, uint_fast64_t componentID) {
+		return static_cast<T>(ecsmanager_->GetEntityComponent(entityID, componentID));
+	}
+
 
 private:
 	std::vector<uint_fast64_t> relevantentities_;

@@ -1,7 +1,7 @@
 #include "../../include/ECSFramework/ECSManager.h"
 #include "../../include/Systems/TriggeredSystem.h"
 
-TriggeredSystem::TriggeredSystem(ECSManager* ECSManager) : System(ECSManager)
+TriggeredSystem::TriggeredSystem()
 {
     //ctor
     triggeredentities_.clear();

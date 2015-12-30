@@ -6,7 +6,7 @@
 class ProcessingSystem : public System
 {
     public:
-        ProcessingSystem(ECSManager* ECSManager);
+        ProcessingSystem();
         virtual ~ProcessingSystem();
 
         virtual void ProcessEntity(uint_fast64_t entity) = 0;

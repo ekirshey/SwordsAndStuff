@@ -27,7 +27,7 @@ void MainMenuState::InitializeState()
     std::cout << "Initialize" << std::endl;
 
     // Build systems and entities
-    ecsmanager_.AddSystem(new RenderSystem(&ecsmanager_,GetSDLManager()),0);
+    ecsmanager_.AddSystem(new RenderSystem(GetSDLManager()),0);
 
     // Background
     int backgroundentity = ecsmanager_.CreateEntity();

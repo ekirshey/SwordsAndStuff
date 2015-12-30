@@ -5,7 +5,7 @@
 #include "../../include/Components/VelocityComponent.h"
 #include "../../include/Components/BoundingRectangleComponent.h"
 
-CollisionSystem::CollisionSystem(ECSManager* ECSManager, GameWorld* gameworld) : ProcessingSystem(ECSManager), gameworld_(gameworld)
+CollisionSystem::CollisionSystem(GameWorld* gameworld) : gameworld_(gameworld)
 {
 	// Set up Collision Callback dictionary
 	collisioncallbacks_[VelocityComponentID] = VelocityCollision;
@@ -33,13 +33,13 @@ void CollisionSystem::HandleCollision(uint_fast64_t entityA, uint_fast64_t entit
 
 void CollisionSystem::SpatialCollision(uint_fast64_t entityA, uint_fast64_t entityB)
 {
-	PositionComponent*			positioncomponentA  = static_cast<PositionComponent*>(GetECSManager()->GetEntityComponent(entityA, PositionComponentID));
-	VelocityComponent*			velocitycomponentA  = static_cast<VelocityComponent*>(GetECSManager()->GetEntityComponent(entityA, VelocityComponentID));
-	BoundingRectangleComponent* boundingrectangleA = static_cast<BoundingRectangleComponent*>(GetECSManager()->GetEntityComponent(entityA, BoundingRectangleComponentID));
+	PositionComponent*			positioncomponentA  = GetEntity<PositionComponent*>(entityA, PositionComponentID);
+	VelocityComponent*			velocitycomponentA  = GetEntity<VelocityComponent*>(entityA, VelocityComponentID);
+	BoundingRectangleComponent* boundingrectangleA =  GetEntity<BoundingRectangleComponent*>(entityA, BoundingRectangleComponentID);
 
-	PositionComponent*			positioncomponentB = static_cast<PositionComponent*>(GetECSManager()->GetEntityComponent(entityB, PositionComponentID));
-	VelocityComponent*			velocitycomponentB = static_cast<VelocityComponent*>(GetECSManager()->GetEntityComponent(entityB, VelocityComponentID));
-	BoundingRectangleComponent* boundingrectangleB = static_cast<BoundingRectangleComponent*>(GetECSManager()->GetEntityComponent(entityB, BoundingRectangleComponentID));
+	PositionComponent*			positioncomponentB = GetEntity<PositionComponent*>(entityB, PositionComponentID);
+	VelocityComponent*			velocitycomponentB = GetEntity<VelocityComponent*>(entityB, VelocityComponentID);
+	BoundingRectangleComponent* boundingrectangleB = GetEntity<BoundingRectangleComponent*>(entityB, BoundingRectangleComponentID);
 
 	SDL_Rect entityArect = boundingrectangleA->Rectangle();
 
@@ -79,9 +79,9 @@ void CollisionSystem::ProcessEntity(uint_fast64_t entity)
 	bool collision = false;
 
 	// Consider a vector of commonly used components so i dont do getentitycomponent as often
-	//PositionComponent*			positioncomponent  = static_cast<PositionComponent*>(GetECSManager()->GetEntityComponent(entity, PositionComponentID));
-	//VelocityComponent*			velocitycomponent  = static_cast<VelocityComponent*>(GetECSManager()->GetEntityComponent(entity, VelocityComponentID));
-	BoundingRectangleComponent* boundingrectangle  = static_cast<BoundingRectangleComponent*>(GetECSManager()->GetEntityComponent(entity, BoundingRectangleComponentID));
+	//PositionComponent*			positioncomponent  = GetEntity<PositionComponent*>(entity, PositionComponentID);
+	//VelocityComponent*			velocitycomponent  = static_cast<VelocityComponent*>(entity, VelocityComponentID));
+	BoundingRectangleComponent* boundingrectangle  = GetEntity<BoundingRectangleComponent*>(entity, BoundingRectangleComponentID);
 
 	std::vector<QuadElement> elements = gameworld_->SparseGridQueryRange(boundingrectangle->Rectangle());
 	

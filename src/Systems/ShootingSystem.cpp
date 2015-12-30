@@ -14,7 +14,7 @@
 
 #include "../../include/Components/RPGStatsComponent.h"
 
-ShootingSystem::ShootingSystem(ECSManager* ECSManager) : ProcessingSystem(ECSManager)
+ShootingSystem::ShootingSystem()
 {
 	SetSystemName("ShootingSystem");
 }
@@ -37,11 +37,11 @@ void ShootingSystem::ProcessEntity(uint_fast64_t entity)
     RPGStatsComponent* stats;
 
     // Get Relevant Component Data
-    //positioncomponent = static_cast<PositionComponent*>(GetECSManager()->GetEntityComponent(entity,PositionComponent::ID));
-    anglecomponent = static_cast<AngleComponent*>(GetECSManager()->GetEntityComponent(entity,AngleComponent::ID));
-    shootingcomponent = static_cast<ShootingComponent*>(GetECSManager()->GetEntityComponent(entity,ShootingComponent::ID));
-    boundingrectanglecomponent = static_cast<BoundingRectangleComponent*>(GetECSManager()->GetEntityComponent(entity,BoundingRectangleComponent::ID));
-    stats = static_cast<RPGStatsComponent*>(GetECSManager()->GetEntityComponent(entity,RPGStatsComponent::ID));
+    //positioncomponent = GetEntity<PositionComponent*>(entity,PositionComponent::ID);
+    anglecomponent = GetEntity<AngleComponent*>(entity,AngleComponent::ID);
+    shootingcomponent = GetEntity<ShootingComponent*>(entity,ShootingComponent::ID);
+    boundingrectanglecomponent = GetEntity<BoundingRectangleComponent*>(entity,BoundingRectangleComponent::ID);
+    stats = GetEntity<RPGStatsComponent*>(entity,RPGStatsComponent::ID);
 
     if (shootingcomponent->ShotsFired())
     {

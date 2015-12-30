@@ -1,7 +1,7 @@
 #include "../../include/ECSFramework/ECSManager.h"
 #include "../../include/Systems/ProcessingSystem.h"
 #include <iostream>
-ProcessingSystem::ProcessingSystem(ECSManager* ECSManager) : System(ECSManager)
+ProcessingSystem::ProcessingSystem() 
 {
     //ctor
 }

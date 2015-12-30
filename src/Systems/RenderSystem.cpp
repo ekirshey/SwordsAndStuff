@@ -9,13 +9,13 @@
 #include <iostream>
 #include <sstream>
 
-RenderSystem::RenderSystem(ECSManager* ECSManager, SDLManager* sdlmanager) : ProcessingSystem(ECSManager), sdlmanager_(sdlmanager), gameworld_(nullptr)
+RenderSystem::RenderSystem(SDLManager* sdlmanager) : sdlmanager_(sdlmanager), gameworld_(nullptr)
 {
 	SetSystemName("RenderSystem");
 }
 
-RenderSystem::RenderSystem(ECSManager* ECSManager, SDLManager* sdlmanager, GameWorld* gameworld, Camera* camera)
-    : ProcessingSystem(ECSManager), sdlmanager_(sdlmanager), gameworld_(gameworld), camera_(camera)
+RenderSystem::RenderSystem( SDLManager* sdlmanager, GameWorld* gameworld, Camera* camera)
+    : sdlmanager_(sdlmanager), gameworld_(gameworld), camera_(camera)
 {
 	tilemap_ = SDL_CreateTexture(sdlmanager_->GetRenderer(), SDL_PIXELFORMAT_RGBA8888,
 		SDL_TEXTUREACCESS_TARGET, gameworld_->Width(), gameworld_->Height());
@@ -73,10 +73,10 @@ void RenderSystem::ProcessEntity(uint_fast64_t entity)
     BoundingRectangleComponent* entityrect;
 
     // Get Relevant Component Data
-    positioncomponent = static_cast<PositionComponent*>(GetECSManager()->GetEntityComponent(entity,PositionComponent::ID));
-    rendercomponent = static_cast<RenderComponent*>(GetECSManager()->GetEntityComponent(entity,RenderComponent::ID));
-    anglecomponent = static_cast<AngleComponent*>(GetECSManager()->GetEntityComponent(entity,AngleComponent::ID));
-    entityrect = static_cast<BoundingRectangleComponent*>(GetECSManager()->GetEntityComponent(entity,BoundingRectangleComponent::ID));
+    positioncomponent = GetEntity<PositionComponent*>(entity,PositionComponent::ID);
+    rendercomponent = GetEntity<RenderComponent*>(entity,RenderComponent::ID);
+    anglecomponent = GetEntity<AngleComponent*>(entity,AngleComponent::ID);
+    entityrect = GetEntity<BoundingRectangleComponent*>(entity,BoundingRectangleComponent::ID);
 
     SDL_Rect cliprect = rendercomponent->ClipRect();
 

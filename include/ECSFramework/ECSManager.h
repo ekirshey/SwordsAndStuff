@@ -7,6 +7,7 @@
 #include <string>
 #include "SystemManager.h"
 #include "EntityManager.h"
+#include "MessageQueueContainer.h"
 
 class ECSManager
 {
@@ -42,9 +43,12 @@ class ECSManager
         std::vector<uint_fast64_t> GetAssociatedEntities(std::string tag);
         std::vector<uint_fast64_t>* GetPtrToAssociatedEntities(std::string tag) {return &tagmanager_[tag];}
 
+		MessageQueueContainer& GetQueues() { return messagequeues_; } 
+
     private:
         SystemManager systemmanager_;
         EntityManager entitymanager_;
+		MessageQueueContainer messagequeues_;
         std::unordered_map<std::string,std::vector<uint_fast64_t>> tagmanager_;
 };
 

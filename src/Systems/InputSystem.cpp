@@ -3,16 +3,12 @@
 #include "../../include/ECSFramework/ECSManager.h"
 #include "../../include/SDL/SDLManager.h"
 #include "../../include/Systems/InputSystem.h"
-#include "../../include/Components/PositionComponent.h"
 #include "../../include/Components/InputComponent.h"
-#include "../../include/Components/AngleComponent.h"
-#include "../../include/Components/VelocityComponent.h"
-#include "../../include/Components/ShootingComponent.h"
+#include "../../include/ECSFramework/MessageTypes.h"
 
 #define MAXANGLE 90.0
 #define MINANGLE -90.0
-InputSystem::InputSystem(ECSManager* ECSManager, SDLManager* sdlmanager):
-     ProcessingSystem(ECSManager), sdlmanager_(sdlmanager)
+InputSystem::InputSystem(SDLManager* sdlmanager): sdlmanager_(sdlmanager)
 {
 	SetSystemName("InputSystem");
 }
@@ -30,7 +26,7 @@ void InputSystem::ProcessEntity(uint_fast64_t entity)
 	InputComponent* inputcomponent;
 
     // Get Relevant Component Data
-	inputcomponent = static_cast<InputComponent*>(GetECSManager()->GetEntityComponent(entity, InputComponent::ID));
+	inputcomponent = GetEntity<InputComponent*>(entity, InputComponent::ID);
 
     mousestate_ = sdlmanager_->GetMouseState();
     keyboardstate_ = sdlmanager_->GetKeyBoardState();
@@ -50,6 +46,13 @@ void InputSystem::ProcessEntity(uint_fast64_t entity)
 			inputcomponent->SetPressed(inputname, false);
 		}
 	}
+
+	if (inputcomponent->Pressed("MELEE"))
+	{
+		GetECSManager()->GetQueues().SendMessage("SpellCreation", new EntityMessage(entity));
+	}
+
+
 
 }
 

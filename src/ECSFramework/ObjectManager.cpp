@@ -11,6 +11,7 @@
 #include "../../include/Systems/CollisionSystem.h"
 #include "../../include/Systems/CameraSystem.h"
 #include "../../include/Systems/PlayerTargetingSystem.h"
+#include "../../include/Systems/SpellCreationSystem.h"
 #include "../../include/Components/BoundingRectangleComponent.h"
 #include "../../include/Components/RenderComponent.h"
 #include "../../include/Components/PositionComponent.h"
@@ -45,13 +46,16 @@ void ObjectManager::Initialize(SDLManager* sdlmanager, GameWorld* gameworld, Cam
 	int priority = 0;
 	int cameraindex = 0;
 
+	ecsmanager_.GetQueues().AddQueue("SpellCreation");
+
 	// Build systems and entities
-	ecsmanager_.AddSystem(new InputSystem(&ecsmanager_, sdlmanager ),priority++);
-	ecsmanager_.AddSystem(new MovementSystem(&ecsmanager_, gameworld), priority++);
-	ecsmanager_.AddSystem(new CollisionSystem(&ecsmanager_, gameworld), priority++);
-	ecsmanager_.AddSystem(new PlayerTargetingSystem(&ecsmanager_, *sdlmanager, *gameworld, "..\\..\\..\\media\\reticule.png"), priority++);	
-	cameraindex = ecsmanager_.AddSystem(new CameraSystem(&ecsmanager_,camera), priority++);
-	ecsmanager_.AddSystem(new RenderSystem(&ecsmanager_, sdlmanager, gameworld, camera), priority++);
+	ecsmanager_.AddSystem(new InputSystem( sdlmanager ),priority++);
+	ecsmanager_.AddSystem(new MovementSystem( gameworld), priority++);
+	ecsmanager_.AddSystem(new SpellCreationSystem(ecsmanager_.GetQueues().GetQueue("SpellCreation")), priority++);
+	ecsmanager_.AddSystem(new CollisionSystem( gameworld), priority++);
+	ecsmanager_.AddSystem(new PlayerTargetingSystem( *sdlmanager, *gameworld, "..\\..\\..\\media\\reticule.png"), priority++);	
+	cameraindex = ecsmanager_.AddSystem(new CameraSystem(camera), priority++);
+	ecsmanager_.AddSystem(new RenderSystem( sdlmanager, gameworld, camera), priority++);
 
 	// Player
 	int playerentity = ecsmanager_.CreateEntity();

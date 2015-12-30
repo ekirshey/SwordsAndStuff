@@ -12,7 +12,7 @@ class CollisionSystem : public ProcessingSystem
 {
     public:
         static const uint_fast64_t COMPONENTIDS = BoundingRectangleComponentID; // just need a bounding box
-        CollisionSystem(ECSManager* ECSManager, GameWorld* gameworld);
+        CollisionSystem(GameWorld* gameworld);
         ~CollisionSystem();
 
         uint_fast64_t ComponentBits() {return CollisionSystem::COMPONENTIDS;}
