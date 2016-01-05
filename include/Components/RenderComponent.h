@@ -11,9 +11,10 @@ class RenderComponent : public Component
     public:
         static const uint_fast64_t ID = RenderComponentID;
 
-		RenderComponent() { clip_ = { 0,0,0,0 }; imagepath_ = nullptr; }
-        RenderComponent(std::string path, SDL_Rect cliprect) : imagepath_(path), clip_(cliprect) {}
-        RenderComponent(const RenderComponent& c) :  imagepath_(c.ImagePath()), clip_(c.ClipRect()) {}
+		RenderComponent() : imagepath_(nullptr), renderangle_(0) { clip_ = { 0,0,0,0 };}
+        RenderComponent(std::string path, SDL_Rect cliprect, double renderangle) : imagepath_(path), clip_(cliprect), renderangle_(renderangle) {}
+		RenderComponent(std::string path, SDL_Rect cliprect) : imagepath_(path), clip_(cliprect), renderangle_(0.0) {}
+        RenderComponent(const RenderComponent& c) :  imagepath_(c.ImagePath()), clip_(c.ClipRect()), renderangle_(c.RenderAngle()) {}
 
         ~RenderComponent() {}
 
@@ -21,11 +22,14 @@ class RenderComponent : public Component
 
         std::string ImagePath() const {return imagepath_;}
         SDL_Rect ClipRect() const {return clip_;}
+		double RenderAngle() const { return renderangle_; }
 
         void SetPath(std::string path) { imagepath_ = path;}
         void SetClipRect(SDL_Rect cliprect) { clip_ = cliprect;}
+		void SetRenderAngle(double angle) { renderangle_ = angle; }
 
     private:
+		double renderangle_;
         std::string imagepath_;
         SDL_Rect clip_;
 

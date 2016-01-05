@@ -9,6 +9,7 @@
 
 #define MAXOBJECTS 100000
 
+
 inline int fastlog(uint_fast64_t i)
 {
 	int result = 0;
@@ -27,6 +28,8 @@ class EntityManager
 
         bool AddComponent(uint_fast64_t UUID, std::unique_ptr<Component> componenttoadd);
         bool RemoveComponent(uint_fast64_t UUID, uint_fast64_t componentid);
+
+		uint_fast64_t EntityCount() { return entitycount_; }
 
 		inline Component* EntityManager::GetEntityComponent(uint_fast64_t UUID, uint_fast64_t componentid)
 		{

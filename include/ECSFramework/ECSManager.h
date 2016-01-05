@@ -16,18 +16,28 @@ class ECSManager
         virtual ~ECSManager();
 
         int AddSystem(std::unique_ptr<System> system, int priority);
-        int AddSystem(System* system, int priority);
 		System* GetSystem(int systemid);
 
         uint_fast64_t CreateEntity();
         void RemoveEntity(uint_fast64_t entity);
-        Component* GetEntityComponent(uint_fast64_t entity, uint_fast64_t componentid);
+
+		template<class T> 
+		T GetEntityComponent(uint_fast64_t entity, uint_fast64_t componentid) {
+			return static_cast<T>(entitymanager_.GetEntityComponent(entity, componentid));
+		}
+
         std::vector<Component*> GetAllEntityComponents(uint_fast64_t entity);
 
 		uint_fast64_t GetEntityComponentBits(uint_fast64_t entity) { return entitymanager_.GetEntityComponentBits(entity); }
+		uint_fast64_t EntityCount() { return entitymanager_.EntityCount(); }
 
         void AddComponentToEntity(uint_fast64_t entity, std::unique_ptr<Component> componenttoadd);
-        void AddComponentToEntity(uint_fast64_t entity, Component* componenttoadd);
+
+		template<typename T, typename... Args>
+		void AddComponentToEntity(uint_fast64_t entity, Args... args) {
+			if ( entitymanager_.AddComponent( entity, std::unique_ptr<T>( new T(args...) ) ) )
+				systemmanager_.AddEntityToSystem(entity, entitymanager_.GetEntityComponentBits(entity));
+		}
 
         void RemoveComponentFromEntity(uint_fast64_t entity, uint_fast64_t componentid);
 

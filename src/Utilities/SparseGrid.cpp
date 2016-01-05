@@ -122,6 +122,7 @@ std::vector<QuadElement> SparseGrid::QueryRange(const SDL_Rect& boundary) const
 			entitiesinrange.insert(entitiesinrange.end(), grid_[(gridwidth_*gridtop) + gridleft].begin(), grid_[(gridwidth_*gridtop) + gridleft].end());
 	}
 
+	//EKNOTE: Try to make this better...
 	// Remove duplicates
 	std::sort(entitiesinrange.begin(), entitiesinrange.end());
 	entitiesinrange.erase(std::unique(entitiesinrange.begin(), entitiesinrange.end()), entitiesinrange.end());

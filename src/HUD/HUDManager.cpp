@@ -11,7 +11,7 @@ HUDManager::HUDManager()
     //ctor
 }
 
-HUDManager::HUDManager(ObjectManager* objectmanager, SDLManager* sdlmanager) : objectmanager_(objectmanager), sdlmanager_(sdlmanager)
+HUDManager::HUDManager(SDLManager* sdlmanager) : sdlmanager_(sdlmanager)
 {
 	Initialize();
 }
@@ -33,6 +33,7 @@ void HUDManager::Update()
 //void HUDManager::Initialize()
 void HUDManager::Initialize() 
 {
+/*
     RPGStatsComponent* playerstats;
 
     std::vector<Component*> playercomponents = objectmanager_->GetAllPlayerComponents();
@@ -49,6 +50,6 @@ void HUDManager::Initialize()
 
 		hudcomponents.push_back(std::unique_ptr<HUDComponent>(new FillBar(playerstats->GetStatPtr(HEALTH), sdlmanager_)));
 	}
-
+*/
 
 }

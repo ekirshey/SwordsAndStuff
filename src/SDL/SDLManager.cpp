@@ -22,12 +22,13 @@ SDLManager::~SDLManager()
 
     delete mousestate_;
 }
-
+void log(void* userdata, int category, SDL_LogPriority priority, const char* message) {
+	std::cout << "Log : " << message << std::endl;
+}
 bool SDLManager::Initialize()
 {
     bool returnvalue = true;
     std::cout << "Initialize SDL Manager" <<std::endl;
-
     	//Initialize SDL
 	if( SDL_Init( SDL_INIT_VIDEO ) < 0 )
 	{

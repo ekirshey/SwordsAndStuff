@@ -31,7 +31,6 @@ class SDLManager
         void RenderOutlineRectangle(int X, int Y, int Width, int Height, uint8_t R, uint8_t G, uint8_t B, uint8_t A);
         void RenderOutlineRectangle(SDL_Rect rectangle, uint8_t R, uint8_t G, uint8_t B, uint8_t A);
 		void RenderText(std::string text);
-        void RenderLine();
 
         void RenderImage(const std::string& image, int x, int y, SDL_Rect* clip = 0);
         void RenderImage(const std::string& image, int x, int y, SDL_Rect* clip, double angle, SDL_Point* center, SDL_RendererFlip flip );

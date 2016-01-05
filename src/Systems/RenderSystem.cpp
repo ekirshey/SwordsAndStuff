@@ -52,10 +52,13 @@ void RenderSystem::BeforeObjectProcessing()
 
 void RenderSystem::AfterObjectProcessing()
 {
+
 	std::ostringstream strs;
-	if (ElapsedTime() > 0)
+	if (FrameTime() > 0)
 	{
-		strs << 1000 / ElapsedTime();
+		strs << 1000 / FrameTime();
+		strs << " ";
+		strs << GetECSManager()->EntityCount();
 		std::string str = "FPS: " + strs.str();
 		sdlmanager_->RenderText(str);
 	}
@@ -88,8 +91,8 @@ void RenderSystem::ProcessEntity(uint_fast64_t entity)
 
 		for (int i = 0; i < elements.size(); i++)
 		{
-			SDL_Rect rect{ elements[i].boundingrectangle->Rectangle().x- camera_->X(),elements[i].boundingrectangle->Rectangle().y - camera_->Y(),
-				elements[i].boundingrectangle->Rectangle().w,elements[i].boundingrectangle->Rectangle().h};
+			SDL_Rect rect{ elements[i].boundingrectangle->Rectangle().x - camera_->X(),elements[i].boundingrectangle->Rectangle().y - camera_->Y(),
+				elements[i].boundingrectangle->Rectangle().w,elements[i].boundingrectangle->Rectangle().h };
 			sdlmanager_->RenderOutlineRectangle(rect, 0x00, 0x00, 0x00, 0xFF);
 		}
 	}
@@ -99,11 +102,10 @@ void RenderSystem::ProcessEntity(uint_fast64_t entity)
 	{
 		if (SDL_HasIntersection(&cullrect, &camerarect))
 		{
-			//GetECSManager()->AssignEntityTag(entity, "ONSCREEN");
-			if (anglecomponent != nullptr)
+			if (rendercomponent->RenderAngle() != 0.0)
 			{
 				SDL_Point center = { (cliprect.w / 2), (cliprect.h / 2) };
-				sdlmanager_->RenderImage(rendercomponent->ImagePath(), positioncomponent->X() - camera_->X(), positioncomponent->Y() - camera_->Y(), &cliprect, anglecomponent->Angle(), &center, SDL_FLIP_NONE);
+				sdlmanager_->RenderImage(rendercomponent->ImagePath(), positioncomponent->X() - camera_->X(), positioncomponent->Y() - camera_->Y(), &cliprect, rendercomponent->RenderAngle(), &center, SDL_FLIP_NONE);
 			}
 			else
 				sdlmanager_->RenderImage(rendercomponent->ImagePath(), positioncomponent->X() - camera_->X(), positioncomponent->Y() - camera_->Y(), &cliprect);

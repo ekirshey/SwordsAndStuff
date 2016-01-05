@@ -13,11 +13,14 @@ class SpellCreationSystem : public QueueSystem
 		SpellCreationSystem(MessageQueue* messagequeue);
 		~SpellCreationSystem();
 
+		void AfterObjectProcessing();
+
 		uint_fast64_t ComponentBits() { return SpellCreationSystem::COMPONENTIDS; }    // TODO: Is this necessary or is just accessing the variable directly better?
 
 		void ProcessMessage(Message* data);
 
 	private:
+		std::vector<uint_fast64_t> castspells_;
 
 };
 

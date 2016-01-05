@@ -6,7 +6,6 @@
 #include <memory>
 #include "MessageQueue.h"
 
-
 class MessageQueueContainer
 {
 	public:
@@ -17,8 +16,8 @@ class MessageQueueContainer
 			messagequeues_.insert({ queuename, MessageQueue() });
 		}
 
-		void SendMessage(std::string queuename, Message* data) {
-			messagequeues_.at(queuename).AddData(data);
+		void SendMessage(std::string queuename, std::unique_ptr<Message> data) {
+			messagequeues_.at(queuename).AddData(std::move(data));
 		}
 
 		MessageQueue* GetQueue(std::string queuename) {

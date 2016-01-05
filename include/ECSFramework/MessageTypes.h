@@ -1,11 +1,14 @@
 #pragma once
+#include <string>
 #include "MessageQueueContainer.h"
 
-struct EntityMessage : public Message
+
+struct SpellMessage : public Message
 {
 	uint_fast64_t entity;
+	std::string spell;
 
-	EntityMessage() {}
-	EntityMessage(uint_fast64_t entity) : entity(entity) {}
-	EntityMessage(const EntityMessage& e) : entity(e.entity) {}
+	SpellMessage() {}
+	SpellMessage(uint_fast64_t entity, std::string spell) : entity(entity), spell(spell) {}
+	SpellMessage(const SpellMessage& e) : entity(e.entity),spell(e.spell) {}
 };

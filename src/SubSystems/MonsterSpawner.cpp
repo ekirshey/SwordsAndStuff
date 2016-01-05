@@ -55,11 +55,11 @@ void MonsterSpawner::SpawnMonsters()
             velocityx = (destinationx - startx)/605;
 
             monsterentity = ecsmanager_->CreateEntity();
-            ecsmanager_->AddComponentToEntity(monsterentity, new PositionComponent(startx,STARTY)); // TODO MAgic numbers
-            ecsmanager_->AddComponentToEntity(monsterentity, new VelocityComponent(velocityx,velocityy));
-            ecsmanager_->AddComponentToEntity(monsterentity, new AngleComponent(0.0)); // In degrees
-            ecsmanager_->AddComponentToEntity(monsterentity, new BoundingRectangleComponent(startx+5,STARTY+5,20,21));//30,30
-            ecsmanager_->AddComponentToEntity(monsterentity, new RenderComponent(path,rect));
+			ecsmanager_->AddComponentToEntity(monsterentity, std::unique_ptr<PositionComponent>(new PositionComponent(startx,STARTY))); // TODO MAgic numbers
+            ecsmanager_->AddComponentToEntity(monsterentity, std::unique_ptr<VelocityComponent>(new VelocityComponent(velocityx,velocityy)));
+            ecsmanager_->AddComponentToEntity(monsterentity, std::unique_ptr<AngleComponent>(new AngleComponent(0.0))); // In degrees
+            ecsmanager_->AddComponentToEntity(monsterentity, std::unique_ptr<BoundingRectangleComponent>(new BoundingRectangleComponent(startx+5,STARTY+5,20,21)));//30,30
+            ecsmanager_->AddComponentToEntity(monsterentity, std::unique_ptr<RenderComponent>(new RenderComponent(path,rect, 0.0)));
             ecsmanager_->AssignEntityTag(monsterentity, "MONSTER");
         }
     }

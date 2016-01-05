@@ -13,12 +13,8 @@ ECSManager::~ECSManager() {
 }
 
 int ECSManager::AddSystem(std::unique_ptr<System> system, int priority) {
-	return systemmanager_.AddSystem(std::move(system),priority);
-}
-
-int ECSManager::AddSystem(System* system, int priority) {
 	system->SetECSManager(this);
-    return systemmanager_.AddSystem(std::unique_ptr<System>(std::move(system)),priority);
+	return systemmanager_.AddSystem(std::move(system),priority);
 }
 
 System* ECSManager::GetSystem(int systemid) {
@@ -40,21 +36,12 @@ void ECSManager::RemoveEntity(uint_fast64_t entity) {
         RemoveEntityFromTag(entity,entitytags[i]);
 }
 
-Component* ECSManager::GetEntityComponent(uint_fast64_t entity, uint_fast64_t componentid) {
-    return entitymanager_.GetEntityComponent(entity,componentid);
-}
-
 std::vector<Component*> ECSManager::GetAllEntityComponents(uint_fast64_t entity) {
     return entitymanager_.GetAllEntityComponents(entity);
 }
 
 void ECSManager::AddComponentToEntity(uint_fast64_t entity, std::unique_ptr<Component> componenttoadd) {
     if ( entitymanager_.AddComponent(entity, std::move(componenttoadd)) )
-        systemmanager_.AddEntityToSystem(entity, entitymanager_.GetEntityComponentBits(entity));
-}
-
-void ECSManager::AddComponentToEntity(uint_fast64_t entity, Component* componenttoadd) {
-    if ( entitymanager_.AddComponent(entity, std::unique_ptr<Component>(std::move(componenttoadd))) )
         systemmanager_.AddEntityToSystem(entity, entitymanager_.GetEntityComponentBits(entity));
 }
 

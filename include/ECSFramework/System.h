@@ -12,7 +12,7 @@ class System
 {
 public:
 	static const uint_fast64_t COMPONENTIDS = 0x0;
-	System() {}
+	System();
 	System(ECSManager* ecsmanager);
 
 	virtual ~System() {}
@@ -36,15 +36,18 @@ public:
 
 	std::vector<uint_fast64_t> RelevantEntities();
 
-	int ElapsedTime() { return elapsedtime_; }
-	void SetElapsedTime(int elapsedtime) { elapsedtime_ = elapsedtime; }
+	int FrameTime() { return frametime_; }
+	void SetFrameTime(int frametime) { frametime_ = frametime; }
+
+	int TimeRunning() { return elapsedtime_; }
+	void UpdateTimeRunning(int runtime) { elapsedtime_ += runtime; }
 
 	std::string SystemName() { return systemname_; }
 	void SetSystemName(std::string name) { systemname_ = name; }
 
 	template<typename T>
 	T GetEntity(uint_fast64_t entityID, uint_fast64_t componentID) {
-		return static_cast<T>(ecsmanager_->GetEntityComponent(entityID, componentID));
+		return ecsmanager_->GetEntityComponent<T>(entityID, componentID);
 	}
 
 
@@ -53,6 +56,7 @@ private:
 	uint_fast64_t entitycount_;
 	ECSManager* ecsmanager_;
 	int elapsedtime_;
+	int frametime_;
 	std::string systemname_;	// For debugging purposes
 
 

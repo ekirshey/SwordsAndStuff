@@ -70,7 +70,7 @@ void MovementSystem::ProcessEntity(uint_fast64_t entity)
 	// This is the player so adjust his velocity based on inputs
 	if (inputcomponent != nullptr)
 	{
-		int velocity = 1.0 * ElapsedTime()*.25;
+		int velocity = 1.0 * FrameTime()*.25;
 		velocitycomponent->SetXVelocity(0);
 		if (inputcomponent->Pressed("MOVE_LEFT"))
 			velocitycomponent->SetXVelocity(-1 * velocity);

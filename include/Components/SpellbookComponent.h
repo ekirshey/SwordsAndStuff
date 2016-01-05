@@ -4,10 +4,7 @@
 #include <unordered_map>
 #include "../../include/ECSFramework/Component.h"
 #include "../Config/ComponentDefines.h"
-
-struct Spell {
-
-};
+#include "../Types/Spells.h"
 
 class SpellbookComponent : public Component
 {
@@ -16,8 +13,13 @@ class SpellbookComponent : public Component
 		SpellbookComponent() {}
 		~SpellbookComponent() {}
 
+		uint_fast64_t UniqueBits() const { return ID; }
+
+		void AddSpell(Spell spell) { spellbook_[spell.name] = spell; }
+		Spell* GetSpell(std::string name) { return &spellbook_[name]; }
+
 	private:
 		// Holds spell name and its "description" description might become a custom type and not a string
-		std::unordered_map<std::string, std::string> spellbook_;
+		std::unordered_map<std::string, Spell> spellbook_;
 };
 

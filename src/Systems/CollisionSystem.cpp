@@ -72,6 +72,7 @@ void CollisionSystem::SpatialCollision(uint_fast64_t entityA, uint_fast64_t enti
 		positioncomponentA->SetX(positioncomponentA->X() - velocitycomponentA->XVelocity());
 		positioncomponentA->SetY(positioncomponentA->Y() - velocitycomponentA->YVelocity());
 	}
+
 }
 
 void CollisionSystem::ProcessEntity(uint_fast64_t entity)
@@ -97,6 +98,5 @@ void CollisionSystem::ProcessEntity(uint_fast64_t entity)
 		}
 	}
 	
-
 }
 

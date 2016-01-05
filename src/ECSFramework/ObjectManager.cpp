@@ -18,10 +18,11 @@
 #include "../../include/Components/InputComponent.h"
 #include "../../include/Components/AngleComponent.h"
 #include "../../include/Components/VelocityComponent.h"
-#include "../../include/Components/ShootingComponent.h"
+#include "../../include/Components/SpellCastingComponent.h"
 #include "../../include/Components/RPGStatsComponent.h"
 #include "../../include/Components/InventoryComponent.h"
 #include "../../include/Components/TargetingComponent.h"
+#include "../../include/Components/EquipmentComponent.h"
 
 
 ObjectManager::ObjectManager()
@@ -59,6 +60,9 @@ void ObjectManager::Initialize(SDLManager* sdlmanager, GameWorld* gameworld, Cam
 
 	// Player
 	int playerentity = ecsmanager_.CreateEntity();
+	EquipmentComponent* playerequipment = new EquipmentComponent();
+	playerequipment->AddEquipment(std::unique_ptr<Item>(new Item("sword", MAINHAND, 0, ItemStats(10, 20))));
+
 	rect = { 0,0,26,26 }; // Removed top pixel due to a black line showing up when rotating
 						  //path = "media\\sprites\\shooter.png";
 	path = "..\\..\\..\\media\\Wikimedia\\Player2.png";
@@ -67,12 +71,12 @@ void ObjectManager::Initialize(SDLManager* sdlmanager, GameWorld* gameworld, Cam
 	ecsmanager_.AddComponentToEntity(playerentity, new VelocityComponent(0, 0));
 	ecsmanager_.AddComponentToEntity(playerentity, new RenderComponent(path, rect));
 	ecsmanager_.AddComponentToEntity(playerentity, new BoundingRectangleComponent((SCREEN_WIDTH / 2) - (34 / 2) + 8, 400 + 8, 24, 24)); // TODO Magic Numbers
-	//ecsmanager_.AddComponentToEntity(playerentity, new CollisionComponent());
+	ecsmanager_.AddComponentToEntity(playerentity, new SpellCastingComponent());
 	ecsmanager_.AddComponentToEntity(playerentity, new RPGStatsComponent());
+	ecsmanager_.AddComponentToEntity(playerentity, playerequipment);
 	ecsmanager_.AddComponentToEntity(playerentity, new TargetingComponent());
 	ecsmanager_.AssignEntityTag(playerentity, "PLAYER");
 	std::cout << playerentity << std::endl;
-	
 	
 	CameraSystem* camerasystem = static_cast<CameraSystem*>(ecsmanager_.GetSystem(cameraindex));
 	if (camerasystem != nullptr)

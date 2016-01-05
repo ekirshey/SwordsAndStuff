@@ -2,15 +2,18 @@
 #include "../../include/ECSFramework/ECSManager.h"
 #include "../../include/Systems/SpellCreationSystem.h"
 #include "../../include/ECSFramework/MessageTypes.h"
+#include "../../include/Components/SpellCastingComponent.h"
+#include "../../include/Components/SpellbookComponent.h"
+#include "../../include/Components/EquipmentComponent.h"
+#include "../../include/GameMechanics/Spells/SpellFactory.h"
 
 
 SpellCreationSystem::SpellCreationSystem(MessageQueue* messagequeue) : QueueSystem(messagequeue) {
 	SetSystemName("SpellCreationSystem");
-	
 }
 
 SpellCreationSystem::~SpellCreationSystem() {
-	//dtor
+
 }
 
 
@@ -31,6 +34,49 @@ void SpellCreationSystem::ProcessMessage(Message* data) {
 				Finish processing
 	*/
 
-	EntityMessage* msg = static_cast<EntityMessage*>(data);
+	SpellMessage* msg = static_cast<SpellMessage*>(data);
+	SpellCastingComponent* spellcastingcomponent = GetEntity<SpellCastingComponent*>(msg->entity, SpellCastingComponentID);
+	SpellbookComponent* spellbookcomponent = GetEntity<SpellbookComponent*>(msg->entity, SpellbookComponentID);
+	EquipmentComponent* equipmentcomponent = GetEntity<EquipmentComponent*>(msg->entity, EquipmentComponentID);
+	
+	if (spellcastingcomponent->SpellToCast() == "NO_CAST") {
 
+		// Check if spell is still coolingdown
+		if ((TimeRunning() - spellbookcomponent->GetSpell(msg->spell)->lastcast) >= spellbookcomponent->GetSpell(msg->spell)->cooldown) {
+			// Check any other spell casting requirements
+			spellcastingcomponent->SetSpellToCast(msg->spell);
+			spellcastingcomponent->SetCastTime(spellbookcomponent->GetSpell(msg->spell)->casttime);
+			spellcastingcomponent->SetStartTimeOfCast(TimeRunning());
+			castspells_.push_back(msg->entity);
+		}
+	}
+
+}
+
+void SpellCreationSystem::AfterObjectProcessing() {
+	
+	std::string spellname;
+	Spell* spell;
+	int spellid = -1;
+	for (int i = castspells_.size()-1; i >= 0; i--) {
+
+		SpellCastingComponent* spellcastingcomponent = GetEntity<SpellCastingComponent*>(castspells_[i], SpellCastingComponentID);
+		SpellbookComponent* spellbookcomponent = GetEntity<SpellbookComponent*>(castspells_[i], SpellbookComponentID);
+
+		spellname = spellcastingcomponent->SpellToCast();
+		spell = spellbookcomponent->GetSpell(spellname);
+
+		if (spellcastingcomponent->CastTime() <= (TimeRunning() - spellcastingcomponent->StartTimeOfCast()) ) {
+
+			// Create spell
+			spellid = SpellFactory::CreateSpellEntity(GetECSManager(), castspells_[i], spell); 
+
+			// Reset Spell
+			spellcastingcomponent->SetSpellToCast("NO_CAST");
+			spell->lastcast = TimeRunning();
+			castspells_.pop_back();
+
+		}
+	}
+	
 }

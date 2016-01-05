@@ -49,7 +49,7 @@ void InputSystem::ProcessEntity(uint_fast64_t entity)
 
 	if (inputcomponent->Pressed("MELEE"))
 	{
-		GetECSManager()->GetQueues().SendMessage("SpellCreation", new EntityMessage(entity));
+		GetECSManager()->GetQueues().SendMessage("SpellCreation", std::unique_ptr<SpellMessage>(new SpellMessage(entity,"MELEE")));
 	}
 
 
