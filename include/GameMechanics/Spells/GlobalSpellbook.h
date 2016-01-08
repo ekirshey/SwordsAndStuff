@@ -8,8 +8,8 @@ class GlobalSpellbook
 	public:
 		GlobalSpellbook() {}
 
-		Spell CreateSpell(std::string name, int casttime, int cooldown, std::string graphic) { 
-			spellbook_[name] = Spell(name, casttime, cooldown, graphic);
+		Spell CreateSpell(std::string name, int casttime, int cooldown, int duration, std::string graphic) {
+			spellbook_[name] = Spell(name, casttime, cooldown, duration, graphic);
 			return spellbook_[name];
 		}
 

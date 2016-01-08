@@ -11,6 +11,7 @@ struct ScriptedEvent{
 class AIScripted : public AITemplate {
 	public:
 		AIScripted() {}
+		~AIScripted() {}
 		AIScripted(std::vector<ScriptedEvent> v) : scriptedevents_(v) {}
 	private:
 		std::vector<ScriptedEvent> scriptedevents_;

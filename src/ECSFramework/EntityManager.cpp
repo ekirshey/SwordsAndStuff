@@ -74,9 +74,6 @@ bool EntityManager::AddComponent(uint_fast64_t UUID, std::unique_ptr<Component> 
             // I'm moving the pointer so either eaccess the entitylist or do this last if you need the ID bits
             entitylist_[UUID].at(componentid) = std::move(componenttoadd);
 
-            // How to access an entity
-            //PositionComponent* p = static_cast<PositionComponent*>(entitylist_[UUID].at(componentid).get());
-            //std::cout << p->X() << " "<< p->Y() << std::endl;
             returnvalue = true;
         }
         else

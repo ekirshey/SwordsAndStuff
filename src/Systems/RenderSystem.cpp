@@ -85,6 +85,7 @@ void RenderSystem::ProcessEntity(uint_fast64_t entity)
 
 	SDL_Rect cullrect = {positioncomponent->X(), positioncomponent->Y(), cliprect.w, cliprect.h};
 
+/*
 	if (entity == 0)
 	{
 		std::vector<QuadElement> elements = gameworld_->SparseGridQueryRange(entityrect->Rectangle());
@@ -96,6 +97,7 @@ void RenderSystem::ProcessEntity(uint_fast64_t entity)
 			sdlmanager_->RenderOutlineRectangle(rect, 0x00, 0x00, 0x00, 0xFF);
 		}
 	}
+*/
 
     // TODO This implies that you NEED a camera. Is this true? I dont think it should be
 	if (rendercomponent != nullptr)

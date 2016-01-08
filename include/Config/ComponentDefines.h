@@ -16,3 +16,4 @@
 #define SpellCastingComponentID			  0x2000
 #define EquipmentComponentID			  0x4000
 #define AIComponentID					  0x8000
+#define ScriptComponentID			      0x10000

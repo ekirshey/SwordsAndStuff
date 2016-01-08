@@ -68,7 +68,8 @@ void GameStateManager::Run()
             }
 
             framecounter++;
-/*
+/*		
+			// REplaced with VSYNC
             int frameTicks = SDL_GetTicks() - currenttime;
 
             if( frameTicks < SCREEN_TICK_PER_FRAME )

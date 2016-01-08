@@ -34,20 +34,25 @@ void SpellCreationSystem::ProcessMessage(Message* data) {
 				Finish processing
 	*/
 
-	SpellMessage* msg = static_cast<SpellMessage*>(data);
-	SpellCastingComponent* spellcastingcomponent = GetEntity<SpellCastingComponent*>(msg->entity, SpellCastingComponentID);
-	SpellbookComponent* spellbookcomponent = GetEntity<SpellbookComponent*>(msg->entity, SpellbookComponentID);
-	EquipmentComponent* equipmentcomponent = GetEntity<EquipmentComponent*>(msg->entity, EquipmentComponentID);
-	
-	if (spellcastingcomponent->SpellToCast() == "NO_CAST") {
+	// Check for valid spell message
+	if (auto msg = dynamic_cast<SpellMessage*>(data))
+	{
+		auto spellcastingcomponent = GetEntity<SpellCastingComponent*>(msg->entity, SpellCastingComponentID);
+		auto spellbookcomponent = GetEntity<SpellbookComponent*>(msg->entity, SpellbookComponentID);
+		auto equipmentcomponent = GetEntity<EquipmentComponent*>(msg->entity, EquipmentComponentID);
 
-		// Check if spell is still coolingdown
-		if ((TimeRunning() - spellbookcomponent->GetSpell(msg->spell)->lastcast) >= spellbookcomponent->GetSpell(msg->spell)->cooldown) {
-			// Check any other spell casting requirements
-			spellcastingcomponent->SetSpellToCast(msg->spell);
-			spellcastingcomponent->SetCastTime(spellbookcomponent->GetSpell(msg->spell)->casttime);
-			spellcastingcomponent->SetStartTimeOfCast(TimeRunning());
-			castspells_.push_back(msg->entity);
+		Spell* queuedspell = spellbookcomponent->GetSpell(msg->spell);
+
+		if (spellcastingcomponent->SpellToCast() == "NO_CAST") {
+			// Check if spell is still coolingdown
+			if (((TimeRunning() - queuedspell->lastcast) >= (queuedspell->cooldown + queuedspell->duration))) {
+				// Check any other spell casting requirements
+				spellcastingcomponent->SetSpellToCast(msg->spell);
+				spellcastingcomponent->SetCastTime(spellbookcomponent->GetSpell(msg->spell)->casttime);
+				spellcastingcomponent->SetStartTimeOfCast(TimeRunning());
+				castspells_.push_back(msg->entity);
+
+			}
 		}
 	}
 
@@ -58,6 +63,7 @@ void SpellCreationSystem::AfterObjectProcessing() {
 	std::string spellname;
 	Spell* spell;
 	int spellid = -1;
+
 	for (int i = castspells_.size()-1; i >= 0; i--) {
 
 		SpellCastingComponent* spellcastingcomponent = GetEntity<SpellCastingComponent*>(castspells_[i], SpellCastingComponentID);
@@ -66,10 +72,10 @@ void SpellCreationSystem::AfterObjectProcessing() {
 		spellname = spellcastingcomponent->SpellToCast();
 		spell = spellbookcomponent->GetSpell(spellname);
 
+		
 		if (spellcastingcomponent->CastTime() <= (TimeRunning() - spellcastingcomponent->StartTimeOfCast()) ) {
-
 			// Create spell
-			spellid = SpellFactory::CreateSpellEntity(GetECSManager(), castspells_[i], spell); 
+			spellid = SpellFactory::CreateSpellEntity(GetECSManager(), castspells_[i], *spell); 
 
 			// Reset Spell
 			spellcastingcomponent->SetSpellToCast("NO_CAST");
@@ -78,5 +84,5 @@ void SpellCreationSystem::AfterObjectProcessing() {
 
 		}
 	}
-	
+
 }

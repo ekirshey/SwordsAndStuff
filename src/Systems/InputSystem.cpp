@@ -22,11 +22,8 @@ void InputSystem::ProcessEntity(uint_fast64_t entity)
 {
     int x, y;
 
-    // Components to use
-	InputComponent* inputcomponent;
-
     // Get Relevant Component Data
-	inputcomponent = GetEntity<InputComponent*>(entity, InputComponent::ID);
+	auto inputcomponent = GetEntity<InputComponent*>(entity, InputComponent::ID);
 
     mousestate_ = sdlmanager_->GetMouseState();
     keyboardstate_ = sdlmanager_->GetKeyBoardState();

@@ -15,8 +15,9 @@ class MessageQueue
 		void AddData(std::unique_ptr<Message> datum) {
 			// Dont add data to the queue if we are in the middle of processing
 			// Add it to a staging area first
-			if (consumers_ > 1 && (consumed_ != 0 || indextracker_ > 0))
+			if (consumers_ > 1 && (consumed_ != 0 || indextracker_ > 0)) {
 				stageddata_.push_front(std::move(datum));
+			}
 			else
 			{
 				data_.push_front(std::move(datum));

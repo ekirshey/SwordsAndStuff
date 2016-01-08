@@ -12,6 +12,7 @@
 #include "../../../include/Systems/PlayerTargetingSystem.h"
 #include "../../../include/Systems/SpellCreationSystem.h"
 #include "../../../include/Systems/AISystem.h"
+#include "../../../include/Systems/ScriptedEntitySystem.h"
 
 #include "../../../include/Components/BoundingRectangleComponent.h"
 #include "../../../include/Components/RenderComponent.h"
@@ -47,7 +48,8 @@ void GameRunningState::InitializeState()
 
 	// Set up Game Data
 	spellbook_ = std::unique_ptr<GlobalSpellbook>(new GlobalSpellbook());
-	spellbook_->CreateSpell("MELEE", 0, 0, "../../../media/sprites/sword.png");	// index and name?? probably can be better
+	// Name, Cast time, cooldown, duration (milliseconds)
+	spellbook_->CreateSpell("MELEE", 0, 100, 300, "../../../media/sprites/sword.png");	// index and name?? probably can be better
 
 	// Set up ECS. This was originally in some wrapper object and I dont know why I did that...
 	ecsmanager_ = std::unique_ptr<ECSManager>(new ECSManager());
@@ -70,14 +72,15 @@ void GameRunningState::InitializeECS()
 	ecsmanager_->GetQueues().AddQueue("SpellCreation");
 
 	// Build systems and entities
-	ecsmanager_->AddSystem(std::unique_ptr<InputSystem>(new InputSystem(GetSDLManager())), priority++);
-	ecsmanager_->AddSystem(std::unique_ptr<AISystem>(new AISystem()), priority++);
-	ecsmanager_->AddSystem(std::unique_ptr<MovementSystem>(new MovementSystem(gameworld_.get())), priority++);
-	ecsmanager_->AddSystem(std::unique_ptr<SpellCreationSystem>(new SpellCreationSystem(ecsmanager_->GetQueues().GetQueue("SpellCreation"))), priority++);
-	ecsmanager_->AddSystem(std::unique_ptr<CollisionSystem>(new CollisionSystem(gameworld_.get())), priority++);
-	ecsmanager_->AddSystem(std::unique_ptr<PlayerTargetingSystem>( new PlayerTargetingSystem(*GetSDLManager(), *gameworld_.get(), "..\\..\\..\\media\\reticule.png")), priority++);
-	cameraindex = ecsmanager_->AddSystem(std::unique_ptr<CameraSystem>(new CameraSystem(camera_.get())), priority++);
-	ecsmanager_->AddSystem(std::unique_ptr<RenderSystem>(new RenderSystem(GetSDLManager(), gameworld_.get(), camera_.get())), priority++);
+	ecsmanager_->AddSystem(std::make_unique<InputSystem>(GetSDLManager()), priority++);
+	//ecsmanager_->AddSystem(std::unique_ptr<AISystem>(new AISystem()), priority++);
+	ecsmanager_->AddSystem(std::make_unique<MovementSystem>(gameworld_.get()), priority++);
+	ecsmanager_->AddSystem(std::make_unique<ScriptedEntitySystem>(), priority++);	// Not 100% sure on the placement 
+	ecsmanager_->AddSystem(std::make_unique<SpellCreationSystem>(ecsmanager_->GetQueues().GetQueue("SpellCreation")), priority++);
+	ecsmanager_->AddSystem(std::make_unique<CollisionSystem>(gameworld_.get()), priority++);
+	ecsmanager_->AddSystem(std::make_unique<PlayerTargetingSystem>(*GetSDLManager(), *gameworld_.get(), "..\\..\\..\\media\\reticule.png"), priority++);
+	cameraindex = ecsmanager_->AddSystem(std::make_unique<CameraSystem>(camera_.get()), priority++);
+	ecsmanager_->AddSystem(std::make_unique<RenderSystem>(GetSDLManager(), gameworld_.get(), camera_.get()), priority++);
 
 	// Player
 	int playerentity = ecsmanager_->CreateEntity();
@@ -123,14 +126,8 @@ void GameRunningState::InitializeECS()
 			if (j % 2 == 0) mod = 1;
 			rect = { (i % 5) * 22,mod * 28,22,28 };
 			ecsmanager_->AddComponentToEntity<PositionComponent>(monsterentity, (50 + i * 40) + i * 23, 50 + j * 29); // TODO MAgic numbers
-																														 /*if (i <= 4)
-																														 ecsmanager->AddComponentToEntity(monsterentity, new VelocityComponent(1, 0));
-																														 else if (i >= 5)
-																														 ecsmanager->AddComponentToEntity(monsterentity, new VelocityComponent(-1, 0));
-																														 else*/
 			ecsmanager_->AddComponentToEntity<VelocityComponent>(monsterentity, 0, 0 );
 			ecsmanager_->AddComponentToEntity<BoundingRectangleComponent>(monsterentity, (55 + i * 40) + i * 23, 55 + j * 29, 20, 21);//30,30
-																																		 //ecsmanager->AddComponentToEntity(monsterentity, new CollisionComponent());
 			ecsmanager_->AddComponentToEntity<RenderComponent>(monsterentity, path, rect, 0.0 );
 			ecsmanager_->AssignEntityTag(monsterentity, "MONSTER");
 			//std::cout << monsterentity << std::endl;
