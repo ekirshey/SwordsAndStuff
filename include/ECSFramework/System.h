@@ -46,7 +46,7 @@ public:
 	void SetSystemName(std::string name) { systemname_ = name; }
 
 	template<typename T>
-	T GetEntity(uint_fast64_t entityID, uint_fast64_t componentID) {
+	T GetEntityComponent(uint_fast64_t entityID, uint_fast64_t componentID) {
 		return ecsmanager_->GetEntityComponent<T>(entityID, componentID);
 	}
 

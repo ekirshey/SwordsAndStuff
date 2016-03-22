@@ -15,8 +15,8 @@ ScriptedEntitySystem::~ScriptedEntitySystem() {
 
 void ScriptedEntitySystem::ProcessEntity(uint_fast64_t entity) {
 
-	auto script = GetEntity<ScriptComponent*>(entity, ScriptComponentID);
-	auto entityposition = GetEntity<PositionComponent*>(entity, PositionComponentID);
+	auto script = GetEntityComponent<ScriptComponent*>(entity, ScriptComponentID);
+	auto entityposition = GetEntityComponent<PositionComponent*>(entity, PositionComponentID);
 	int currentstep = script->CurrentStep();
 
 	auto steps = script->ScriptVector();
@@ -38,7 +38,7 @@ void ScriptedEntitySystem::ProcessEntity(uint_fast64_t entity) {
 		// If theres an anchor, set position to anchorpos+steppos
 		// otherwise just set the position to the steppos
 		if (script->GetAnchor() != -1) {
-			auto anchorposition = GetEntity<PositionComponent*>(script->GetAnchor(), PositionComponentID);
+			auto anchorposition = GetEntityComponent<PositionComponent*>(script->GetAnchor(), PositionComponentID);
 			if (anchorposition != nullptr) {
 				entityposition->SetX(anchorposition->X() + steps[currentstep].dX);
 				entityposition->SetY(anchorposition->Y() + steps[currentstep].dY);

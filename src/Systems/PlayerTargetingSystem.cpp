@@ -37,9 +37,9 @@ void PlayerTargetingSystem::UpdateTargetReticule()
 
 	if (playertargetingcomponent_->Target() != NOTARGET)
 	{
-		reticuleposition = GetEntity<PositionComponent*>(targetreticuleid_, PositionComponent::ID);
-		targetposition = GetEntity<PositionComponent*>(playertargetingcomponent_->Target(), PositionComponent::ID);
-		reticulerender = GetEntity<RenderComponent*>(targetreticuleid_, RenderComponent::ID);
+		reticuleposition = GetEntityComponent<PositionComponent*>(targetreticuleid_, PositionComponent::ID);
+		targetposition = GetEntityComponent<PositionComponent*>(playertargetingcomponent_->Target(), PositionComponent::ID);
+		reticulerender = GetEntityComponent<RenderComponent*>(targetreticuleid_, RenderComponent::ID);
 
 		reticuleposition->SetX(targetposition->X());
 		reticuleposition->SetY(targetposition->Y());
@@ -59,7 +59,7 @@ void PlayerTargetingSystem::ProcessEntities()
 	if (player_ == NOTARGET)
 	{
 		player_ = GetECSManager()->GetAssociatedEntities("PLAYER")[0];
-		playertargetingcomponent_ = GetEntity<TargetingComponent*>(player_, TargetingComponent::ID);
+		playertargetingcomponent_ = GetEntityComponent<TargetingComponent*>(player_, TargetingComponent::ID);
 		playertargetingcomponent_->SetTarget(NOTARGET);
 		if (playertargetingcomponent_ == nullptr)
 			std::cout << "PLAYERTARGETINGSYSTEM:: No Player Targeting Component, peace out!" << std::endl;

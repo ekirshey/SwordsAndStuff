@@ -23,7 +23,7 @@ void InputSystem::ProcessEntity(uint_fast64_t entity)
     int x, y;
 
     // Get Relevant Component Data
-	auto inputcomponent = GetEntity<InputComponent*>(entity, InputComponent::ID);
+	auto inputcomponent = GetEntityComponent<InputComponent*>(entity, InputComponent::ID);
 
     mousestate_ = sdlmanager_->GetMouseState();
     keyboardstate_ = sdlmanager_->GetKeyBoardState();
@@ -46,7 +46,7 @@ void InputSystem::ProcessEntity(uint_fast64_t entity)
 
 	if (inputcomponent->Pressed("MELEE"))
 	{
-		GetECSManager()->GetQueues().SendMessage("SpellCreation", std::unique_ptr<SpellMessage>(new SpellMessage(entity,"MELEE")));
+		GetECSManager()->GetQueues().SendMessage<SpellMessage>("SpellCreation", entity, "MELEE");
 	}
 
 

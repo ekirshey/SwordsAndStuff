@@ -38,11 +38,11 @@ void MovementSystem::AfterObjectProcessing()
 	for (int i = 0; i < staticobjects.size(); i++)
 	{
 		entitytoinsert.entityid = staticobjects[i];
-		entitytoinsert.boundingrectangle = GetEntity<BoundingRectangleComponent*>(staticobjects[i], BoundingRectangleComponentID);
+		entitytoinsert.boundingrectangle = GetEntityComponent<BoundingRectangleComponent*>(staticobjects[i], BoundingRectangleComponentID);
 
 		if (entitytoinsert.boundingrectangle != nullptr)
 		{
-			entitytoinsert.positioncomponent = GetEntity<PositionComponent*>(staticobjects[i], PositionComponentID);
+			entitytoinsert.positioncomponent = GetEntityComponent<PositionComponent*>(staticobjects[i], PositionComponentID);
 			entitytoinsert.velocitycomponent = nullptr; // static objects dont have a collision component
 
 			gameworld_->SparseGridInsert(entitytoinsert);
@@ -62,10 +62,10 @@ void MovementSystem::ProcessEntity(uint_fast64_t entity)
 	InputComponent* inputcomponent;
 
     // Get Relevant Component Data
-    positioncomponent = GetEntity<PositionComponent*>(entity,PositionComponentID);
-    velocitycomponent = GetEntity<VelocityComponent*>(entity,VelocityComponentID);
-    boundingrectanglecomponent = GetEntity<BoundingRectangleComponent*>(entity,BoundingRectangleComponentID);
-	inputcomponent = GetEntity<InputComponent*>(entity, InputComponent::ID);
+    positioncomponent = GetEntityComponent<PositionComponent*>(entity,PositionComponentID);
+    velocitycomponent = GetEntityComponent<VelocityComponent*>(entity,VelocityComponentID);
+    boundingrectanglecomponent = GetEntityComponent<BoundingRectangleComponent*>(entity,BoundingRectangleComponentID);
+	inputcomponent = GetEntityComponent<InputComponent*>(entity, InputComponent::ID);
 
 	// This is the player so adjust his velocity based on inputs
 	if (inputcomponent != nullptr)

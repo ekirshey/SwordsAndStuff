@@ -76,10 +76,10 @@ void RenderSystem::ProcessEntity(uint_fast64_t entity)
     BoundingRectangleComponent* entityrect;
 
     // Get Relevant Component Data
-    positioncomponent = GetEntity<PositionComponent*>(entity,PositionComponent::ID);
-    rendercomponent = GetEntity<RenderComponent*>(entity,RenderComponent::ID);
-    anglecomponent = GetEntity<AngleComponent*>(entity,AngleComponent::ID);
-    entityrect = GetEntity<BoundingRectangleComponent*>(entity,BoundingRectangleComponent::ID);
+    positioncomponent = GetEntityComponent<PositionComponent*>(entity,PositionComponent::ID);
+    rendercomponent = GetEntityComponent<RenderComponent*>(entity,RenderComponent::ID);
+    anglecomponent = GetEntityComponent<AngleComponent*>(entity,AngleComponent::ID);
+    entityrect = GetEntityComponent<BoundingRectangleComponent*>(entity,BoundingRectangleComponent::ID);
 
     SDL_Rect cliprect = rendercomponent->ClipRect();
 

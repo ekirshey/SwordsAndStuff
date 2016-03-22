@@ -45,6 +45,7 @@ void ECSManager::AddComponentToEntity(uint_fast64_t entity, std::unique_ptr<Comp
         systemmanager_.AddEntityToSystem(entity, entitymanager_.GetEntityComponentBits(entity));
 }
 
+
 void ECSManager::RemoveComponentFromEntity(uint_fast64_t entity, uint_fast64_t componentid) {
     if ( entitymanager_.RemoveComponent(entity,componentid) )
         systemmanager_.RemoveEntityFromSystems(entity, entitymanager_.GetEntityComponentBits(entity));

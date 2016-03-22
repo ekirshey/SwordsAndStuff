@@ -24,8 +24,8 @@ bool CameraSystem::SetFocus(uint_fast64_t focus)
 	bool focusset = false;
 	focus_ = focus;
 
-	focusposition_ = GetEntity<PositionComponent*>(focus_, PositionComponentID);
-	focusvelocity_ = GetEntity<VelocityComponent*>(focus_, VelocityComponentID);
+	focusposition_ = GetEntityComponent<PositionComponent*>(focus_, PositionComponentID);
+	focusvelocity_ = GetEntityComponent<VelocityComponent*>(focus_, VelocityComponentID);
 	
 	if (focusposition_ != nullptr && focusvelocity_ != nullptr)
 		focusset = true;

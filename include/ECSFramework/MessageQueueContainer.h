@@ -16,8 +16,9 @@ class MessageQueueContainer
 			messagequeues_.insert({ queuename, MessageQueue() });
 		}
 
-		void SendMessage(std::string queuename, std::unique_ptr<Message> data) {
-			messagequeues_.at(queuename).AddData(std::move(data));
+		template<typename T, typename... Args>
+		void SendMessage(std::string queuename, Args... args) {
+			messagequeues_.at(queuename).AddData(std::unique_ptr<T>( new T(args...) ) );
 		}
 
 		MessageQueue* GetQueue(std::string queuename) {

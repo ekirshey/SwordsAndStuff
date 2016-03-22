@@ -67,14 +67,13 @@ bool EntityManager::AddComponent(uint_fast64_t UUID, std::unique_ptr<Component> 
     {
         if ( !(entitycomponentbits_[UUID] & componenttoadd->UniqueBits()) )
         {
-            componentid = fastlog(componenttoadd->UniqueBits());
+			componentid = fastlog(componenttoadd->UniqueBits());
+			entitycomponentbits_[UUID] |= componenttoadd->UniqueBits();
 
-            entitycomponentbits_[UUID] |= componenttoadd->UniqueBits();
+			// I'm moving the pointer so either eaccess the entitylist or do this last if you need the ID bits
+			entitylist_[UUID].at(componentid) = std::move(componenttoadd);
 
-            // I'm moving the pointer so either eaccess the entitylist or do this last if you need the ID bits
-            entitylist_[UUID].at(componentid) = std::move(componenttoadd);
-
-            returnvalue = true;
+			returnvalue = true;
         }
         else
             std::cout << "Duplicate Component ID " << componenttoadd->UniqueBits() << std::endl;

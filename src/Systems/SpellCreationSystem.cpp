@@ -7,6 +7,7 @@
 #include "../../include/Components/EquipmentComponent.h"
 #include "../../include/GameMechanics/Spells/SpellFactory.h"
 
+#include <Windows.h>
 
 SpellCreationSystem::SpellCreationSystem(MessageQueue* messagequeue) : QueueSystem(messagequeue) {
 	SetSystemName("SpellCreationSystem");
@@ -33,13 +34,21 @@ void SpellCreationSystem::ProcessMessage(Message* data) {
 			If spellname contains NOCAST
 				Finish processing
 	*/
+	LARGE_INTEGER StartingTime, EndingTime, ElapsedMicroseconds;
+	LARGE_INTEGER Frequency;
+
+	QueryPerformanceFrequency(&Frequency);
+	QueryPerformanceCounter(&StartingTime);
 
 	// Check for valid spell message
-	if (auto msg = dynamic_cast<SpellMessage*>(data))
+	if (data->GetID() == SPELLMESSAGEID)// auto msg = dynamic_cast<SpellMessage*>(data))
 	{
-		auto spellcastingcomponent = GetEntity<SpellCastingComponent*>(msg->entity, SpellCastingComponentID);
-		auto spellbookcomponent = GetEntity<SpellbookComponent*>(msg->entity, SpellbookComponentID);
-		auto equipmentcomponent = GetEntity<EquipmentComponent*>(msg->entity, EquipmentComponentID);
+		auto msg = static_cast<SpellMessage*>(data);
+		QueryPerformanceCounter(&EndingTime);
+		ElapsedMicroseconds.QuadPart = EndingTime.QuadPart - StartingTime.QuadPart;
+		auto spellcastingcomponent = GetEntityComponent<SpellCastingComponent*>(msg->entity, SpellCastingComponentID);
+		auto spellbookcomponent = GetEntityComponent<SpellbookComponent*>(msg->entity, SpellbookComponentID);
+		auto equipmentcomponent = GetEntityComponent<EquipmentComponent*>(msg->entity, EquipmentComponentID);
 
 		Spell* queuedspell = spellbookcomponent->GetSpell(msg->spell);
 
@@ -54,7 +63,16 @@ void SpellCreationSystem::ProcessMessage(Message* data) {
 
 			}
 		}
+
 	}
+	else {
+		std::cout << "Invalid message type! Expected: SpellMessage Receieved: " << typeid(*data).name() << std::endl;
+	}
+
+	ElapsedMicroseconds.QuadPart *= 1000000;
+	ElapsedMicroseconds.QuadPart /= Frequency.QuadPart;
+
+	//std::cout << ElapsedMicroseconds.QuadPart << std::endl;
 
 }
 
@@ -66,8 +84,8 @@ void SpellCreationSystem::AfterObjectProcessing() {
 
 	for (int i = castspells_.size()-1; i >= 0; i--) {
 
-		SpellCastingComponent* spellcastingcomponent = GetEntity<SpellCastingComponent*>(castspells_[i], SpellCastingComponentID);
-		SpellbookComponent* spellbookcomponent = GetEntity<SpellbookComponent*>(castspells_[i], SpellbookComponentID);
+		SpellCastingComponent* spellcastingcomponent = GetEntityComponent<SpellCastingComponent*>(castspells_[i], SpellCastingComponentID);
+		SpellbookComponent* spellbookcomponent = GetEntityComponent<SpellbookComponent*>(castspells_[i], SpellbookComponentID);
 
 		spellname = spellcastingcomponent->SpellToCast();
 		spell = spellbookcomponent->GetSpell(spellname);

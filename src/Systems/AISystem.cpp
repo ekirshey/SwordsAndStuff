@@ -16,7 +16,7 @@ AISystem::~AISystem() {
 void AISystem::ProcessEntity(uint_fast64_t entity) {
 	// Do something
 
-	AIComponent* aicomponent = GetEntity<AIComponent*>(entity, AIComponentID);
+	AIComponent* aicomponent = GetEntityComponent<AIComponent*>(entity, AIComponentID);
 
 		
 }
