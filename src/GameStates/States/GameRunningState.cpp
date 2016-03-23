@@ -57,7 +57,7 @@ void GameRunningState::InitializeState()
 		{ ScriptStep(8,0,50), ScriptStep(13,5,50), ScriptStep(18,10,200) },
 		{ ScriptStep(0,0,50), ScriptStep(-5,5,50), ScriptStep(-10,10,200) }
 	};
-	spellbook_->CreateSpell("MELEE", 0, 100, 300, "../../../media/sprites/sword.png", spellscript);
+	spellbook_->CreateSpell(0, "MELEE", 0, 100, 300, "../../../media/sprites/sword.png", spellscript);
 
 	// Set up ECS. This was originally in some wrapper object and I dont know why I did that...
 	ecsmanager_ = std::unique_ptr<ECSManager>(new ECSManager());
@@ -100,7 +100,8 @@ void GameRunningState::InitializeECS()
 	playerequipment->AddEquipment(std::unique_ptr<Item>(new Item("sword", MAINHAND, 0, ItemStats(10, 20))));
 
 	auto playerspellbook = std::make_unique<SpellbookComponent>();
-	playerspellbook->AddSpell(spellbook_->GetSpell("MELEE"));
+	Spell test = spellbook_->GetSpell(0);
+	playerspellbook->AddSpell(spellbook_->GetSpell(0));
 
 	path = "../../../media/sprites/Player2.png";
 

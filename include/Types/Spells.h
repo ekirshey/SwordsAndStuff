@@ -1,9 +1,11 @@
 #pragma once
 #include <string>
+#include <iostream>
 #include "AITypes\AITemplate.h"
 #include "../Components/ScriptComponent.h"
 
 struct Spell {
+	int spellId;
 	std::string name;
 	int casttime;
 	int cooldown;
@@ -15,19 +17,21 @@ struct Spell {
 	//std::unique_ptr<AITemplate> ai;
 	//interruptible??
 	
-	Spell() : name(""), casttime(0), cooldown(0), duration(0), lastcast(0), graphic("") {}
-
-	Spell(std::string name, int casttime, int cooldown, int duration, std::string graphic, std::vector<std::vector<ScriptStep>> script) :
-		name(name), casttime(casttime), cooldown(cooldown), duration(duration), lastcast(0), graphic(graphic), spellscript(script), cancelable(false) {
+	Spell() : spellId(0xFFFF), name(""), casttime(0), cooldown(0), duration(0), lastcast(0), graphic("") {
+		std::cout << "Go fuck yourself :) " << std::endl;
 	}
 
-	Spell(std::string name, int casttime, int cooldown, int duration, std::string graphic, std::vector<std::vector<ScriptStep>> script, bool cancelable) :
-		name(name), casttime(casttime), cooldown(cooldown), duration(duration), lastcast(0), graphic(graphic), spellscript(script), cancelable(cancelable) {
+	Spell(int spellId, std::string name, int casttime, int cooldown, int duration, std::string graphic, std::vector<std::vector<ScriptStep>> script) :
+		spellId(spellId), name(name), casttime(casttime), cooldown(cooldown), duration(duration), lastcast(0), graphic(graphic), spellscript(script), cancelable(false) {
+		std::cout << "Spell " << spellId << std::endl;
+	}
+
+	Spell(int spellId, std::string name, int casttime, int cooldown, int duration, std::string graphic, std::vector<std::vector<ScriptStep>> script, bool cancelable) :
+		spellId(spellId), name(name), casttime(casttime), cooldown(cooldown), duration(duration), lastcast(0), graphic(graphic), spellscript(script), cancelable(cancelable) {
 	}
 
 	Spell(const Spell& s) :
-		name(s.name), casttime(s.casttime), cooldown(s.cooldown), duration(s.duration), lastcast(s.lastcast), graphic(s.graphic), spellscript(s.spellscript), cancelable(s.cancelable) {
-
+		spellId(s.spellId), name(s.name), casttime(s.casttime), cooldown(s.cooldown), duration(s.duration), lastcast(s.lastcast), graphic(s.graphic), spellscript(s.spellscript), cancelable(s.cancelable) {
 	}
 };
 

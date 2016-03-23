@@ -7,11 +7,11 @@ const int SPELLMESSAGEID = 0x01;
 struct SpellMessage : public Message
 {
 	uint_fast64_t entity;
-	std::string spell;
+	int spellId;
 
 	int GetID() { return SPELLMESSAGEID; }
 
 	SpellMessage() {}
-	SpellMessage(uint_fast64_t entity, std::string spell) : entity(entity), spell(spell) {}
-	SpellMessage(const SpellMessage& e) : entity(e.entity),spell(e.spell) {}
+	SpellMessage(uint_fast64_t entity, int spellId) : entity(entity), spellId(spellId) {}
+	SpellMessage(const SpellMessage& e) : entity(e.entity), spellId(e.spellId) {}
 };

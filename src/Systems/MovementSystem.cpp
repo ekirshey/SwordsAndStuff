@@ -78,7 +78,7 @@ void MovementSystem::ProcessEntity(uint_fast64_t entity)
 	{
 		bool canmove = true;
 		if (spellcastingcomponent != nullptr) {
-			if (spellcastingcomponent->SpellToCast() != "NO_CAST" && !spellcastingcomponent->Cancelable())
+			if (spellcastingcomponent->SpellToCast() != NO_CAST && !spellcastingcomponent->Cancelable())
 				canmove = false;
 		}
 

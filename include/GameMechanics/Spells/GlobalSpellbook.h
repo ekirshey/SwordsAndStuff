@@ -8,16 +8,17 @@ class GlobalSpellbook
 	public:
 		GlobalSpellbook() {}
 
-		Spell CreateSpell(std::string name, int casttime, int cooldown, int duration, std::string graphic, std::vector<std::vector<ScriptStep>> script) {
-			spellbook_[name] = Spell(name, casttime, cooldown, duration, graphic, script);
-			return spellbook_[name];
+		void CreateSpell(int spellId, std::string name, int casttime, int cooldown, int duration, std::string graphic, std::vector<std::vector<ScriptStep>> script) {
+			spellbook_[spellId] = Spell(spellId, name, casttime, cooldown, duration, graphic, script);
 		}
 
 		// Returns a copy of a global spell
-		Spell GetSpell(std::string name) { return spellbook_[name]; }
+		Spell GetSpell(int spellId) { 
+			return spellbook_[spellId]; 
+		}
 
 	private:
-		std::unordered_map<std::string, Spell> spellbook_;
+		std::unordered_map<int, Spell> spellbook_;
 
 };
 

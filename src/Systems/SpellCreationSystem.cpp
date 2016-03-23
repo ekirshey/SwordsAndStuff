@@ -50,13 +50,13 @@ void SpellCreationSystem::ProcessMessage(Message* data) {
 		auto spellbookcomponent = GetEntityComponent<SpellbookComponent*>(msg->entity, SpellbookComponentID);
 		auto equipmentcomponent = GetEntityComponent<EquipmentComponent*>(msg->entity, EquipmentComponentID);
 
-		Spell* queuedspell = spellbookcomponent->GetSpell(msg->spell);
+		Spell* queuedspell = spellbookcomponent->GetSpell(msg->spellId);
 
-		if (spellcastingcomponent->SpellToCast() == "NO_CAST") {
+		if (spellcastingcomponent->SpellToCast() == NO_CAST) {
 			// Check if spell is still coolingdown
 			if (((TimeRunning() - queuedspell->lastcast) >= (queuedspell->cooldown + queuedspell->duration))) {
 				// Check any other spell casting requirements
-				spellcastingcomponent->SetSpellToCast(msg->spell);
+				spellcastingcomponent->SetSpellToCast(msg->spellId);
 				spellcastingcomponent->SetCastTime(queuedspell->casttime);
 				spellcastingcomponent->SetStartTimeOfCast(TimeRunning());
 				spellcastingcomponent->SetCancelable(queuedspell->cancelable);
@@ -79,7 +79,7 @@ void SpellCreationSystem::ProcessMessage(Message* data) {
 
 void SpellCreationSystem::AfterObjectProcessing() {
 	
-	std::string spellname;
+	int castspellId;
 	Spell* spell;
 	int spellid = -1;
 
@@ -88,16 +88,15 @@ void SpellCreationSystem::AfterObjectProcessing() {
 		SpellCastingComponent* spellcastingcomponent = GetEntityComponent<SpellCastingComponent*>(castspells_[i], SpellCastingComponentID);
 		SpellbookComponent* spellbookcomponent = GetEntityComponent<SpellbookComponent*>(castspells_[i], SpellbookComponentID);
 
-		spellname = spellcastingcomponent->SpellToCast();
-		spell = spellbookcomponent->GetSpell(spellname);
-
+		castspellId = spellcastingcomponent->SpellToCast();
+		spell = spellbookcomponent->GetSpell(castspellId);
 		
 		if (spellcastingcomponent->CastTime() <= (TimeRunning() - spellcastingcomponent->StartTimeOfCast()) ) {
 			// Create spell
 			spellid = SpellFactory::CreateSpellEntity(GetECSManager(), castspells_[i], *spell); 
 
 			// Reset Spell
-			spellcastingcomponent->SetSpellToCast("NO_CAST");
+			spellcastingcomponent->SetSpellToCast(NO_CAST);
 			spell->lastcast = TimeRunning();
 			castspells_.pop_back();
 

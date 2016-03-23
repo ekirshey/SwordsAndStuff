@@ -16,12 +16,17 @@ class SpellbookComponent : public Component
 
 		uint_fast64_t UniqueBits() const { return ID; }
 
-		void AddSpell(const Spell& spell) { spellbook_[spell.name] = spell; }
-		Spell* GetSpell(std::string name) { return &spellbook_[name]; }
+		void AddSpell(const Spell& spell) {
+			spellbook_[spell.spellId] = spell;
+		}
+
+		Spell* GetSpell(int id) { 
+			return &spellbook_[id]; 
+		}
 
 	private:
 		// String or int??
 		// Hold spells somewhere else and store a list of indices?
-		std::unordered_map<std::string, Spell> spellbook_;
+		std::unordered_map<int, Spell> spellbook_;
 };
 
