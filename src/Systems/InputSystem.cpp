@@ -44,8 +44,7 @@ void InputSystem::ProcessEntity(uint_fast64_t entity)
 		}
 	}
 
-	if (inputcomponent->Pressed("MELEE"))
-	{
+	if (inputcomponent->Pressed("MELEE")) {
 		GetECSManager()->GetQueues().SendMessage<SpellMessage>("SpellCreation", entity, "MELEE");
 	}
 

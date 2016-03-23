@@ -5,6 +5,7 @@
 #include "../../include/Components/VelocityComponent.h"
 #include "../../include/Components/BoundingRectangleComponent.h"
 #include "../../include/Components/InputComponent.h"
+#include "../../include/Components/SpellCastingComponent.h"
 #include "../../include/Config/ComponentDefines.h"
 
 
@@ -60,28 +61,50 @@ void MovementSystem::ProcessEntity(uint_fast64_t entity)
     BoundingRectangleComponent* boundingrectanglecomponent;
 	CollisionComponent* collisioncomponent;
 	InputComponent* inputcomponent;
+	SpellCastingComponent* spellcastingcomponent;
 
     // Get Relevant Component Data
     positioncomponent = GetEntityComponent<PositionComponent*>(entity,PositionComponentID);
     velocitycomponent = GetEntityComponent<VelocityComponent*>(entity,VelocityComponentID);
     boundingrectanglecomponent = GetEntityComponent<BoundingRectangleComponent*>(entity,BoundingRectangleComponentID);
-	inputcomponent = GetEntityComponent<InputComponent*>(entity, InputComponent::ID);
+	inputcomponent = GetEntityComponent<InputComponent*>(entity, InputComponentID);
+
+	// Spells that cant be cancelled prevent movement
+	spellcastingcomponent = GetEntityComponent<SpellCastingComponent*>(entity, SpellCastingComponentID);
 
 	// This is the player so adjust his velocity based on inputs
+
 	if (inputcomponent != nullptr)
 	{
-		int velocity = 1.0 * FrameTime()*.25;
-		velocitycomponent->SetXVelocity(0);
-		if (inputcomponent->Pressed("MOVE_LEFT"))
-			velocitycomponent->SetXVelocity(-1 * velocity);
-		if (inputcomponent->Pressed("MOVE_RIGHT"))
-			velocitycomponent->SetXVelocity(velocity);
+		bool canmove = true;
+		if (spellcastingcomponent != nullptr) {
+			if (spellcastingcomponent->SpellToCast() != "NO_CAST" && !spellcastingcomponent->Cancelable())
+				canmove = false;
+		}
 
-		velocitycomponent->SetYVelocity(0);
-		if (inputcomponent->Pressed("MOVE_UP"))
-			velocitycomponent->SetYVelocity(-1 * velocity);
-		if (inputcomponent->Pressed("MOVE_DOWN"))
-			velocitycomponent->SetYVelocity(velocity);
+		// Check if casting a spell, if the player is then check if the spell can be cancelled
+		if (canmove) {
+			int velocity = 1.0 * FrameTime()*.25;
+			velocitycomponent->SetXVelocity(0);
+			if (inputcomponent->Pressed("MOVE_LEFT")) {
+				velocitycomponent->SetXVelocity(-1 * velocity);
+				positioncomponent->SetFacing(WEST);
+			}
+			if (inputcomponent->Pressed("MOVE_RIGHT")) {
+				velocitycomponent->SetXVelocity(velocity);
+				positioncomponent->SetFacing(EAST);
+			}
+
+			velocitycomponent->SetYVelocity(0);
+			if (inputcomponent->Pressed("MOVE_UP")) {
+				velocitycomponent->SetYVelocity(-1 * velocity);
+				positioncomponent->SetFacing(NORTH);
+			}
+			if (inputcomponent->Pressed("MOVE_DOWN")) {
+				velocitycomponent->SetYVelocity(velocity);
+				positioncomponent->SetFacing(SOUTH);
+			}
+		}
 	}
 
     // Update position

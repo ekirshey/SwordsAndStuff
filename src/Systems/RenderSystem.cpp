@@ -83,6 +83,9 @@ void RenderSystem::ProcessEntity(uint_fast64_t entity)
 
     SDL_Rect cliprect = rendercomponent->ClipRect();
 
+	// Adjust cliprect for facing
+	cliprect.x = cliprect.x + (positioncomponent->Facing() * cliprect.w);
+
 	SDL_Rect cullrect = {positioncomponent->X(), positioncomponent->Y(), cliprect.w, cliprect.h};
 
 /*

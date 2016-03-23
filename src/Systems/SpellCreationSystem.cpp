@@ -57,8 +57,9 @@ void SpellCreationSystem::ProcessMessage(Message* data) {
 			if (((TimeRunning() - queuedspell->lastcast) >= (queuedspell->cooldown + queuedspell->duration))) {
 				// Check any other spell casting requirements
 				spellcastingcomponent->SetSpellToCast(msg->spell);
-				spellcastingcomponent->SetCastTime(spellbookcomponent->GetSpell(msg->spell)->casttime);
+				spellcastingcomponent->SetCastTime(queuedspell->casttime);
 				spellcastingcomponent->SetStartTimeOfCast(TimeRunning());
+				spellcastingcomponent->SetCancelable(queuedspell->cancelable);
 				castspells_.push_back(msg->entity);
 
 			}

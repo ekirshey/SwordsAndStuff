@@ -19,17 +19,22 @@ void BuildRenderComponent(ECSManager* ecsmanager, uint_fast64_t summoner, uint_f
 
 namespace SpellFactory {
 
-	uint_fast64_t CreateSpellEntity(ECSManager* ecsmanager, uint_fast64_t summoner, const Spell& spell) {
-		PositionComponent* entityposition = ecsmanager->GetEntityComponent<PositionComponent*>(summoner, PositionComponentID);
+	uint_fast64_t CreateSpellEntity(ECSManager* ecsmanager, uint_fast64_t caster, const Spell& spell) {
+		PositionComponent* entityposition = ecsmanager->GetEntityComponent<PositionComponent*>(caster, PositionComponentID);
 		
 
 		uint_fast64_t spellid = ecsmanager->CreateEntity();
-		ecsmanager->AddComponentToEntity<PositionComponent>(spellid, *entityposition);
-		ecsmanager->AddComponentToEntity<VelocityComponent>(spellid, 0, 0 );
-		BuildRenderComponent(ecsmanager, summoner, spellid, spell);
+		PositionComponent spellposition(*entityposition);
+		//Set the position to the initial scripted placement. This prevents a weird jump
+		spellposition.SetX(spell.spellscript[entityposition->Facing()][0].dX + spellposition.X());
+		spellposition.SetY(spell.spellscript[entityposition->Facing()][0].dY + spellposition.Y());
 
-		std::vector<ScriptStep> spellscript = { ScriptStep(0,0,50), ScriptStep(-5,5,50), ScriptStep(-10,10,200) };
-		ecsmanager->AddComponentToEntity<ScriptComponent>(spellid, spellscript, summoner);
+		ecsmanager->AddComponentToEntity<PositionComponent>(spellid, spellposition);
+		ecsmanager->AddComponentToEntity<VelocityComponent>(spellid, 0, 0 );
+		BuildRenderComponent(ecsmanager, caster, spellid, spell);
+
+		
+		ecsmanager->AddComponentToEntity<ScriptComponent>(spellid, spell.spellscript[entityposition->Facing()], caster);
 		
 		
 		//ecsmanager->AddComponentToEntity<BoundingRectangleComponent>(spellid, entityposition->X(), entityposition->Y(), 16, 16);

@@ -49,7 +49,15 @@ void GameRunningState::InitializeState()
 	// Set up Game Data
 	spellbook_ = std::unique_ptr<GlobalSpellbook>(new GlobalSpellbook());
 	// Name, Cast time, cooldown, duration (milliseconds)
-	spellbook_->CreateSpell("MELEE", 0, 100, 300, "../../../media/sprites/sword.png");	// index and name?? probably can be better
+	// Account for anchor orientation in script
+	// Vector of vectors: each vector is the script steps for a facing
+	std::vector<std::vector<ScriptStep>> spellscript = {
+		{ ScriptStep(0,0,50), ScriptStep(-5,5,50), ScriptStep(-10,10,200) },
+		{ ScriptStep(0,0,50), ScriptStep(-5,5,50), ScriptStep(-10,10,200) },
+		{ ScriptStep(8,0,50), ScriptStep(13,5,50), ScriptStep(18,10,200) },
+		{ ScriptStep(0,0,50), ScriptStep(-5,5,50), ScriptStep(-10,10,200) }
+	};
+	spellbook_->CreateSpell("MELEE", 0, 100, 300, "../../../media/sprites/sword.png", spellscript);
 
 	// Set up ECS. This was originally in some wrapper object and I dont know why I did that...
 	ecsmanager_ = std::unique_ptr<ECSManager>(new ECSManager());
@@ -94,7 +102,7 @@ void GameRunningState::InitializeECS()
 	auto playerspellbook = std::make_unique<SpellbookComponent>();
 	playerspellbook->AddSpell(spellbook_->GetSpell("MELEE"));
 
-	path = "../../../media/wikimedia/Player2.png";
+	path = "../../../media/sprites/Player2.png";
 
 	ecsmanager_->AddComponentToEntity<PositionComponent>(playerentity, (SCREEN_WIDTH / 2) - (34 / 2), 400);
 	ecsmanager_->AddComponentToEntity<InputComponent>(playerentity);
@@ -114,7 +122,7 @@ void GameRunningState::InitializeECS()
 	else
 		std::cout << "Failed to set camera focus, camera doesnt exist" << std::endl;
 
-	path = "../../../media/Wikimedia/Pawns.png";
+	path = "../../../media/sprites/Pawns.png";
 	// Monster
 	int monsterentity;
 	int mod;

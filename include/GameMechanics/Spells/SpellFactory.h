@@ -6,5 +6,5 @@ class ECSManager;
 
 namespace SpellFactory {
 
-	uint_fast64_t CreateSpellEntity(ECSManager* ecsmanager, uint_fast64_t summoner, const Spell& spell);
+	uint_fast64_t CreateSpellEntity(ECSManager* ecsmanager, uint_fast64_t caster, const Spell& spell);
 }
