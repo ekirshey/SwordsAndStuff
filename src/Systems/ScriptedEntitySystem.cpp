@@ -4,16 +4,16 @@
 #include "../../include/Components/ScriptComponent.h"	
 #include "../../include/Components/PositionComponent.h"
 
-ScriptedEntitySystem::ScriptedEntitySystem() {
+WaypointSystem::WaypointSystem() {
 	SetSystemName("ScriptedEntitySystem");
 }
 
 
-ScriptedEntitySystem::~ScriptedEntitySystem() {
+WaypointSystem::~WaypointSystem() {
 
 }
 
-void ScriptedEntitySystem::ProcessEntity(uint_fast64_t entity) {
+void WaypointSystem::ProcessEntity(uint_fast64_t entity) {
 
 	auto script = GetEntityComponent<ScriptComponent*>(entity, ScriptComponentID);
 	auto entityposition = GetEntityComponent<PositionComponent*>(entity, PositionComponentID);

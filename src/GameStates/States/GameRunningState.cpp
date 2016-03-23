@@ -83,7 +83,7 @@ void GameRunningState::InitializeECS()
 	ecsmanager_->AddSystem(std::make_unique<InputSystem>(GetSDLManager()), priority++);
 	//ecsmanager_->AddSystem(std::unique_ptr<AISystem>(new AISystem()), priority++);
 	ecsmanager_->AddSystem(std::make_unique<MovementSystem>(gameworld_.get()), priority++);
-	ecsmanager_->AddSystem(std::make_unique<ScriptedEntitySystem>(), priority++);	// Not 100% sure on the placement 
+	ecsmanager_->AddSystem(std::make_unique<WaypointSystem>(), priority++);	// Not 100% sure on the placement 
 	ecsmanager_->AddSystem(std::make_unique<SpellCreationSystem>(ecsmanager_->GetQueues().GetQueue("SpellCreation")), priority++);
 	ecsmanager_->AddSystem(std::make_unique<CollisionSystem>(gameworld_.get()), priority++);
 	ecsmanager_->AddSystem(std::make_unique<PlayerTargetingSystem>(*GetSDLManager(), *gameworld_.get(), "..\\..\\..\\media\\reticule.png"), priority++);
