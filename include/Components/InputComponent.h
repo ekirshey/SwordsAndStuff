@@ -5,12 +5,14 @@
 #include "../Config/ComponentDefines.h"
 #include <unordered_map>
 
-const std::vector<std::string> KeyboardInputs = { 
-	"MOVE_LEFT",
-	"MOVE_RIGHT",
-	"MOVE_UP",
-	"MOVE_DOWN",
-	"MELEE"
+enum INPUTS { MOVE_LEFT, MOVE_RIGHT, MOVE_UP, MOVE_DOWN, MELEE };
+
+const std::vector<int> KeyboardInputs{
+	MOVE_LEFT, 
+	MOVE_RIGHT, 
+	MOVE_UP, 
+	MOVE_DOWN, 
+	MELEE
 };
 
 struct Key
@@ -31,11 +33,11 @@ class InputComponent : public Component
 
 		InputComponent() 
 		{
-			keyboardinput_.insert({ KeyboardInputs[0], Key(SDL_SCANCODE_A) });
-			keyboardinput_.insert({ KeyboardInputs[1], Key(SDL_SCANCODE_D) });
-			keyboardinput_.insert({ KeyboardInputs[2], Key(SDL_SCANCODE_W) });
-			keyboardinput_.insert({ KeyboardInputs[3], Key(SDL_SCANCODE_S) });
-			keyboardinput_.insert({ KeyboardInputs[4], Key(SDL_SCANCODE_E) });
+			keyboardinput_.insert({ MOVE_LEFT, Key(SDL_SCANCODE_A) });
+			keyboardinput_.insert({ MOVE_RIGHT, Key(SDL_SCANCODE_D) });
+			keyboardinput_.insert({ MOVE_UP, Key(SDL_SCANCODE_W) });
+			keyboardinput_.insert({ MOVE_DOWN, Key(SDL_SCANCODE_S) });
+			keyboardinput_.insert({ MELEE, Key(SDL_SCANCODE_E) });
 		}
 
         InputComponent(const InputComponent& c) {}
@@ -44,17 +46,17 @@ class InputComponent : public Component
 
         uint_fast64_t UniqueBits() const {return ID;}
 
-		int Scancode(std::string input) { return keyboardinput_.at(input).scancode; }
-		void SetScancode(std::string input, int scancode) { keyboardinput_.at(input).scancode = scancode; }
+		int Scancode(int input) { return keyboardinput_.at(input).scancode; }
+		void SetScancode(int input, int scancode) { keyboardinput_.at(input).scancode = scancode; }
 
-		bool Pressed(std::string input) { return keyboardinput_.at(input).pressed; }
-		bool Held(std::string input) { return keyboardinput_.at(input).held; }
+		bool Pressed(int input) { return keyboardinput_.at(input).pressed; }
+		bool Held(int input) { return keyboardinput_.at(input).held; }
 
-		void SetPressed(std::string input, bool state) { keyboardinput_.at(input).pressed = state; }
-		void SetHeld(std::string input, bool state) { keyboardinput_.at(input).held = state; }
+		void SetPressed(int input, bool state) { keyboardinput_.at(input).pressed = state; }
+		void SetHeld(int input, bool state) { keyboardinput_.at(input).held = state; }
 
     private:
-		std::unordered_map<std::string, Key> keyboardinput_;
+		std::unordered_map<int, Key> keyboardinput_;
 
 };
 

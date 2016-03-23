@@ -86,21 +86,21 @@ void MovementSystem::ProcessEntity(uint_fast64_t entity)
 		if (canmove) {
 			int velocity = 1.0 * FrameTime()*.25;
 			velocitycomponent->SetXVelocity(0);
-			if (inputcomponent->Pressed("MOVE_LEFT")) {
+			if (inputcomponent->Pressed(MOVE_LEFT)) {
 				velocitycomponent->SetXVelocity(-1 * velocity);
 				positioncomponent->SetFacing(WEST);
 			}
-			if (inputcomponent->Pressed("MOVE_RIGHT")) {
+			if (inputcomponent->Pressed(MOVE_RIGHT)) {
 				velocitycomponent->SetXVelocity(velocity);
 				positioncomponent->SetFacing(EAST);
 			}
 
 			velocitycomponent->SetYVelocity(0);
-			if (inputcomponent->Pressed("MOVE_UP")) {
+			if (inputcomponent->Pressed(MOVE_UP)) {
 				velocitycomponent->SetYVelocity(-1 * velocity);
 				positioncomponent->SetFacing(NORTH);
 			}
-			if (inputcomponent->Pressed("MOVE_DOWN")) {
+			if (inputcomponent->Pressed(MOVE_DOWN)) {
 				velocitycomponent->SetYVelocity(velocity);
 				positioncomponent->SetFacing(SOUTH);
 			}
