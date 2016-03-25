@@ -4,8 +4,13 @@
 
 QueueSystem::QueueSystem( MessageQueue* messagequeue) :messagequeue_(messagequeue) {
 
-	//ecsmanager->GetQueues().RegisterConsumer(queuename_);
-	messagequeue->RegisterConsumer();
+	if (messagequeue != nullptr) {
+		messagequeue->RegisterConsumer();
+	}
+	else {
+		std::cout << "Bad message queue in " << SystemName() << std::endl;
+	}
+
 }
 
 
@@ -17,7 +22,7 @@ void QueueSystem::ProcessEntities() {
 	//MessageQueue* messagequeue = GetECSManager()->GetQueues().GetQueue(queuename_);
 
 	BeforeObjectProcessing();
-	//std::cout << SystemName() << " " << entities.size() << std::endl;
+
 	Message* datum;
 	while( (datum = messagequeue_->GetData()) != nullptr) {
 		ProcessMessage(datum);

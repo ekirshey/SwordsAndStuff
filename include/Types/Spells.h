@@ -18,12 +18,10 @@ struct Spell {
 	//interruptible??
 	
 	Spell() : spellId(0xFFFF), name(""), casttime(0), cooldown(0), duration(0), lastcast(0), graphic("") {
-		std::cout << "Go fuck yourself :) " << std::endl;
 	}
 
 	Spell(int spellId, std::string name, int casttime, int cooldown, int duration, std::string graphic, std::vector<std::vector<ScriptStep>> script) :
 		spellId(spellId), name(name), casttime(casttime), cooldown(cooldown), duration(duration), lastcast(0), graphic(graphic), spellscript(script), cancelable(false) {
-		std::cout << "Spell " << spellId << std::endl;
 	}
 
 	Spell(int spellId, std::string name, int casttime, int cooldown, int duration, std::string graphic, std::vector<std::vector<ScriptStep>> script, bool cancelable) :

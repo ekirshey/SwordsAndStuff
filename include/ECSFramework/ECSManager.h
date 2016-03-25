@@ -35,7 +35,7 @@ class ECSManager
 
 		template<typename T, typename... Args>
 		void AddComponentToEntity(uint_fast64_t entity, Args... args) {
-			if ( entitymanager_.AddComponent( entity, std::unique_ptr<T>( new T(args...) ) ) )
+			if ( entitymanager_.AddComponent( entity, std::make_unique<T>( args... ) ) )
 				systemmanager_.AddEntityToSystem(entity, entitymanager_.GetEntityComponentBits(entity));
 		}
 
@@ -53,12 +53,33 @@ class ECSManager
         std::vector<uint_fast64_t> GetAssociatedEntities(std::string tag);
         std::vector<uint_fast64_t>* GetPtrToAssociatedEntities(std::string tag) {return &tagmanager_[tag];}
 
-		MessageQueueContainer& GetQueues() { return messagequeues_; } 
+		MessageQueue* GetQueue(std::string queue) { 
+			return messagequeuecontainer_.GetQueue(queue); 
+		}
+		void AddQueue(std::string queue) { messagequeuecontainer_.AddQueue(queue); }
+
+		template<typename T, typename... Args>
+		void SendMessage(std::string queuename, Args... args) {
+			messagequeuecontainer_.SendMessage<T>(queuename, args...);
+		}
+
+		void Exit(int code) {
+			std::cout << "Exiting ECSManager with Code " << code << std::endl;
+			errorcode_ = code;
+			status_ = false;
+		}
+
+		bool GetStatus(int& errorcode) {
+			errorcode = errorcode_;
+			return status_;
+		}
 
     private:
+		bool status_;
+		int errorcode_;
         SystemManager systemmanager_;
         EntityManager entitymanager_;
-		MessageQueueContainer messagequeues_;
+		MessageQueueContainer messagequeuecontainer_;
         std::unordered_map<std::string,std::vector<uint_fast64_t>> tagmanager_;
 };
 

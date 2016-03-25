@@ -16,7 +16,7 @@ class SDLManager
 {
     public:
         SDLManager();
-        virtual ~SDLManager();
+        ~SDLManager();
 
         bool Initialize();
         bool ReadEventQueue();

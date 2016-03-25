@@ -27,21 +27,21 @@ void MainMenuState::InitializeState()
     std::cout << "Initialize" << std::endl;
 
     // Build systems and entities
-    ecsmanager_.AddSystem(std::unique_ptr<RenderSystem>(new RenderSystem(GetSDLManager())),0);
+    ecsmanager_.AddSystem(std::make_unique<RenderSystem>(GetSDLManager()),0);
 
     // Background
     int backgroundentity = ecsmanager_.CreateEntity();
     SDL_Rect rect = {0,0,640,480};
     std::string path = "media\\backgrounds\\mainmenubg.bmp";
-    ecsmanager_.AddComponentToEntity(backgroundentity, std::unique_ptr<PositionComponent>(new PositionComponent(0,0)));
-    ecsmanager_.AddComponentToEntity(backgroundentity, std::unique_ptr<RenderComponent>(new RenderComponent(path,rect, 0.0)));
+    ecsmanager_.AddComponentToEntity(backgroundentity, std::make_unique<PositionComponent>(0,0));
+    ecsmanager_.AddComponentToEntity(backgroundentity, std::make_unique<RenderComponent>(path,rect, 0.0));
 
     // Start Button
     int startbuttonentity = ecsmanager_.CreateEntity();
     rect = {0,0,72,30};
     path = "media\\buttons\\startbutton.bmp";
-    ecsmanager_.AddComponentToEntity(startbuttonentity, std::unique_ptr<RenderComponent>(new RenderComponent(path, rect, 0.0)));
-    ecsmanager_.AddComponentToEntity(startbuttonentity, std::unique_ptr<PositionComponent>(new PositionComponent(284,300)));
+    ecsmanager_.AddComponentToEntity(startbuttonentity, std::make_unique<RenderComponent>(path, rect, 0.0));
+    ecsmanager_.AddComponentToEntity(startbuttonentity, std::make_unique<PositionComponent>(284,300));
 
     SetCurrentState(TRANSITIONIN);
 }

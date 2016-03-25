@@ -11,8 +11,11 @@
 #include "../../../include/Systems/CameraSystem.h"
 #include "../../../include/Systems/PlayerTargetingSystem.h"
 #include "../../../include/Systems/SpellCreationSystem.h"
+#include "../../../include/Systems/MeleeSystem.h"
 #include "../../../include/Systems/AISystem.h"
 #include "../../../include/Systems/ScriptedEntitySystem.h"
+#include "../../../include/Systems/EquipmentSystem.h"
+#include "../../../include/Systems/InventorySystem.h"
 
 #include "../../../include/Components/BoundingRectangleComponent.h"
 #include "../../../include/Components/RenderComponent.h"
@@ -42,12 +45,12 @@ void GameRunningState::InitializeState()
     SDL_Rect camerarect = {0,0,SCREEN_WIDTH,SCREEN_HEIGHT};
 
     // Create Game World and Camera
-    gameworld_ = std::unique_ptr<GameWorld>(new GameWorld(3072,2560));
+    gameworld_ = std::make_unique<GameWorld>(3072,2560);
     gameworld_->BuildProceduralTileMap(32);
-    camera_ = std::unique_ptr<Camera>(new Camera(gameworld_->Width(), gameworld_->Height(),camerarect ));
+    camera_ = std::make_unique<Camera>( gameworld_->Width(), gameworld_->Height(),camerarect );
 
 	// Set up Game Data
-	spellbook_ = std::unique_ptr<GlobalSpellbook>(new GlobalSpellbook());
+	spellbook_ = std::make_unique<GlobalSpellbook>();
 	// Name, Cast time, cooldown, duration (milliseconds)
 	// Account for anchor orientation in script
 	// Vector of vectors: each vector is the script steps for a facing
@@ -60,7 +63,7 @@ void GameRunningState::InitializeState()
 	spellbook_->CreateSpell(0, "MELEE", 0, 100, 300, "../../../media/sprites/sword.png", spellscript);
 
 	// Set up ECS. This was originally in some wrapper object and I dont know why I did that...
-	ecsmanager_ = std::unique_ptr<ECSManager>(new ECSManager());
+	ecsmanager_ = std::make_unique<ECSManager>();
 	InitializeECS();
 
 	// GUI Setup HUD and GUI separate for now
@@ -77,16 +80,22 @@ void GameRunningState::InitializeECS()
 	int priority = 0;
 	int cameraindex = 0;
 
-	ecsmanager_->GetQueues().AddQueue("SpellCreation");
+	ecsmanager_->AddQueue("SpellCreation");
+	ecsmanager_->AddQueue("MeleeCreation");
+	ecsmanager_->AddQueue("EquipmentManagement");
+	ecsmanager_->AddQueue("InventoryManagement");
 
 	// Build systems and entities
 	ecsmanager_->AddSystem(std::make_unique<InputSystem>(GetSDLManager()), priority++);
 	//ecsmanager_->AddSystem(std::unique_ptr<AISystem>(new AISystem()), priority++);
 	ecsmanager_->AddSystem(std::make_unique<MovementSystem>(gameworld_.get()), priority++);
 	ecsmanager_->AddSystem(std::make_unique<WaypointSystem>(), priority++);	// Not 100% sure on the placement 
-	ecsmanager_->AddSystem(std::make_unique<SpellCreationSystem>(ecsmanager_->GetQueues().GetQueue("SpellCreation")), priority++);
+	ecsmanager_->AddSystem(std::make_unique<SpellCreationSystem>(ecsmanager_->GetQueue("SpellCreation")), priority++);
+	ecsmanager_->AddSystem(std::make_unique<MeleeSystem>(ecsmanager_->GetQueue("MeleeCreation")), priority++);
 	ecsmanager_->AddSystem(std::make_unique<CollisionSystem>(gameworld_.get()), priority++);
 	ecsmanager_->AddSystem(std::make_unique<PlayerTargetingSystem>(*GetSDLManager(), *gameworld_.get(), "..\\..\\..\\media\\reticule.png"), priority++);
+	ecsmanager_->AddSystem(std::make_unique<InventorySystem>(ecsmanager_->GetQueue("EquipmentManagement")), priority++);
+	ecsmanager_->AddSystem(std::make_unique<InventorySystem>(ecsmanager_->GetQueue("InventoryManagement")), priority++);
 	cameraindex = ecsmanager_->AddSystem(std::make_unique<CameraSystem>(camera_.get()), priority++);
 	ecsmanager_->AddSystem(std::make_unique<RenderSystem>(GetSDLManager(), gameworld_.get(), camera_.get()), priority++);
 
@@ -97,7 +106,7 @@ void GameRunningState::InitializeECS()
 						  //path = "media\\sprites\\shooter.png";
 	
 	auto playerequipment = std::make_unique<EquipmentComponent>();
-	playerequipment->AddEquipment(std::unique_ptr<Item>(new Item("sword", MAINHAND, 0, ItemStats(10, 20))));
+	//playerequipment->AddEquipment(std::unique_ptr<Item>(new Item("sword", MAINHAND, 0, ItemStats(10, 20))));
 
 	auto playerspellbook = std::make_unique<SpellbookComponent>();
 	Spell test = spellbook_->GetSpell(0);
@@ -112,6 +121,7 @@ void GameRunningState::InitializeECS()
 	ecsmanager_->AddComponentToEntity<BoundingRectangleComponent>(playerentity, (SCREEN_WIDTH / 2) - (34 / 2) + 8, 400 + 8, 24, 24); // TODO Magic Numbers
 	ecsmanager_->AddComponentToEntity<SpellCastingComponent>(playerentity);
 	ecsmanager_->AddComponentToEntity(playerentity, std::move(playerequipment));
+	ecsmanager_->AddComponentToEntity<InventoryComponent>(playerentity, 10);
 	ecsmanager_->AddComponentToEntity<RPGStatsComponent>(playerentity);
 	ecsmanager_->AddComponentToEntity(playerentity, std::move(playerspellbook));
 	ecsmanager_->AddComponentToEntity<TargetingComponent>(playerentity);
@@ -180,9 +190,16 @@ void GameRunningState::TransitionIntoState()
 
 void GameRunningState::UpdateState(int elapsedtime)
 {
-	ecsmanager_->Update(elapsedtime);
-    //objectmanager_->Update(elapsedtime);
-    //hudmanager_->Update();
+	int errorcode;
+
+	if (ecsmanager_->GetStatus(errorcode)) {
+		ecsmanager_->Update(elapsedtime);
+		//objectmanager_->Update(elapsedtime);
+		//hudmanager_->Update();
+	}
+	else {
+		TransitionFromState();
+	}
 }
 
 void GameRunningState::TransitionFromState()

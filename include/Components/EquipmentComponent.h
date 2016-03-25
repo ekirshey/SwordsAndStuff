@@ -6,9 +6,8 @@
 #include "../Types/Items.h"
 
 struct EquipmentSlot {
-	int archtype;
 	std::unique_ptr<Item> item;
-	EquipmentSlot(int archtype, std::unique_ptr<Item> item) : archtype(archtype), item(std::move(item)) {}
+	EquipmentSlot(std::unique_ptr<Item> item) : item(std::move(item)) {}
 };
 
 class EquipmentComponent : public Component
@@ -18,7 +17,7 @@ public:
 
 	EquipmentComponent() { 
 		for (int i = MAINHAND; i <= TRINKET; i++)
-			equipment_.push_back(EquipmentSlot(i, nullptr));
+			equipment_.push_back(EquipmentSlot(nullptr));
 	}
 
 	// Figure out weirdness if you use unique_ptrs
@@ -28,11 +27,13 @@ public:
 
 	uint_fast64_t UniqueBits() const { return ID; }
 
-	int GetSlotType(int slot) { return equipment_[slot].archtype;  }
-
-	void AddEquipment(std::unique_ptr<Item> item) { equipment_[item->slottype].item = std::move(item); }
+	void AddEquipment(std::unique_ptr<Item> item) { 
+		//equipment_[item->slottype].item = std::move(item); 
+	}
 
 	Item* GetEquipment(int slot) { return equipment_[slot].item.get(); }
+
+	std::unique_ptr<Item> TransferItem(int slot) { return std::move(equipment_[slot].item); }
 
 private:
 	std::vector<EquipmentSlot> equipment_;

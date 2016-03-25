@@ -23,7 +23,7 @@ Texture* TextureManager::GetTexture( const std::string& filename )
 	}
 
 	// Search project's main directory
-	if( !(textures_[filename] = std::unique_ptr<Texture>(new Texture(filename,renderer_))) )
+	if( !(textures_[filename] = std::make_unique<Texture>(filename,renderer_)) )
         textures_.erase(filename);
     else
     {
@@ -37,14 +37,14 @@ Texture* TextureManager::GetTexture( const std::string& filename )
 	for( std::vector< std::string >::iterator it = resourcedirectories_.begin(); it != resourcedirectories_.end(); ++it )
 	{
 			// Search project's main directory
-        if( !(textures_[filename] = std::unique_ptr<Texture>(new Texture((*it) + filename,renderer_))) )
+        if( !(textures_[filename] = std::make_unique<Texture>((*it) + filename,renderer_)) )
             textures_.erase(filename);
         else
             return textures_[filename].get();
 	}
 
 	std::cout << "GAME_ERROR: texture was not found. It is filled with an empty texture.\n";
-	textures_[filename] = std::unique_ptr<Texture>(new Texture());
+	textures_[filename] = std::make_unique<Texture>();
 
 	return textures_[filename].get();
 }

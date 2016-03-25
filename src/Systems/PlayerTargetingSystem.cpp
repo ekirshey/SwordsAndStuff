@@ -30,8 +30,8 @@ void PlayerTargetingSystem::UpdateTargetReticule()
 	{
 		SDL_Rect rect = { 0,0,26,26 };
 		targetreticuleid_ = GetECSManager()->CreateEntity();
-		GetECSManager()->AddComponentToEntity(targetreticuleid_, std::unique_ptr<PositionComponent>(new PositionComponent(-100, -100))); // TODO MAgic numbers
-		GetECSManager()->AddComponentToEntity(targetreticuleid_, std::unique_ptr<RenderComponent>(new RenderComponent(reticuleimage_, rect, 0.0)));
+		GetECSManager()->AddComponentToEntity(targetreticuleid_, std::make_unique<PositionComponent>(-100, -100)); // TODO MAgic numbers
+		GetECSManager()->AddComponentToEntity(targetreticuleid_, std::make_unique<RenderComponent>(reticuleimage_, rect, 0.0));
 		firstcreate = false;
 	}
 

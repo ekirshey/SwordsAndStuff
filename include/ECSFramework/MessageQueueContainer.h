@@ -18,11 +18,19 @@ class MessageQueueContainer
 
 		template<typename T, typename... Args>
 		void SendMessage(std::string queuename, Args... args) {
-			messagequeues_.at(queuename).AddData(std::unique_ptr<T>( new T(args...) ) );
+			messagequeues_.at(queuename).AddData(std::make_unique<T>( args... ) );
 		}
 
 		MessageQueue* GetQueue(std::string queuename) {
-			return &messagequeues_.at(queuename);
+			auto queue = messagequeues_.find(queuename);
+
+			if (queue != messagequeues_.end()) {
+				return &queue->second;
+			}
+			else {
+				std::cout << "Invalid Queue Name: " << queuename << std::endl;
+				return nullptr;
+			}
 		}
 
 		void RegisterConsumer(std::string queuename) {

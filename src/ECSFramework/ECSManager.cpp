@@ -4,7 +4,7 @@
 #include "../../include/ECSFramework/System.h"
 
 
-ECSManager::ECSManager() {
+ECSManager::ECSManager() : status_(true), errorcode_(1) {
     
 }
 

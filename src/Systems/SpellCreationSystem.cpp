@@ -11,6 +11,10 @@
 
 SpellCreationSystem::SpellCreationSystem(MessageQueue* messagequeue) : QueueSystem(messagequeue) {
 	SetSystemName("SpellCreationSystem");
+
+	if (messagequeue == nullptr) {
+		std::cout << SystemName() << " Initialization failed! Bad queue!" << std::endl;
+	}
 }
 
 SpellCreationSystem::~SpellCreationSystem() {

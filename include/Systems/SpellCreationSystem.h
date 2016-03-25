@@ -4,18 +4,18 @@
 #include "../Systems/QueueSystem.h"
 #include "../Config/ComponentDefines.h"
 
-
+/* Since QueueSystems handle messages they dont need to 
+   set componentids. I might want to think of a nicer
+   interface for that.
+*/
 class SpellCreationSystem : public QueueSystem
 {
 	public:
-		static const uint_fast64_t COMPONENTIDS = PositionComponentID;
 		// Unlike the component ID this can be duplicated
 		SpellCreationSystem(MessageQueue* messagequeue);
 		~SpellCreationSystem();
 
 		void AfterObjectProcessing();
-
-		uint_fast64_t ComponentBits() { return SpellCreationSystem::COMPONENTIDS; }    // TODO: Is this necessary or is just accessing the variable directly better?
 
 		void ProcessMessage(Message* data);
 
