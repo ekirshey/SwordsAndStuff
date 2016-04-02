@@ -1,12 +1,13 @@
 #pragma once
 #include <string>
-#include "MessageQueueContainer.h"
+#include "../ECSFramework/MessageQueueContainer.h"
 #include "../Types/Items.h"
 
 const int SPELLMESSAGEID = 0x01;
 const int MELEEMESSAGEID = 0x02;
-const int ADDITEMMESSAGEID = 0x03;
-const int REMOVEITEMMESSAGEID = 0x04;
+const int ITEMMESSAGEID = 0x03;
+
+enum ItemOperation { ADDITEM, REMOVE };
 
 struct SpellMessage : public Message
 {
@@ -34,12 +35,14 @@ struct MeleeMessage : public Message
 
 struct ItemMessage : public Message {
 	int operation;
-	std::unique_ptr<Item> item;
-	int GetID() { return operation; }
+	uint_fast64_t entity;
+	Items::Item* item;
+	int destinationslot;
 
-	ItemMessage() : item(nullptr), operation(-1) { }
-	ItemMessage(int operation, std::unique_ptr<Item> item) : item(std::move(item)), operation(operation) { }
+	int GetID() { return ITEMMESSAGEID; }
+
+	ItemMessage(uint_fast64_t entity, Items::Item* item, int operation, int destinationslot) : entity(entity), item(item), operation(operation), destinationslot(destinationslot) { }
+	ItemMessage(uint_fast64_t entity, Items::Item* item, int operation) : entity(entity), item(item), operation(operation), destinationslot(-1) { }
 };
-
 
 

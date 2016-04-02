@@ -26,18 +26,18 @@ namespace SpellFactory {
 		uint_fast64_t spellid = ecsmanager->CreateEntity();
 		PositionComponent spellposition(*entityposition);
 		//Set the position to the initial scripted placement. This prevents a weird jump
-		spellposition.SetX(spell.spellscript[entityposition->Facing()][0].dX + spellposition.X());
-		spellposition.SetY(spell.spellscript[entityposition->Facing()][0].dY + spellposition.Y());
+		spellposition.x_ = spell.spellscript[entityposition->facing_][0].dX + spellposition.x_;
+		spellposition.y_ = spell.spellscript[entityposition->facing_][0].dY + spellposition.y_;
 
 		ecsmanager->AddComponentToEntity<PositionComponent>(spellid, spellposition);
 		ecsmanager->AddComponentToEntity<VelocityComponent>(spellid, 0, 0 );
 		BuildRenderComponent(ecsmanager, caster, spellid, spell);
 
 		
-		ecsmanager->AddComponentToEntity<ScriptComponent>(spellid, spell.spellscript[entityposition->Facing()], caster);
+		ecsmanager->AddComponentToEntity<ScriptComponent>(spellid, spell.spellscript[entityposition->facing_], caster);
 		
 		
-		//ecsmanager->AddComponentToEntity<BoundingRectangleComponent>(spellid, entityposition->X(), entityposition->Y(), 16, 16);
+		//ecsmanager->AddComponentToEntity<BoundingRectangleComponent>(spellid, entityposition->x_, entityposition->y_, 16, 16);
 
 		return spellid;
 	}

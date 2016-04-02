@@ -46,31 +46,31 @@ void CollisionSystem::SpatialCollision(uint_fast64_t entityA, uint_fast64_t enti
 	if (velocitycomponentA->XVelocity() != 0 && velocitycomponentA->YVelocity() != 0)
 	{
 		// Check which direction the collision is in
-		boundingrectangleA->SetX(boundingrectangleA->X() - velocitycomponentA->XVelocity());
-		positioncomponentA->SetX(positioncomponentA->X() - velocitycomponentA->XVelocity());
+		boundingrectangleA->x_ = (boundingrectangleA->x_ - velocitycomponentA->XVelocity());
+		positioncomponentA->x_ = (positioncomponentA->x_ - velocitycomponentA->XVelocity());
 		if (SDL_HasIntersection(&boundingrectangleA->Rectangle(), &boundingrectangleB->Rectangle()))
 		{
-			boundingrectangleA->SetX(boundingrectangleA->X() + velocitycomponentA->XVelocity());
-			positioncomponentA->SetX(positioncomponentA->X() + velocitycomponentA->XVelocity());
+			boundingrectangleA->x_ = (boundingrectangleA->x_ + velocitycomponentA->XVelocity());
+			positioncomponentA->x_ = (positioncomponentA->x_ + velocitycomponentA->XVelocity());
 
-			boundingrectangleA->SetY(boundingrectangleA->Y() - velocitycomponentA->YVelocity());
-			positioncomponentA->SetY(positioncomponentA->Y() - velocitycomponentA->YVelocity());
+			boundingrectangleA->y_ = (boundingrectangleA->y_ - velocitycomponentA->YVelocity());
+			positioncomponentA->y_ = (positioncomponentA->y_ - velocitycomponentA->YVelocity());
 
 			if (SDL_HasIntersection(&boundingrectangleA->Rectangle(), &boundingrectangleB->Rectangle()))
 			{
-				boundingrectangleA->SetX(boundingrectangleA->X() - velocitycomponentA->XVelocity());
-				positioncomponentA->SetX(positioncomponentA->X() - velocitycomponentA->XVelocity());
+				boundingrectangleA->x_ = (boundingrectangleA->x_ - velocitycomponentA->XVelocity());
+				positioncomponentA->x_ = (positioncomponentA->x_ - velocitycomponentA->XVelocity());
 			}
 		}
 
 	}
 	else
 	{
-		boundingrectangleA->SetX(boundingrectangleA->X() - velocitycomponentA->XVelocity());
-		boundingrectangleA->SetY(boundingrectangleA->Y() - velocitycomponentA->YVelocity());
+		boundingrectangleA->x_ = (boundingrectangleA->x_ - velocitycomponentA->XVelocity());
+		boundingrectangleA->y_ = (boundingrectangleA->y_ - velocitycomponentA->YVelocity());
 
-		positioncomponentA->SetX(positioncomponentA->X() - velocitycomponentA->XVelocity());
-		positioncomponentA->SetY(positioncomponentA->Y() - velocitycomponentA->YVelocity());
+		positioncomponentA->x_ = (positioncomponentA->x_ - velocitycomponentA->XVelocity());
+		positioncomponentA->y_ = (positioncomponentA->y_ - velocitycomponentA->YVelocity());
 	}
 
 }

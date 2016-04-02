@@ -17,12 +17,6 @@ class GameWorld
         GameWorld(int width, int height);
         virtual ~GameWorld();
 
-        int Width() {return width_;}
-        int Height() {return height_;}
-
-        void SetWidth(int width) {width_ = width;}
-        void SetHeight(int height) {height_ = height;}
-
         void BuiltTileMapFromFile(int tilesize, std::string file);
         void BuildProceduralTileMap(int tilesize);
 
@@ -36,10 +30,11 @@ class GameWorld
 		std::vector<QuadElement> SparseGridQueryRange(const SDL_Rect& rect) const { return sparsegrid_->QueryRange(rect); }
 		void ClearSparseGrid() { sparsegrid_->clear(); }
 		void DrawSparseGrid(SDLManager* sdlmanager) { sparsegrid_->Draw(sdlmanager); }
+
+		int width_;
+		int height_;
     private:
         // some sort of Tiled Map
-        int width_;
-        int height_;
         std::unique_ptr<TileMap> tilemap_;
         std::vector<std::unique_ptr<Tile>> uniquetiles_;
 		std::unique_ptr<SparseGrid> sparsegrid_;

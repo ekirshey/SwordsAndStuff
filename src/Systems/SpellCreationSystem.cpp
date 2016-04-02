@@ -1,7 +1,7 @@
 #include <iostream>
 #include "../../include/ECSFramework/ECSManager.h"
 #include "../../include/Systems/SpellCreationSystem.h"
-#include "../../include/ECSFramework/MessageTypes.h"
+#include "../../include/Types/MessageTypes.h"
 #include "../../include/Components/SpellCastingComponent.h"
 #include "../../include/Components/SpellbookComponent.h"
 #include "../../include/Components/EquipmentComponent.h"

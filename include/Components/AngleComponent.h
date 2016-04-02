@@ -11,17 +11,12 @@ class AngleComponent : public Component
 
         AngleComponent() {}
         AngleComponent(double angle) : angle_(angle) {}
-        AngleComponent(const AngleComponent& c) : angle_(c.Angle()) {}
+        AngleComponent(const AngleComponent& c) : angle_(c.angle_) {}
 
         ~AngleComponent() {}
 
         uint_fast64_t UniqueBits() const {return ID;}
 
-        double Angle() const {return angle_;}
-
-        void SetAngle(double angle) { angle_ = angle;}
-
-    private:
         double angle_;
 
 };

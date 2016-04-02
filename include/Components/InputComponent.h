@@ -5,14 +5,15 @@
 #include "../Config/ComponentDefines.h"
 #include <unordered_map>
 
-enum INPUTS { MOVE_LEFT, MOVE_RIGHT, MOVE_UP, MOVE_DOWN, MELEE };
+enum INPUTS { MOVE_LEFT, MOVE_RIGHT, MOVE_UP, MOVE_DOWN, MELEE, INVENTORY };
 
 const std::vector<int> KeyboardInputs{
 	MOVE_LEFT, 
 	MOVE_RIGHT, 
 	MOVE_UP, 
 	MOVE_DOWN, 
-	MELEE
+	MELEE,
+	INVENTORY
 };
 
 struct Key
@@ -38,6 +39,7 @@ class InputComponent : public Component
 			keyboardinput_.insert({ MOVE_UP, Key(SDL_SCANCODE_W) });
 			keyboardinput_.insert({ MOVE_DOWN, Key(SDL_SCANCODE_S) });
 			keyboardinput_.insert({ MELEE, Key(SDL_SCANCODE_E) });
+			keyboardinput_.insert({ INVENTORY, Key(SDL_SCANCODE_I) });
 		}
 
         InputComponent(const InputComponent& c) {}

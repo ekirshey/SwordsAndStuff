@@ -41,8 +41,8 @@ void PlayerTargetingSystem::UpdateTargetReticule()
 		targetposition = GetEntityComponent<PositionComponent*>(playertargetingcomponent_->Target(), PositionComponent::ID);
 		reticulerender = GetEntityComponent<RenderComponent*>(targetreticuleid_, RenderComponent::ID);
 
-		reticuleposition->SetX(targetposition->X());
-		reticuleposition->SetY(targetposition->Y());
+		reticuleposition->x_ = targetposition->x_;
+		reticuleposition->y_ = targetposition->y_;
 	}
 	
 	

@@ -9,6 +9,7 @@
 #include "../../GUI/GUIManager.h"
 #include "../../ECSFramework/ECSManager.h"
 #include "../../GameMechanics/Spells/GlobalSpellbook.h"
+#include "../../DataManagement/ItemDatabase.h"
 
 class MonsterSpawner;
 
@@ -40,6 +41,8 @@ class GameRunningState : public GameState
 		// GUI Managers
 		//std::unique_ptr<HUDManager>		hudmanager_;
 		std::unique_ptr<GUIManager>		guimanager_;
+
+		std::unique_ptr<Items::ItemDatabase> itemdatabase_;
 };
 
 #endif // GAMERUNNINGSTATE_H

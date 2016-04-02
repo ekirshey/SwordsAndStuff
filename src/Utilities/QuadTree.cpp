@@ -28,7 +28,7 @@ bool QuadTree::Insert(QuadElement entity)
 {
 
 	if ( ( !SDL_HasIntersection(&boundary_, &entity.boundingrectangle->Rectangle())) || 
-		(entity.boundingrectangle->Width() * entity.boundingrectangle->Height()) >  (boundary_.w * boundary_.h))
+		(entity.boundingrectangle->width_ * entity.boundingrectangle->height_) >  (boundary_.w * boundary_.h))
 		return false;
 	
 	if (nodes_[NORTHWEST].get() != nullptr)

@@ -88,31 +88,31 @@ void MovementSystem::ProcessEntity(uint_fast64_t entity)
 			velocitycomponent->SetXVelocity(0);
 			if (inputcomponent->Pressed(MOVE_LEFT)) {
 				velocitycomponent->SetXVelocity(-1 * velocity);
-				positioncomponent->SetFacing(WEST);
+				positioncomponent->facing_ = WEST;
 			}
 			if (inputcomponent->Pressed(MOVE_RIGHT)) {
 				velocitycomponent->SetXVelocity(velocity);
-				positioncomponent->SetFacing(EAST);
+				positioncomponent->facing_ = EAST;
 			}
 
 			velocitycomponent->SetYVelocity(0);
 			if (inputcomponent->Pressed(MOVE_UP)) {
 				velocitycomponent->SetYVelocity(-1 * velocity);
-				positioncomponent->SetFacing(NORTH);
+				positioncomponent->facing_ = NORTH;
 			}
 			if (inputcomponent->Pressed(MOVE_DOWN)) {
 				velocitycomponent->SetYVelocity(velocity);
-				positioncomponent->SetFacing(SOUTH);
+				positioncomponent->facing_ = SOUTH;
 			}
 		}
 	}
 
     // Update position
-    positioncomponent->SetX(positioncomponent->X() + velocitycomponent->XVelocity());
-    positioncomponent->SetY(positioncomponent->Y() + velocitycomponent->YVelocity());
+    positioncomponent->x_ = (positioncomponent->x_ + velocitycomponent->XVelocity());
+    positioncomponent->y_ = (positioncomponent->y_ + velocitycomponent->YVelocity());
 
-    boundingrectanglecomponent->SetX(boundingrectanglecomponent->X() + velocitycomponent->XVelocity());
-    boundingrectanglecomponent->SetY(boundingrectanglecomponent->Y() + velocitycomponent->YVelocity());
+    boundingrectanglecomponent->x_ = (boundingrectanglecomponent->x_ + velocitycomponent->XVelocity());
+    boundingrectanglecomponent->y_ = (boundingrectanglecomponent->y_ + velocitycomponent->YVelocity());
 
 
 	// Insert new coords into sparse grid

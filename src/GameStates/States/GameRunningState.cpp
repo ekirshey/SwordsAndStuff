@@ -30,6 +30,9 @@
 #include "../../../include/Components/TargetingComponent.h"
 #include "../../../include/Components/EquipmentComponent.h"
 
+#include "../../../include/Types/MessageTypes.h"
+
+using namespace Items;
 GameRunningState::GameRunningState()
 {
     SetCurrentState(INITIALIZE);
@@ -47,7 +50,9 @@ void GameRunningState::InitializeState()
     // Create Game World and Camera
     gameworld_ = std::make_unique<GameWorld>(3072,2560);
     gameworld_->BuildProceduralTileMap(32);
-    camera_ = std::make_unique<Camera>( gameworld_->Width(), gameworld_->Height(),camerarect );
+    camera_ = std::make_unique<Camera>( gameworld_->width_, gameworld_->height_,camerarect );
+
+	itemdatabase_ = std::make_unique<Items::ItemDatabase>();
 
 	// Set up Game Data
 	spellbook_ = std::make_unique<GlobalSpellbook>();
@@ -94,7 +99,7 @@ void GameRunningState::InitializeECS()
 	ecsmanager_->AddSystem(std::make_unique<MeleeSystem>(ecsmanager_->GetQueue("MeleeCreation")), priority++);
 	ecsmanager_->AddSystem(std::make_unique<CollisionSystem>(gameworld_.get()), priority++);
 	ecsmanager_->AddSystem(std::make_unique<PlayerTargetingSystem>(*GetSDLManager(), *gameworld_.get(), "..\\..\\..\\media\\reticule.png"), priority++);
-	ecsmanager_->AddSystem(std::make_unique<InventorySystem>(ecsmanager_->GetQueue("EquipmentManagement")), priority++);
+	ecsmanager_->AddSystem(std::make_unique<EquipmentSystem>(ecsmanager_->GetQueue("EquipmentManagement")), priority++);
 	ecsmanager_->AddSystem(std::make_unique<InventorySystem>(ecsmanager_->GetQueue("InventoryManagement")), priority++);
 	cameraindex = ecsmanager_->AddSystem(std::make_unique<CameraSystem>(camera_.get()), priority++);
 	ecsmanager_->AddSystem(std::make_unique<RenderSystem>(GetSDLManager(), gameworld_.get(), camera_.get()), priority++);
@@ -104,9 +109,6 @@ void GameRunningState::InitializeECS()
 
 	rect = { 0,0,26,26 }; // Removed top pixel due to a black line showing up when rotating
 						  //path = "media\\sprites\\shooter.png";
-	
-	auto playerequipment = std::make_unique<EquipmentComponent>();
-	//playerequipment->AddEquipment(std::unique_ptr<Item>(new Item("sword", MAINHAND, 0, ItemStats(10, 20))));
 
 	auto playerspellbook = std::make_unique<SpellbookComponent>();
 	Spell test = spellbook_->GetSpell(0);
@@ -120,12 +122,23 @@ void GameRunningState::InitializeECS()
 	ecsmanager_->AddComponentToEntity<RenderComponent>(playerentity, path, rect, 0.0);
 	ecsmanager_->AddComponentToEntity<BoundingRectangleComponent>(playerentity, (SCREEN_WIDTH / 2) - (34 / 2) + 8, 400 + 8, 24, 24); // TODO Magic Numbers
 	ecsmanager_->AddComponentToEntity<SpellCastingComponent>(playerentity);
-	ecsmanager_->AddComponentToEntity(playerentity, std::move(playerequipment));
+	ecsmanager_->AddComponentToEntity<EquipmentComponent>(playerentity);
 	ecsmanager_->AddComponentToEntity<InventoryComponent>(playerentity, 10);
 	ecsmanager_->AddComponentToEntity<RPGStatsComponent>(playerentity);
 	ecsmanager_->AddComponentToEntity(playerentity, std::move(playerspellbook));
 	ecsmanager_->AddComponentToEntity<TargetingComponent>(playerentity);
 	ecsmanager_->AssignEntityTag(playerentity, "PLAYER");
+
+	///////////////////////////////////////
+	Items::Item* itemptr = itemdatabase_->CreateItem(
+		Items::ItemStats(),
+		Items::ItemProperties(),
+		Items::ItemLore("sword", "sharp sword"),
+		Items::ItemTriggers());
+
+	ecsmanager_->SendMessage<ItemMessage>("InventoryManagement", playerentity, itemptr, ADDITEM);
+
+	///////////////////////////////////////
 
 	CameraSystem* camerasystem = static_cast<CameraSystem*>(ecsmanager_->GetSystem(cameraindex));
 	if (camerasystem != nullptr)
@@ -136,7 +149,6 @@ void GameRunningState::InitializeECS()
 	path = "../../../media/sprites/Pawns.png";
 	// Monster
 	int monsterentity;
-	int mod;
 	for (int j = 0; j < 10; j++)
 		for (int i = 0; i < 10; i++)
 		{

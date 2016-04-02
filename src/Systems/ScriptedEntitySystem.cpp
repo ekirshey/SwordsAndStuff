@@ -40,15 +40,15 @@ void WaypointSystem::ProcessEntity(uint_fast64_t entity) {
 		if (script->GetAnchor() != -1) {
 			auto anchorposition = GetEntityComponent<PositionComponent*>(script->GetAnchor(), PositionComponentID);
 			if (anchorposition != nullptr) {
-				entityposition->SetX(anchorposition->X() + steps[currentstep].dX);
-				entityposition->SetY(anchorposition->Y() + steps[currentstep].dY);
+				entityposition->x_ = anchorposition->x_ + steps[currentstep].dX;
+				entityposition->y_ = anchorposition->y_ + steps[currentstep].dY;
 			}
 			else
 				std::cout << "Invalid script anchor " << std::endl;
 		}
 		else {
-			entityposition->SetX(steps[currentstep].dX);
-			entityposition->SetY(steps[currentstep].dY);
+			entityposition->x_ = steps[currentstep].dX;
+			entityposition->y_ = steps[currentstep].dY;
 		}
 	}
 

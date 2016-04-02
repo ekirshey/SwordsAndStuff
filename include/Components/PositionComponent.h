@@ -15,7 +15,7 @@ class PositionComponent : public Component
         PositionComponent() {}
 		PositionComponent(int x, int y) : x_(x), y_(y), facing_(SOUTH) {}
         PositionComponent(int x, int y, int facing) : x_(x), y_(y), facing_(facing) {}
-        PositionComponent(const PositionComponent& c) : x_(c.X()), y_(c.Y()), facing_(c.Facing()) {
+        PositionComponent(const PositionComponent& c) : x_(c.x_), y_(c.y_), facing_(c.facing_) {
 
 		}
 
@@ -23,15 +23,6 @@ class PositionComponent : public Component
 
         uint_fast64_t UniqueBits() const {return ID;}
 
-        int X() const {return x_;}
-        int Y() const {return y_;}
-		int Facing() const { return facing_; }
-
-        void SetX(int x) { x_ = x;}
-        void SetY(int y) { y_ = y;}
-		void SetFacing(int facing) { facing_ = facing; }
-
-    private:
         int x_;
         int y_;
 		int facing_;

@@ -1,6 +1,6 @@
 #include "..\..\include\Systems\QueueSystem.h"
 #include "..\..\include\ECSFramework\ECSManager.h"	
-#include "../../include/ECSFramework/MessageTypes.h"
+#include "../../include/Types/MessageTypes.h"
 
 QueueSystem::QueueSystem( MessageQueue* messagequeue) :messagequeue_(messagequeue) {
 

@@ -18,7 +18,7 @@ RenderSystem::RenderSystem( SDLManager* sdlmanager, GameWorld* gameworld, Camera
     : sdlmanager_(sdlmanager), gameworld_(gameworld), camera_(camera)
 {
 	tilemap_ = SDL_CreateTexture(sdlmanager_->GetRenderer(), SDL_PIXELFORMAT_RGBA8888,
-		SDL_TEXTUREACCESS_TARGET, gameworld_->Width(), gameworld_->Height());
+		SDL_TEXTUREACCESS_TARGET, gameworld_->width_, gameworld_->height_);
 	SDL_SetRenderTarget(sdlmanager_->GetRenderer(), tilemap_);
 
 	gameworld_->Render(sdlmanager_);	// Build map texture
@@ -84,9 +84,9 @@ void RenderSystem::ProcessEntity(uint_fast64_t entity)
     SDL_Rect cliprect = rendercomponent->ClipRect();
 
 	// Adjust cliprect for facing
-	cliprect.x = cliprect.x + (positioncomponent->Facing() * cliprect.w);
+	cliprect.x = cliprect.x + (positioncomponent->facing_ * cliprect.w);
 
-	SDL_Rect cullrect = {positioncomponent->X(), positioncomponent->Y(), cliprect.w, cliprect.h};
+	SDL_Rect cullrect = {positioncomponent->x_, positioncomponent->y_, cliprect.w, cliprect.h};
 
 /*
 	if (entity == 0)
@@ -95,7 +95,7 @@ void RenderSystem::ProcessEntity(uint_fast64_t entity)
 
 		for (int i = 0; i < elements.size(); i++)
 		{
-			SDL_Rect rect{ elements[i].boundingrectangle->Rectangle().x - camera_->X(),elements[i].boundingrectangle->Rectangle().y - camera_->Y(),
+			SDL_Rect rect{ elements[i].boundingrectangle->Rectangle().x - camera_->x_,elements[i].boundingrectangle->Rectangle().y - camera_->y_,
 				elements[i].boundingrectangle->Rectangle().w,elements[i].boundingrectangle->Rectangle().h };
 			sdlmanager_->RenderOutlineRectangle(rect, 0x00, 0x00, 0x00, 0xFF);
 		}
@@ -110,10 +110,10 @@ void RenderSystem::ProcessEntity(uint_fast64_t entity)
 			if (rendercomponent->RenderAngle() != 0.0)
 			{
 				SDL_Point center = { (cliprect.w / 2), (cliprect.h / 2) };
-				sdlmanager_->RenderImage(rendercomponent->ImagePath(), positioncomponent->X() - camera_->X(), positioncomponent->Y() - camera_->Y(), &cliprect, rendercomponent->RenderAngle(), &center, SDL_FLIP_NONE);
+				sdlmanager_->RenderImage(rendercomponent->ImagePath(), positioncomponent->x_ - camera_->X(), positioncomponent->y_ - camera_->Y(), &cliprect, rendercomponent->RenderAngle(), &center, SDL_FLIP_NONE);
 			}
 			else
-				sdlmanager_->RenderImage(rendercomponent->ImagePath(), positioncomponent->X() - camera_->X(), positioncomponent->Y() - camera_->Y(), &cliprect);
+				sdlmanager_->RenderImage(rendercomponent->ImagePath(), positioncomponent->x_ - camera_->X(), positioncomponent->y_ - camera_->Y(), &cliprect);
 		}
 
 	}
