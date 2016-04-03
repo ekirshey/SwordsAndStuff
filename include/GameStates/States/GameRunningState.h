@@ -16,7 +16,7 @@ class MonsterSpawner;
 class GameRunningState : public GameState
 {
     public:
-        GameRunningState();
+        GameRunningState(bool persistent);
         virtual ~GameRunningState();
 
     private:

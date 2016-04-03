@@ -1,6 +1,8 @@
 #ifndef GAMESTATE_H
 #define GAMESTATE_H
 
+#include <memory>
+
 enum States {INITIALIZE, TRANSITIONIN, UPDATE, TRANSITIONOUT, EXIT};
 
 class SDLManager;
@@ -8,7 +10,7 @@ class SDLManager;
 class GameState
 {
     public:
-
+		GameState(bool persistent) : persistent_(persistent), nextstate_(nullptr) {}
         virtual ~GameState() {}
 
         // Default FSM for a state
@@ -34,11 +36,13 @@ class GameState
             }
         }
 
-        void SetSDLManager(SDLManager& sdlmanager) {sdlmanager_ = &sdlmanager;}
-        SDLManager* GetSDLManager() {return sdlmanager_;}
-
         void SetCurrentState(int state) {currentstate_ = state;}
         int GetCurrentState() {return currentstate_;}
+
+		SDLManager* sdlmanager_;
+		std::unique_ptr<GameState> nextstate_;
+		bool persistent_;
+
 
     private:
         // Every state must handle init, update and exit
@@ -48,7 +52,7 @@ class GameState
         virtual void TransitionIntoState() = 0;
         virtual void TransitionFromState() = 0;
 
-        SDLManager* sdlmanager_;
+        
         int currentstate_;
 };
 

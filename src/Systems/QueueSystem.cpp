@@ -2,7 +2,7 @@
 #include "..\..\include\ECSFramework\ECSManager.h"	
 #include "../../include/Types/MessageTypes.h"
 
-QueueSystem::QueueSystem( MessageQueue* messagequeue) :messagequeue_(messagequeue) {
+QueueSystem::QueueSystem( MessageQueue* messagequeue) : messagequeue_(messagequeue) {
 
 	if (messagequeue != nullptr) {
 		messagequeue->RegisterConsumer();

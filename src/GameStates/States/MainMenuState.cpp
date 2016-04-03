@@ -4,15 +4,10 @@
 #include "../../../include/Systems/RenderSystem.h"
 #include "../../../include/Components/RenderComponent.h"
 #include "../../../include/Components/PositionComponent.h"
+#include "../../../include/GameStates/States/GameRunningState.h"
+#include "../../../include/GameStates/States/CharacterCreationState.h"
 
-void StartButton(GameState* state)
-{
-    MainMenuState* currentstate = static_cast<MainMenuState*>(state);
-
-    currentstate->SetCurrentState(TRANSITIONOUT);
-}
-
-MainMenuState::MainMenuState()
+MainMenuState::MainMenuState(bool persistent) : GameState(persistent)
 {
     SetCurrentState(INITIALIZE);
 }
@@ -25,23 +20,10 @@ MainMenuState::~MainMenuState()
 void MainMenuState::InitializeState()
 {
     std::cout << "Initialize" << std::endl;
-
+	//std::string path = "media\\backgrounds\\mainmenubg.bmp";
+	//path = "media\\buttons\\startbutton.bmp";
     // Build systems and entities
-    ecsmanager_.AddSystem(std::make_unique<RenderSystem>(GetSDLManager()),0);
 
-    // Background
-    int backgroundentity = ecsmanager_.CreateEntity();
-    SDL_Rect rect = {0,0,640,480};
-    std::string path = "media\\backgrounds\\mainmenubg.bmp";
-    ecsmanager_.AddComponentToEntity(backgroundentity, std::make_unique<PositionComponent>(0,0));
-    ecsmanager_.AddComponentToEntity(backgroundentity, std::make_unique<RenderComponent>(path,rect, 0.0));
-
-    // Start Button
-    int startbuttonentity = ecsmanager_.CreateEntity();
-    rect = {0,0,72,30};
-    path = "media\\buttons\\startbutton.bmp";
-    ecsmanager_.AddComponentToEntity(startbuttonentity, std::make_unique<RenderComponent>(path, rect, 0.0));
-    ecsmanager_.AddComponentToEntity(startbuttonentity, std::make_unique<PositionComponent>(284,300));
 
     SetCurrentState(TRANSITIONIN);
 }
@@ -54,8 +36,15 @@ void MainMenuState::TransitionIntoState()
 
 void MainMenuState::UpdateState(int elapsedtime)
 {
-    //ecsmanager_.Process();
-    SetCurrentState(EXIT);
+	auto keyboardstate_ = sdlmanager_->GetKeyBoardState();
+	
+	if (keyboardstate_[SDL_SCANCODE_C]) {
+		nextstate_ = std::make_unique<CharacterCreationState>(false);
+		SetCurrentState(TRANSITIONOUT);
+	}
+	else if (keyboardstate_[SDL_SCANCODE_Q]) {
+		SetCurrentState(TRANSITIONOUT);
+	}
 }
 
 void MainMenuState::TransitionFromState()
@@ -63,6 +52,8 @@ void MainMenuState::TransitionFromState()
     std::cout << "Transition From State" << std::endl;
 
     std::cout << "Exit State" << std::endl;
+
+	
     SetCurrentState(EXIT);
 }
 

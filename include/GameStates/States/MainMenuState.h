@@ -7,7 +7,7 @@
 class MainMenuState : public GameState
 {
     public:
-        MainMenuState();
+		MainMenuState(bool persistent);
         virtual ~MainMenuState();
 
     private:
@@ -16,8 +16,6 @@ class MainMenuState : public GameState
         void InitializeState();
         void UpdateState(int elapsedtime);
         void TransitionFromState();
-
-        ECSManager ecsmanager_;
 };
 
 #endif // MAINMENUSTATE_H

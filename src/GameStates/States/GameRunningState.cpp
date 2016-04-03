@@ -33,7 +33,7 @@
 #include "../../../include/Types/MessageTypes.h"
 
 using namespace Items;
-GameRunningState::GameRunningState()
+GameRunningState::GameRunningState(bool persistent) : GameState(persistent)
 {
     SetCurrentState(INITIALIZE);
 }
@@ -91,18 +91,18 @@ void GameRunningState::InitializeECS()
 	ecsmanager_->AddQueue("InventoryManagement");
 
 	// Build systems and entities
-	ecsmanager_->AddSystem(std::make_unique<InputSystem>(GetSDLManager()), priority++);
+	ecsmanager_->AddSystem(std::make_unique<InputSystem>(sdlmanager_), priority++);
 	//ecsmanager_->AddSystem(std::unique_ptr<AISystem>(new AISystem()), priority++);
 	ecsmanager_->AddSystem(std::make_unique<MovementSystem>(gameworld_.get()), priority++);
 	ecsmanager_->AddSystem(std::make_unique<WaypointSystem>(), priority++);	// Not 100% sure on the placement 
 	ecsmanager_->AddSystem(std::make_unique<SpellCreationSystem>(ecsmanager_->GetQueue("SpellCreation")), priority++);
 	ecsmanager_->AddSystem(std::make_unique<MeleeSystem>(ecsmanager_->GetQueue("MeleeCreation")), priority++);
 	ecsmanager_->AddSystem(std::make_unique<CollisionSystem>(gameworld_.get()), priority++);
-	ecsmanager_->AddSystem(std::make_unique<PlayerTargetingSystem>(*GetSDLManager(), *gameworld_.get(), "..\\..\\..\\media\\reticule.png"), priority++);
+	ecsmanager_->AddSystem(std::make_unique<PlayerTargetingSystem>(*sdlmanager_, *gameworld_.get(), "..\\..\\..\\media\\reticule.png"), priority++);
 	ecsmanager_->AddSystem(std::make_unique<EquipmentSystem>(ecsmanager_->GetQueue("EquipmentManagement")), priority++);
 	ecsmanager_->AddSystem(std::make_unique<InventorySystem>(ecsmanager_->GetQueue("InventoryManagement")), priority++);
 	cameraindex = ecsmanager_->AddSystem(std::make_unique<CameraSystem>(camera_.get()), priority++);
-	ecsmanager_->AddSystem(std::make_unique<RenderSystem>(GetSDLManager(), gameworld_.get(), camera_.get()), priority++);
+	ecsmanager_->AddSystem(std::make_unique<RenderSystem>(sdlmanager_, gameworld_.get(), camera_.get()), priority++);
 
 	// Player
 	int playerentity = ecsmanager_->CreateEntity();
@@ -204,7 +204,8 @@ void GameRunningState::UpdateState(int elapsedtime)
 {
 	int errorcode;
 
-	if (ecsmanager_->GetStatus(errorcode)) {
+	if (ecsmanager_->GetStatus(errorcode) && 
+		!sdlmanager_->GetKeyBoardState()[SDL_SCANCODE_ESCAPE]) {	// State test
 		ecsmanager_->Update(elapsedtime);
 		//objectmanager_->Update(elapsedtime);
 		//hudmanager_->Update();

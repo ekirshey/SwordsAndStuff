@@ -30,18 +30,18 @@ void InputSystem::ProcessEntity(uint_fast64_t entity)
     keyboardstate_ = sdlmanager_->GetKeyBoardState();
 
 	// Update key states
-	for (auto inputname : KeyboardInputs)
+	for (auto inputid : KeyboardInputs)
 	{
-		if (keyboardstate_[inputcomponent->Scancode(inputname)])
+		if (keyboardstate_[inputcomponent->Scancode(inputid)])
 		{
-			if (inputcomponent->Pressed(inputname))
-				inputcomponent->SetHeld(inputname, true);
-			inputcomponent->SetPressed(inputname, true);
+			if (inputcomponent->Pressed(inputid))
+				inputcomponent->SetHeld(inputid, true);
+			inputcomponent->SetPressed(inputid, true);
 		}
 		else
 		{
-			inputcomponent->SetHeld(inputname, false);
-			inputcomponent->SetPressed(inputname, false);
+			inputcomponent->SetHeld(inputid, false);
+			inputcomponent->SetPressed(inputid, false);
 		}
 	}
 

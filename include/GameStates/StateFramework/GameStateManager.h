@@ -15,7 +15,7 @@ class GameStateManager
         GameStateManager();
         virtual ~GameStateManager();
 
-        void AddState(GameState* state);
+		void AddState(std::unique_ptr<GameState> state);
 
         void Run();
     private:
@@ -23,7 +23,13 @@ class GameStateManager
         bool Initialize();
 
         void RemoveStateAtIndex(int idx);
-        void RemoveLastState() { if (gamestates_.size() > 0) gamestates_.pop_back();}
+        void RemoveLastState() { 
+			if (gamestates_.size() > 0) {
+				activestate_--;
+				gamestates_.pop_back();
+			}
+		}
+
 
         std::vector<std::unique_ptr<GameState>> gamestates_;
         unsigned int activestate_;
