@@ -1,8 +1,10 @@
 #ifndef MAINMENUSTATE_H
 #define MAINMENUSTATE_H
 
+#include <memory>
 #include "../StateFramework/GameState.h"
 #include "../../ECSFramework/ECSManager.h"
+#include "../../GUI/GUIManager.h"
 
 class MainMenuState : public GameState
 {
@@ -16,6 +18,8 @@ class MainMenuState : public GameState
         void InitializeState();
         void UpdateState(int elapsedtime);
         void TransitionFromState();
+
+		std::unique_ptr<GUIManager> guimanager_;
 };
 
 #endif // MAINMENUSTATE_H

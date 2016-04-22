@@ -8,17 +8,17 @@
 #include "../../include/GameWorld/Tile.h"
 
 
-TileMap::TileMap(int mapwidth, int mapheight, int tilesize, std::string filetoload, const std::vector<std::unique_ptr<Tile>> &uniquetiles) :
+TileMap::TileMap(int mapwidth, int mapheight, int tilesize, std::string filetoload, const std::vector<Tile> &uniquetiles) :
      mapwidth_(mapwidth), mapheight_(mapheight), tilesize_(tilesize)
 {
     std::cout << mapwidth_ << " " << mapheight_ << std::endl;
     tilemap_.resize(mapwidth_*mapheight_);
 
-    if ( !LoadMapFromFile(filetoload,uniquetiles) )
+    if ( !LoadMapFromFile(filetoload, uniquetiles) )
         std::cout << "Failed to Load Tile Map: Cascading errors Someday " << std::endl;
 }
 
-TileMap::TileMap(int mapwidth, int mapheight, int tilesize, const std::vector<std::unique_ptr<Tile>> &uniquetiles) :
+TileMap::TileMap(int mapwidth, int mapheight, int tilesize, const std::vector<Tile> &uniquetiles) :
      mapwidth_(mapwidth), mapheight_(mapheight), tilesize_(tilesize)
 {
     std::cout << mapwidth_ << " " << mapheight_ << std::endl;
@@ -33,7 +33,7 @@ TileMap::~TileMap()
     //dtor
 }
 
-bool TileMap::LoadMapProcedurally(const std::vector<std::unique_ptr<Tile>> &uniquetiles)
+bool TileMap::LoadMapProcedurally(const std::vector<Tile> &uniquetiles)
 {
     int totalcenterpoints = 0;
     int centerpointcounter = 0;
@@ -55,7 +55,7 @@ bool TileMap::LoadMapProcedurally(const std::vector<std::unique_ptr<Tile>> &uniq
         int index = (y*mapwidth_) + x;
         tiletype = std::rand() % uniquetiles.size();
         centerpoints.push_back(index);
-        tilemap_[index] = uniquetiles[tiletype].get();
+        tilemap_[index] = uniquetiles[tiletype];
     }
 
     std::cout << "-----BEGIN PROCEDURAL ALG-----" <<std::endl;
@@ -92,7 +92,7 @@ bool TileMap::LoadMapProcedurally(const std::vector<std::unique_ptr<Tile>> &uniq
 }
 
 
-bool TileMap::LoadMapFromFile(std::string filename, const std::vector<std::unique_ptr<Tile>> &uniquetiles)
+bool TileMap::LoadMapFromFile(std::string filename, const std::vector<Tile> &uniquetiles)
 {
 	bool tilesLoaded = true;
 	char id;
@@ -106,7 +106,7 @@ bool TileMap::LoadMapFromFile(std::string filename, const std::vector<std::uniqu
         while (file >> id)
         {
             if ( id != '\n' && id != ',')
-                tilemap_[i++] = uniquetiles.at((int)(id - '0')).get();
+                tilemap_[i++] = uniquetiles.at((int)(id - '0'));
 
             if ( i == (mapwidth_ * mapheight_))
                 break;
@@ -149,17 +149,16 @@ void TileMap::Render(SDLManager* sdlmanager, SDL_Rect boundsrect)
     {
         for(int j = ylowerbound; j < yupperbound; j++)
         {
-            if ( tilemap_[(j*mapwidth_) + i ] != nullptr)
-            {
-                SDL_Rect cliprect = tilemap_[ (j*mapwidth_) + i ]->Cliprect();
+            //if ( tilemap_[(j*mapwidth_) + i ] != nullptr)
+            //{
+                SDL_Rect cliprect = tilemap_[ (j*mapwidth_) + i ].Cliprect();
 
                 col = tilesize_*i - boundsrect.x;
                 row = tilesize_*j;
 				//http://stackoverflow.com/questions/22132531/fastest-way-to-render-a-tiled-map-with-sdl2
 				//http://stackoverflow.com/questions/20730900/creating-a-new-texture-from-several-textures-sdl-2
-                sdlmanager->RenderImage(tilemap_[i]->Imagepath(),col,row,&cliprect);
-            }
-
+                sdlmanager->RenderImage(tilemap_[i].Imagepath(),col,row,&cliprect);
+            //}
         }
     }
 
@@ -174,16 +173,16 @@ void TileMap::Render(SDLManager* sdlmanager)
 	{
 		for (int j = 0; j < mapheight_; j++)
 		{
-			if (tilemap_[(j*mapwidth_) + i] != nullptr)
-			{
-				SDL_Rect cliprect = tilemap_[(j*mapwidth_) + i]->Cliprect();
+			//if (tilemap_[(j*mapwidth_) + i] != nullptr)
+			//{
+				SDL_Rect cliprect = tilemap_[(j*mapwidth_) + i].Cliprect();
 
 				col = tilesize_*i;
 				row = tilesize_*j;
 				//http://stackoverflow.com/questions/22132531/fastest-way-to-render-a-tiled-map-with-sdl2
 				//http://stackoverflow.com/questions/20730900/creating-a-new-texture-from-several-textures-sdl-2
-				sdlmanager->RenderImage(tilemap_[i]->Imagepath(), col, row, &cliprect);
-			}
+				sdlmanager->RenderImage(tilemap_[i].Imagepath(), col, row, &cliprect);
+			//}
 
 		}
 	}

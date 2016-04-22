@@ -7,6 +7,8 @@
 class Tile
 {
     public:
+		Tile() : id_(-1), collidable_(false), imagepath_(""), cliprect_({ 0,0,0,0 } ) {}
+
         Tile(int id, bool collidable, std::string imagepath, SDL_Rect cliprect) : id_(id), collidable_(collidable), imagepath_(imagepath), cliprect_(cliprect) {}
         virtual ~Tile() {}
 

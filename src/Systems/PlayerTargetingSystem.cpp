@@ -52,7 +52,7 @@ void PlayerTargetingSystem::ProcessEntities()
 {
 	int mouseX, mouseY;
 	const uint8_t* keyboardstate;
-	bool* mousestate;
+	std::vector<bool> mousestate;
 	BoundingRectangleComponent* targetboundingrectangle;
 
 	// Set up Player if not already done
@@ -67,7 +67,7 @@ void PlayerTargetingSystem::ProcessEntities()
 
 	
 	mousestate = sdlmanager_->GetMouseState();
-	if (mousestate[LEFT_MOUSEBUTTON] == true)
+	if (mousestate[LEFT_PRESSED] == true)
 	{
 		SDL_GetMouseState(&mouseX, &mouseY);
 		playertargetingcomponent_->SetTarget(NOTARGET);

@@ -9,6 +9,7 @@ const int ITEMMESSAGEID = 0x03;
 
 enum ItemOperation { ADDITEM, REMOVE };
 
+
 struct SpellMessage : public Message
 {
 	uint_fast64_t entity;

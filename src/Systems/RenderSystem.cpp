@@ -17,12 +17,7 @@ RenderSystem::RenderSystem(SDLManager* sdlmanager) : sdlmanager_(sdlmanager), ga
 RenderSystem::RenderSystem( SDLManager* sdlmanager, GameWorld* gameworld, Camera* camera)
     : sdlmanager_(sdlmanager), gameworld_(gameworld), camera_(camera)
 {
-	tilemap_ = SDL_CreateTexture(sdlmanager_->GetRenderer(), SDL_PIXELFORMAT_RGBA8888,
-		SDL_TEXTUREACCESS_TARGET, gameworld_->width_, gameworld_->height_);
-	SDL_SetRenderTarget(sdlmanager_->GetRenderer(), tilemap_);
-
-	gameworld_->Render(sdlmanager_);	// Build map texture
-	SDL_SetRenderTarget(sdlmanager_->GetRenderer(), NULL);
+	gameworld_->BuildTileMapTexture(sdlmanager_);
 
 	SetSystemName("RenderSystem");
 }
@@ -34,25 +29,15 @@ RenderSystem::~RenderSystem()
 
 void RenderSystem::BeforeObjectProcessing()
 {
-/* EKTEMP Render Info no real reason its here
-	SDL_RendererInfo x;
-	SDL_GetRendererInfo(sdlmanager_->GetRenderer(), &x);
-	std::cout << x.name << " " << x.flags<< std::endl;
-*/
-	//GetECSManager()->ClearTagVector("ONSCREEN"); // Rebuild the onscreen list
-
-    //if ( gameworld_ != nullptr && camera_ != nullptr)
-    //    gameworld_->Render(sdlmanager_,camera_);
-	SDL_Rect destrect = {0,0,SCREEN_WIDTH,SCREEN_HEIGHT};
 	SDL_Rect camerarect = camera_->GetCameraRect();
 
-	SDL_RenderCopy(sdlmanager_->GetRenderer(), tilemap_, &camerarect, NULL);
+	// Render tilemap texture
+	gameworld_->Render(sdlmanager_, &camerarect);
 
 }
 
 void RenderSystem::AfterObjectProcessing()
 {
-
 	std::ostringstream strs;
 	if (FrameTime() > 0)
 	{
@@ -60,7 +45,7 @@ void RenderSystem::AfterObjectProcessing()
 		strs << " ";
 		strs << GetECSManager()->EntityCount();
 		std::string str = "FPS: " + strs.str();
-		sdlmanager_->RenderText(str);
+		//sdlmanager_->RenderText(str);
 	}
 
 	//gameworld_->DrawSparseGrid(sdlmanager_);

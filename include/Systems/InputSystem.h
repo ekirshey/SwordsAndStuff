@@ -17,8 +17,6 @@ class InputSystem : public ProcessingSystem
         void ProcessEntity(uint_fast64_t entity);
     private:
         SDLManager* sdlmanager_;
-        const uint8_t* keyboardstate_;
-        bool* mousestate_;
 
 };
 

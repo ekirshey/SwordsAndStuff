@@ -4,7 +4,6 @@
 #include <vector>
 #include <memory>
 #include <cstdint>
-#include "ECSManagerToSystemMessage.h"
 
 // Forward Declarations
 class System;

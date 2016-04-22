@@ -26,7 +26,7 @@ void GameStateManager::AddState(std::unique_ptr<GameState> state)
 {
 	if (state != nullptr) {
 		gamestates_.push_back(std::move(state));
-		gamestates_.back()->sdlmanager_ = &sdlmanager_;
+		gamestates_.back()->AssignSDLManager(&sdlmanager_);
 	}
 }
 
@@ -95,9 +95,9 @@ void GameStateManager::Update(int elapsedtime)
     gamestates_[activestate_]->FiniteStateMachine(elapsedtime);
     if (gamestates_[activestate_]->GetCurrentState() == EXIT)
     {
-		if (gamestates_[activestate_]->nextstate_ != nullptr) {
-			auto nextstate = std::move(gamestates_[activestate_]->nextstate_);
-			if (gamestates_[activestate_]->persistent_) {
+		if (gamestates_[activestate_]->HasNextState()) {
+			auto nextstate = gamestates_[activestate_]->PopNextState();
+			if (gamestates_[activestate_]->IsPersistent()) {
 				gamestates_[activestate_]->SetCurrentState(TRANSITIONIN);
 			}
 			else // Remove a non persistent state

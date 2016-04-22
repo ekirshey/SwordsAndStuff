@@ -28,8 +28,6 @@ class RenderSystem : public ProcessingSystem
         SDLManager* sdlmanager_;
         GameWorld* gameworld_;
         Camera* camera_;
-
-		SDL_Texture* tilemap_;
 };
 
 #endif // RENDERSYSTEM_H

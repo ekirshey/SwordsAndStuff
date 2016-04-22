@@ -2,6 +2,7 @@
 #define GAMESTATE_H
 
 #include <memory>
+#include <iostream>
 
 enum States {INITIALIZE, TRANSITIONIN, UPDATE, TRANSITIONOUT, EXIT};
 
@@ -39,12 +40,30 @@ class GameState
         void SetCurrentState(int state) {currentstate_ = state;}
         int GetCurrentState() {return currentstate_;}
 
+		void AssignSDLManager(SDLManager* sdlmanager) {
+			if (sdlmanager != nullptr)
+				sdlmanager_ = sdlmanager;
+			else
+				std::cout << "Bad SDLManager" << std::endl;
+		}
+
+		bool HasNextState() {
+			return nextstate_ != nullptr;
+		}
+		
+		void AddNextState(std::unique_ptr<GameState> nextstate) { nextstate_ = std::move(nextstate); }
+
+		bool IsPersistent() { return persistent_; }
+
+		// Source
+		std::unique_ptr<GameState> PopNextState() { return std::move(nextstate_); }
+
+		SDLManager* GetSDLManager() { return sdlmanager_; }
+    private:
 		SDLManager* sdlmanager_;
 		std::unique_ptr<GameState> nextstate_;
 		bool persistent_;
 
-
-    private:
         // Every state must handle init, update and exit
         virtual void InitializeState() = 0;
         virtual void UpdateState(int elapsedtime) = 0;

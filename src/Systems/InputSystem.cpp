@@ -26,13 +26,13 @@ void InputSystem::ProcessEntity(uint_fast64_t entity)
     // Get Relevant Component Data
 	auto inputcomponent = GetEntityComponent<InputComponent*>(entity, InputComponent::ID);
 
-    mousestate_ = sdlmanager_->GetMouseState();
-    keyboardstate_ = sdlmanager_->GetKeyBoardState();
+    auto mousestate = sdlmanager_->GetMouseState();
+    auto keyboardstate = sdlmanager_->GetKeyBoardState();
 
 	// Update key states
 	for (auto inputid : KeyboardInputs)
 	{
-		if (keyboardstate_[inputcomponent->Scancode(inputid)])
+		if (keyboardstate[inputcomponent->Scancode(inputid)])
 		{
 			if (inputcomponent->Pressed(inputid))
 				inputcomponent->SetHeld(inputid, true);

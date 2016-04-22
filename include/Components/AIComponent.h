@@ -11,15 +11,12 @@ public:
 
 	AIComponent() {}
 	AIComponent(AITemplate* ai) : ai_(ai) {}
-	AIComponent(const AIComponent& c) : ai_(c.AI()) {}
+	AIComponent(const AIComponent& c) : ai_(c.ai_) {}
 
 	~AIComponent() {}
 
 	uint_fast64_t UniqueBits() const { return ID; }
 
-	AITemplate* AI() const { return ai_; }
-
-private:
 	AITemplate* ai_;
 
 };

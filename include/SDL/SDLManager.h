@@ -1,6 +1,7 @@
 #ifndef SDLMANAGER_H
 #define SDLMANAGER_H
 
+#include <iostream>
 #include <SDL.h>
 #include "TextureManager.h"
 //TODO Add necessary functions as I need them essentially
@@ -10,7 +11,20 @@
 const int SCREEN_WIDTH = 1280;
 const int SCREEN_HEIGHT = 640;
 
-enum {LEFT_MOUSEBUTTON, RIGHT_MOUSEBUTTON};
+enum {
+	LEFT_MOUSEBUTTON_HELD, 
+	RIGHT_MOUSEBUTTON_HELD, 
+	LEFT_PRESSED, 
+	RIGHT_PRESSED
+};
+
+struct RecordStream {
+	std::string* stream;
+	int maxcharacters;
+	bool AtMaxLength() { return (stream->size() < maxcharacters);  }
+
+	RecordStream(std::string* s, int maxchars) : stream(s), maxcharacters(maxchars) {}
+};
 
 class SDLManager
 {
@@ -26,28 +40,46 @@ class SDLManager
         void Close();
 
         // Render Functions
-        void RenderFillRectangle(int X, int Y, int Width, int Height, uint8_t R, uint8_t G, uint8_t B, uint8_t A);
-        void RenderFillRectangle(SDL_Rect rectangle, uint8_t R, uint8_t G, uint8_t B, uint8_t A);
-        void RenderOutlineRectangle(int X, int Y, int Width, int Height, uint8_t R, uint8_t G, uint8_t B, uint8_t A);
-        void RenderOutlineRectangle(SDL_Rect rectangle, uint8_t R, uint8_t G, uint8_t B, uint8_t A);
-		void RenderText(std::string text);
+		void RenderFillRectangle(int X, int Y, int Width, int Height, SDL_Color color);
+		void RenderFillRectangle(SDL_Rect rectangle, SDL_Color color);
+		void RenderOutlineRectangle(int X, int Y, int Width, int Height, SDL_Color color);
+		void RenderOutlineRectangle(SDL_Rect rectangle, SDL_Color color);
+		void RenderLine(int x1, int y1, int x2, int y2, SDL_Color color);
+
+        void RenderFillRectangle(int X, int Y, int Width, int Height, Uint8 R, Uint8 G, Uint8 B, Uint8 A);
+        void RenderFillRectangle(SDL_Rect rectangle, Uint8 R, Uint8 G, Uint8 B, Uint8 A);
+        void RenderOutlineRectangle(int X, int Y, int Width, int Height, Uint8 R, Uint8 G, Uint8 B, Uint8 A);
+        void RenderOutlineRectangle(SDL_Rect rectangle, Uint8 R, Uint8 G, Uint8 B, Uint8 A);
+		void RenderLine(int x1, int y1, int x2, int y2, Uint8 R, Uint8 G, Uint8 B, Uint8 A);
+
+		void RenderText(std::string text, int x, int y, int fontsize = 12, SDL_Color color = {0,0,0,255}, std::string fontpath = "..\\..\\..\\media\\font.ttf");
 
         void RenderImage(const std::string& image, int x, int y, SDL_Rect* clip = 0);
         void RenderImage(const std::string& image, int x, int y, SDL_Rect* clip, double angle, SDL_Point* center, SDL_RendererFlip flip );
 
         const uint8_t* GetKeyBoardState() const {return SDL_GetKeyboardState(NULL);}
-        bool* GetMouseState() const {return mousestate_;}
+        const std::vector<bool>& GetMouseState() const {return mousestate_;}
 
         SDL_Renderer* GetRenderer() {return renderer_;}
         SDL_Window* GetWindow() {return window_;}
+
+		void RecordInput(int maxcharacters, std::string* stream);
+		void StopInput(std::string* stream);
+
+		int ActiveStringLength() const { return activestringlength_; }
 
     private:
         SDL_Window* window_;
         SDL_Renderer* renderer_;
         SDL_Event event;
 
-        bool* mousestate_;
+        std::vector<bool> mousestate_;
         TextureManager texturemanager_;
+
+		std::vector<RecordStream> recordstreams_;
+		int activestringlength_;
+		int activestream_;
+		
 };
 
 #endif // SDLMANAGER_H

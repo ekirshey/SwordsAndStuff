@@ -22,8 +22,7 @@ class GameWorld
 
         TileMap* GetTileMap() const { return tilemap_.get();}
 
-        void Render(SDLManager* sdlmanager, Camera* camera);
-		void Render(SDLManager* sdlmanager);
+		void Render(SDLManager* sdlmanager, const SDL_Rect* camera);
 
 		// Temp SparseGrid functions
 		bool SparseGridInsert(QuadElement entity) { return sparsegrid_->Insert(entity); }
@@ -31,12 +30,16 @@ class GameWorld
 		void ClearSparseGrid() { sparsegrid_->clear(); }
 		void DrawSparseGrid(SDLManager* sdlmanager) { sparsegrid_->Draw(sdlmanager); }
 
+		void BuildTileMapTexture(SDLManager* sdlmanager);
+
 		int width_;
 		int height_;
     private:
+		SDL_Texture* tilemaptexture_;
+
         // some sort of Tiled Map
         std::unique_ptr<TileMap> tilemap_;
-        std::vector<std::unique_ptr<Tile>> uniquetiles_;
+        std::vector<Tile> uniquetiles_;
 		std::unique_ptr<SparseGrid> sparsegrid_;
 };
 
