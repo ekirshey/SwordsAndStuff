@@ -1,7 +1,7 @@
 #include <iostream>
 #include "..\..\..\include\GUI\GUIComponents\TextBox.h"
 
-void TextBox::HandleInput(const SDL_Rect& windowrect, SDLManager* sdlmanager) {
+void TextBox::HandleInput(const SDL_Rect& windowrect, SDLManager* sdlmanager, int elapsedtime) {
 	auto mousestate = sdlmanager->GetMouseState();
 	int x;
 	int y;
@@ -28,17 +28,8 @@ void TextBox::HandleInput(const SDL_Rect& windowrect, SDLManager* sdlmanager) {
 			cursortimer_ = 0;
 		}
 	}
-}	
 
-void TextBox::Render(const SDL_Rect& windowrect, SDLManager* sdlmanager, int elapsedtime) {
-
-	sdlmanager->RenderFillRectangle(rect_, 255, 255, 255, 255);
-	
-	sdlmanager->RenderText(storedString, rect_.x + windowrect.x, rect_.y + windowrect.y, fontsize_, fontcolor_, fontpath_);
-	
-	*value_ = storedString;
-
-	// Draw Cursor
+	// Update Cursor
 	if (focus_) {
 		cursortimer_ += elapsedtime;
 
@@ -46,14 +37,24 @@ void TextBox::Render(const SDL_Rect& windowrect, SDLManager* sdlmanager, int ela
 			cursortimer_ = 0;
 			showcursor_ = !showcursor_;
 		}
-
-		if (showcursor_) {
-			sdlmanager->RenderLine(rect_.x + windowrect.x + sdlmanager->ActiveStringLength() + 2,
-				rect_.y + windowrect.y + rect_.h - 2,
-				rect_.x + windowrect.x + sdlmanager->ActiveStringLength() + 2,
-				rect_.y + windowrect.y + 2,
-				255, 0, 0, 255
-				);
-		}
 	}
+
+	*value_ = storedString;
+}	
+
+void TextBox::Render(const SDL_Rect& windowrect, SDLManager* sdlmanager) {
+
+	sdlmanager->RenderFillRectangle(rect_, 255, 255, 255, 255);
+	
+	sdlmanager->RenderText(storedString, rect_.x + windowrect.x, rect_.y + windowrect.y, fontsize_, fontcolor_, fontpath_);
+	
+	if (showcursor_) {
+		sdlmanager->RenderLine(rect_.x + windowrect.x + sdlmanager->ActiveStringLength() + 2,
+			rect_.y + windowrect.y + rect_.h - 2,
+			rect_.x + windowrect.x + sdlmanager->ActiveStringLength() + 2,
+			rect_.y + windowrect.y + 2,
+			255, 0, 0, 255
+			);
+	}
+	
 }

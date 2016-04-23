@@ -1,10 +1,34 @@
 #include <iostream>
+#include <vector>
 #include "../../../include/GameStates/States/CharacterCreationState.h"
 #include "../../../include/GameStates/States/GameRunningState.h"
 #include "../../../include/SDL/SDLManager.h"
 #include "../../../include/GUI/GUIComponents/TextBox.h"
 #include "../../../include/GUI/GUIComponents/DynamicText.h"
 #include "../../../include/GUI/GUIComponents/GUIImage.h"
+#include "../../../include/GUI/GUIComponents/GUIButton.h"
+
+class IncrementClip {
+public:
+	IncrementClip(GUIImage* image) : image_(image) {}
+	void operator()() {
+		image_->NextClip();
+	}
+
+private:
+	GUIImage* image_;
+};
+
+class DecrementClip {
+public:
+	DecrementClip(GUIImage* image) : image_(image) {}
+	void operator()() {
+		image_->PreviousClip();
+	}
+
+private:
+	GUIImage* image_;
+};
 
 CharacterCreationState::CharacterCreationState(bool persistent) : GameState(persistent)
 {
@@ -24,7 +48,25 @@ void CharacterCreationState::InitializeState() {
 
 	window->AddComponent<TextBox>(&characterDescription.name_, SDL_Rect{ 200, 200, 100, 25 }, 20, SDL_Color{ 0,0,0,255 }, "..\\..\\..\\media\\font.ttf");
 	window->AddComponent<DynamicText>(&characterDescription.name_, SDL_Rect{ 400, 200, 100, 25 }, 20, SDL_Color{ 255,0,0,255 }, "..\\..\\..\\media\\font.ttf");
-	window->AddComponent<GUIImage>("../../../media/sprites/tree.png", SDL_Rect{ 300,300,222,223 });
+
+	auto image = std::make_unique<GUIImage>("../../../media/sprites/Pawns.png", SDL_Point{ 300,300 },
+		std::vector<SDL_Rect>{
+		SDL_Rect{ 0, 0, 22,28 },
+			SDL_Rect{ 22, 0, 22,28 },
+			SDL_Rect{ 44, 0, 22,28 },
+			SDL_Rect{ 66, 0, 22,28 },
+			SDL_Rect{ 88, 0, 22,28 },
+			SDL_Rect{ 0, 28, 22,28 },
+			SDL_Rect{ 22, 28, 22,28 },
+			SDL_Rect{ 44, 28, 22,28 },
+			SDL_Rect{ 66, 28, 22,28 },
+			SDL_Rect{ 88, 28, 22,28 }
+	});
+
+	window->AddComponent<GUIButton<IncrementClip>>(SDL_Rect{ 250,300,60,20 }, SDL_Rect{ 0,0,25,25 }, "../../../media/buttons/arrows.bmp", IncrementClip(image.get()));
+	window->AddComponent<GUIButton<DecrementClip>>(SDL_Rect{ 350,300,60,20 }, SDL_Rect{ 25,0,25,25 }, "../../../media/buttons/arrows.bmp", DecrementClip(image.get()));
+
+	window->AddComponent(std::move(image));
 
 	guimanager_->AddWindow(std::move(window));
 

@@ -18,8 +18,8 @@ $RECYCLE.BIN/
 *.lnk
 
 # VS project files
-#*.vcxproj
-#*.vcxproj.filters
+*.vcxproj
+*.vcxproj.filters
 
 # =========================
 # Operating System Files

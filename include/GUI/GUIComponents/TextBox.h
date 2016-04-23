@@ -13,8 +13,8 @@ public:
 	~TextBox() {
 	}
 
-	void HandleInput(const SDL_Rect& windowrect, SDLManager* sdlmanager);
-	void Render(const SDL_Rect& windowrect, SDLManager* sdlmanager, int elapsedtime);
+	void HandleInput(const SDL_Rect& windowrect, SDLManager* sdlmanager, int elapsedtime);
+	void Render(const SDL_Rect& windowrect, SDLManager* sdlmanager);
 
 private:
 	std::string* value_;

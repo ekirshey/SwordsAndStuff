@@ -15,7 +15,7 @@ public:
 
 	}
 
-	void Render(const SDL_Rect& windowrect, SDLManager* sdlmanager, int elapsedtime) {
+	void Render(const SDL_Rect& windowrect, SDLManager* sdlmanager) {
 		sdlmanager->RenderText(*text_, rect_.x + windowrect.x, rect_.y + windowrect.y, fontsize_, fontcolor_, fontpath_);
 	}
 

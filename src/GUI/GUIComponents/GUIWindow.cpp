@@ -24,8 +24,8 @@ void GUIWindow::Update(int elapsedtime) {
 
 		for (int i = 0; i < guicomponents_.size(); i++) {
 			// Split up input and render handling for some hypothetical future where input in a window is disabled
-			guicomponents_[i]->HandleInput(windowrect_, sdlmanager_);
-			guicomponents_[i]->Render(windowrect_, sdlmanager_, elapsedtime);
+			guicomponents_[i]->HandleInput(windowrect_, sdlmanager_, elapsedtime);
+			guicomponents_[i]->Render(windowrect_, sdlmanager_);
 		}
 
 		SDL_SetRenderTarget(sdlmanager_->GetRenderer(), NULL);

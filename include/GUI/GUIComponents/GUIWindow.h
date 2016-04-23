@@ -20,6 +20,10 @@ public:
 		guicomponents_.push_back(std::make_unique<T>(args...));
 	}
 
+	void AddComponent(std::unique_ptr<GUIComponent> component) {
+		guicomponents_.push_back(std::move(component));
+	}
+
 	bool IsOpen() { return open_; }
 	void OpenWindow() { open_ = true; }
 	void CloseWindow() { open_ = false; }
