@@ -7,6 +7,7 @@
 #include "../../../include/GUI/GUIComponents/DynamicText.h"
 #include "../../../include/GUI/GUIComponents/GUIImage.h"
 #include "../../../include/GUI/GUIComponents/GUIButton.h"
+#include "../../../include/GUI/GUIBuilder.h"
 
 class IncrementClip {
 public:
@@ -44,6 +45,9 @@ CharacterCreationState::~CharacterCreationState()
 void CharacterCreationState::InitializeState() {
 
 	guimanager_ = std::make_unique<GUIManager>(GetSDLManager());
+
+	GUIBuilder::BuildGUIFromFile(guimanager_.get(), "../../../config/gui/charcreationconfig.txt");
+/*
 	auto window = std::make_unique<GUIWindow>(GetSDLManager(), "mainmenu", SDL_Rect{ 0, 0, 1280, 640 }, "../../../media//backgrounds/charcreationbg.bmp", "../../../media/backgrounds/charcreationbg.bmp", true);
 
 	window->AddComponent<TextBox>(&characterDescription.name_, SDL_Rect{ 200, 200, 100, 25 }, 20, SDL_Color{ 0,0,0,255 }, "..\\..\\..\\media\\font.ttf");
@@ -69,7 +73,7 @@ void CharacterCreationState::InitializeState() {
 	window->AddComponent(std::move(image));
 
 	guimanager_->AddWindow(std::move(window));
-
+*/
 	SetCurrentState(TRANSITIONIN);
 }
 
