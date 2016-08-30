@@ -1,0 +1,13 @@
+#Window
+Name First
+Height 1080
+Width 800
+Texture a
+FocusedTexture b
+#Button
+Texture a
+#GUIImage
+Height 20
+
+#Window
+Name Second
