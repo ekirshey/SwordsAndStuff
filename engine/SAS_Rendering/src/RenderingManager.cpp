@@ -1,16 +1,16 @@
 #include <iostream>
 #include <SDL_image.h>
 #include "SDL_ttf.h"
-#include "SDLManager.h"
+#include "RenderingManager.h"
 
 namespace SAS_Rendering {
-	SDLManager::SDLManager() : window_(NULL), renderer_(NULL), activestream_(-1)
+	RenderingManager::RenderingManager() : window_(NULL), renderer_(NULL), activestream_(-1)
 	{
 		for (int i = 0; i < NUM_MOUSE_STATES; i++)
 			mousestate_.push_back(false);
 	}
 
-	SDLManager::~SDLManager()
+	RenderingManager::~RenderingManager()
 	{
 		//Quit SDL subsystems
 		TTF_Quit();
@@ -18,11 +18,7 @@ namespace SAS_Rendering {
 		SDL_Quit();
 	}
 
-	void log(void* userdata, int category, SDL_LogPriority priority, const char* message) {
-		std::cout << "Log : " << message << std::endl;
-	}
-
-	bool SDLManager::Initialize()
+	bool RenderingManager::Initialize()
 	{
 		bool returnvalue = true;
 		std::cout << "Initialize SDL Manager" << std::endl;
@@ -85,26 +81,26 @@ namespace SAS_Rendering {
 		return returnvalue;
 	}
 
-	void SDLManager::Start()
+	void RenderingManager::Start()
 	{
 		std::cout << "Start SDL Timer and such" << std::endl;
 	}
 
-	void SDLManager::Render()
+	void RenderingManager::Render()
 	{
 		//Update screen
 
 		SDL_RenderPresent(renderer_);
 	}
 
-	void SDLManager::ClearScreen()
+	void RenderingManager::ClearScreen()
 	{
 		//Clear The Screen
 		SDL_SetRenderDrawColor(renderer_, 0xFF, 0xFF, 0xFF, 0xFF);
 		SDL_RenderClear(renderer_);
 	}
 
-	bool SDLManager::ReadEventQueue()
+	bool RenderingManager::ReadEventQueue()
 	{
 		bool returnvalue = false;
 		//SDL_PumpEvents();
@@ -172,7 +168,7 @@ namespace SAS_Rendering {
 		return returnvalue;
 
 	}
-	void SDLManager::Close()
+	void RenderingManager::Close()
 	{
 		//Destroy window
 		SDL_DestroyRenderer(renderer_);
@@ -186,72 +182,72 @@ namespace SAS_Rendering {
 	}
 
 	// Render Functions
-	void SDLManager::RenderFillRectangle(int X, int Y, int Width, int Height, SDL_Color color) {
+	void RenderingManager::RenderFillRectangle(int X, int Y, int Width, int Height, SDL_Color color) {
 		RenderFillRectangle(X, Y, Width, Height, color.r, color.g, color.b, color.a);
 	}
 
-	void SDLManager::RenderFillRectangle(SDL_Rect rectangle, SDL_Color color) {
+	void RenderingManager::RenderFillRectangle(SDL_Rect rectangle, SDL_Color color) {
 		RenderFillRectangle(rectangle.x, rectangle.y, rectangle.w, rectangle.h, color.r, color.g, color.b, color.a);
 	}
 
-	void SDLManager::RenderOutlineRectangle(int X, int Y, int Width, int Height, SDL_Color color) {
+	void RenderingManager::RenderOutlineRectangle(int X, int Y, int Width, int Height, SDL_Color color) {
 		RenderOutlineRectangle(X, Y, Width, Height, color.r, color.g, color.b, color.a);
 	}
 
-	void SDLManager::RenderOutlineRectangle(SDL_Rect rectangle, SDL_Color color) {
+	void RenderingManager::RenderOutlineRectangle(SDL_Rect rectangle, SDL_Color color) {
 		RenderOutlineRectangle(rectangle.x, rectangle.y, rectangle.w, rectangle.h, color.r, color.g, color.b, color.a);;
 	}
 
-	void SDLManager::RenderLine(int x1, int y1, int x2, int y2, SDL_Color color) {
+	void RenderingManager::RenderLine(int x1, int y1, int x2, int y2, SDL_Color color) {
 		RenderLine(x1, y1, x2, y2, color.r, color.g, color.b, color.a);
 	}
 
-	void SDLManager::RenderFillRectangle(int X, int Y, int Width, int Height, Uint8 R, Uint8 G, Uint8 B, Uint8 A)
+	void RenderingManager::RenderFillRectangle(int X, int Y, int Width, int Height, Uint8 R, Uint8 G, Uint8 B, Uint8 A)
 	{
 		SDL_Rect rectangle = { X, Y, Width, Height };
 		SDL_SetRenderDrawColor(renderer_, R, G, B, A);
 		SDL_RenderFillRect(renderer_, &rectangle);
 	}
 
-	void SDLManager::RenderFillRectangle(SDL_Rect rectangle, Uint8 R, Uint8 G, Uint8 B, Uint8 A)
+	void RenderingManager::RenderFillRectangle(SDL_Rect rectangle, Uint8 R, Uint8 G, Uint8 B, Uint8 A)
 	{
 		SDL_SetRenderDrawColor(renderer_, R, G, B, A);
 		SDL_RenderFillRect(renderer_, &rectangle);
 	}
 
-	void SDLManager::RenderOutlineRectangle(int X, int Y, int Width, int Height, Uint8 R, Uint8 G, Uint8 B, Uint8 A)
+	void RenderingManager::RenderOutlineRectangle(int X, int Y, int Width, int Height, Uint8 R, Uint8 G, Uint8 B, Uint8 A)
 	{
 		SDL_Rect rectangle = { X, Y, Width, Height };
 		SDL_SetRenderDrawColor(renderer_, R, G, B, A);
 		SDL_RenderDrawRect(renderer_, &rectangle);
 	}
 
-	void SDLManager::RenderOutlineRectangle(SDL_Rect rectangle, Uint8 R, Uint8 G, Uint8 B, Uint8 A)
+	void RenderingManager::RenderOutlineRectangle(SDL_Rect rectangle, Uint8 R, Uint8 G, Uint8 B, Uint8 A)
 	{
 		SDL_SetRenderDrawColor(renderer_, R, G, B, A);
 		SDL_RenderDrawRect(renderer_, &rectangle);
 	}
 
-	void SDLManager::RenderLine(int x1, int y1, int x2, int y2, Uint8 R, Uint8 G, Uint8 B, Uint8 A)
+	void RenderingManager::RenderLine(int x1, int y1, int x2, int y2, Uint8 R, Uint8 G, Uint8 B, Uint8 A)
 	{
 		SDL_SetRenderDrawColor(renderer_, R, G, B, A);
 		SDL_RenderDrawLine(renderer_, x1, y1, x2, y2);
 	}
 
-	void SDLManager::RenderImage(const std::string& image, int x, int y, SDL_Rect* clip)
+	void RenderingManager::RenderImage(const std::string& image, int x, int y, SDL_Rect* clip)
 	{
 		//TODO ADD CULLING
 		Texture* texture = texturemanager_.GetTexture(image);
 		texture->Render(renderer_, x, y, clip);
 	}
 
-	void SDLManager::RenderImage(const std::string& image, int x, int y, SDL_Rect* clip, double angle, SDL_Point* center, SDL_RendererFlip flip)
+	void RenderingManager::RenderImage(const std::string& image, int x, int y, SDL_Rect* clip, double angle, SDL_Point* center, SDL_RendererFlip flip)
 	{
 		Texture* texture = texturemanager_.GetTexture(image);
 		texture->Render(renderer_, x, y, clip, angle, center, flip);
 	}
 
-	void SDLManager::RecordInput(int maxcharacters, std::string* stream) {
+	void RenderingManager::RecordInput(int maxcharacters, std::string* stream) {
 		activestringlength_ = 0;
 
 		bool existingstream = false;
@@ -268,7 +264,7 @@ namespace SAS_Rendering {
 		}
 	}
 
-	void SDLManager::StopInput(std::string* stream) {
+	void RenderingManager::StopInput(std::string* stream) {
 		for (int i = 0; i < recordstreams_.size(); i++) {
 			if (recordstreams_[i].stream == stream) {
 				recordstreams_.erase(recordstreams_.begin() + i);
@@ -276,7 +272,7 @@ namespace SAS_Rendering {
 		}
 	}
 
-	void SDLManager::RenderText(std::string text, int x, int y, int fontsize, SDL_Color color, std::string fontpath)
+	void RenderingManager::RenderText(std::string text, int x, int y, int fontsize, SDL_Color color, std::string fontpath)
 	{
 		if (text.size() > 0) {
 			TTF_Font* font = TTF_OpenFont(fontpath.c_str(), fontsize);

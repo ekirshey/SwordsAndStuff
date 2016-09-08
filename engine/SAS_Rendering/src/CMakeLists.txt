@@ -13,6 +13,7 @@ file( GLOB SRCS
 
 #SET( CMAKE_CXX_FLAGS "-g -std=c++11 -DASIO_STANDALONE")
 
-add_library(SAS_Rendering STATIC ${SRCS} )
+add_library(SAS_Rendering SHARED ${SRCS} )
 
+message("SDL2 LIBRARY ${SDL2_LIBRARY}")
 target_link_libraries (SAS_Rendering LINK_PUBLIC ${SDL2_LIBRARY} ${SDL2IMAGE_LIB} ${SDL2TTF_LIB})

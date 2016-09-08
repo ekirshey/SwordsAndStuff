@@ -20,19 +20,15 @@ namespace SAS_Rendering {
 		RIGHT_PRESSED
 	};
 
-	struct RecordStream {
-		std::string* stream;
-		int maxcharacters;
-		bool AtMaxLength() { return (stream->size() < maxcharacters); }
-
-		RecordStream(std::string* s, int maxchars) : stream(s), maxcharacters(maxchars) {}
-	};
-
-	class SDLManager
+	class RenderingManager
 	{
 	public:
-		SDLManager();
-		~SDLManager();
+		RenderingManager();
+		~RenderingManager();
+
+		// implicit
+		RenderingManager(const RenderingManager&) = delete;
+		RenderingManager& operator=(const RenderingManager&) = delete;
 
 		bool Initialize();
 		bool ReadEventQueue();
@@ -71,6 +67,7 @@ namespace SAS_Rendering {
 		int ActiveStringLength() const { return activestringlength_; }
 
 	private:
+		Renderer* renderer;	// Polymorphic wrapper type
 		SDL_Window* window_;
 		SDL_Renderer* renderer_;
 		SDL_Event event;
