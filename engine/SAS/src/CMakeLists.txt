@@ -46,6 +46,7 @@ file( GLOB SRCS
 	${PROJECT_SOURCE_DIR}/SAS/include/Types/AITypes/*.h
 	${PROJECT_SOURCE_DIR}/SAS/include/Utilities/*.h
 	#Source
+	${PROJECT_SOURCE_DIR}/SAS/src/*.cpp
 	${PROJECT_SOURCE_DIR}/SAS/src/Config/*.cpp
 	${PROJECT_SOURCE_DIR}/SAS/src/DataManagement/*.cpp
 	${PROJECT_SOURCE_DIR}/SAS/src/ECSFramework/*.cpp

@@ -3,8 +3,8 @@
 
 #include <SDL.h>
 
-namespace SAS_Rendering {
-	TextureManager::TextureManager() : textures_(), resourcedirectories_()
+namespace SAS_System {
+	TextureManager::TextureManager(SDL_Renderer* renderer) : textures_(), resourcedirectories_(), renderer_(renderer)
 	{
 	}
 

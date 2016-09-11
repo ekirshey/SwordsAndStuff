@@ -7,7 +7,7 @@
 #include "../include/GameStates/States/MainMenuState.h"
 #include "../include/GameStates/States/CharacterCreationState.h"
 #include "../include/GameStates/States/GameRunningState.h"
-#include "../include/SDL/SDLManager.h"
+#include "SDLManager.h"
 #include <windows.h>
 #include <stdio.h>
 #include <tchar.h>

@@ -6,11 +6,11 @@
 #include <string>
 #include "Texture.h"
 
-namespace SAS_Rendering {
+namespace SAS_System {
 	class TextureManager
 	{
 	public:
-		TextureManager();
+		TextureManager(SDL_Renderer* renderer);
 		~TextureManager();
 
 	public:
@@ -21,8 +21,6 @@ namespace SAS_Rendering {
 		void RemoveResourceDirectory(const std::string& directory);
 
 		Texture* GetTexture(const std::string& filename);
-
-		void SetRenderer(SDL_Renderer* renderer) { renderer_ = renderer; }
 
 	private:
 		//TextureManager( const TextureManager& );

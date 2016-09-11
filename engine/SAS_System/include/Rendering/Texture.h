@@ -3,7 +3,7 @@
 #include <SDL.h>
 #include <string>
 
-namespace SAS_Rendering {
+namespace SAS_System {
 	class Texture
 	{
 	public:

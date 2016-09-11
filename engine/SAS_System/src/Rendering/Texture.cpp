@@ -2,7 +2,7 @@
 #include <iostream>
 #include "Texture.h"
 
-namespace SAS_Rendering {
+namespace SAS_System {
 	Texture::Texture()
 	{
 		//Initialize
