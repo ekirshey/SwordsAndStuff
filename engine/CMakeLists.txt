@@ -8,6 +8,13 @@ find_package(SDL2)
 find_package(SDL2_image)
 find_package(SDL2_ttf)
 
+message("${CMAKE_BINARY_DIR}")
+
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/../lib)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/../lib)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/../bin)
+		
 add_subdirectory(SAS_System)
 add_subdirectory(SAS_GUI)
 add_subdirectory(SAS)
+add_subdirectory(SAS_TEST)

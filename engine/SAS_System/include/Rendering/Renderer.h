@@ -16,22 +16,22 @@ namespace SAS_System {
 			SAS_FLIP_VERTICAL = 0x00000002     /**< flip vertically */
 		} SAS_RendererFlip;
 
-		Renderer(int screenwidth, int screenheight);
-		~Renderer();
+		DECLSPEC Renderer(int screenwidth, int screenheight);
+		DECLSPEC ~Renderer();
 
-		void RenderFillRectangle(int X, int Y, int Width, int Height, SDL_Color color);
-		void RenderFillRectangle(SDL_Rect rectangle, SDL_Color color);
-		void RenderOutlineRectangle(int X, int Y, int Width, int Height, SDL_Color color);
-		void RenderOutlineRectangle(SDL_Rect rectangle, SDL_Color color);
-		void RenderLine(int x1, int y1, int x2, int y2, SDL_Color color);
-		void RenderText(const std::string& text, int x, int y, int fontsize, SDL_Color color, std::string fontpath);
-		void RenderImage(const std::string& image, int x, int y, SDL_Rect* clip = 0);
-		void RenderImage(const std::string& image, int x, int y, SDL_Rect* clip, double angle, SDL_Point* center, SDL_RendererFlip flip);
+		void DECLSPEC RenderFillRectangle(int X, int Y, int Width, int Height, SDL_Color color);
+		void DECLSPEC RenderFillRectangle(SDL_Rect rectangle, SDL_Color color);
+		void DECLSPEC RenderOutlineRectangle(int X, int Y, int Width, int Height, SDL_Color color);
+		void DECLSPEC RenderOutlineRectangle(SDL_Rect rectangle, SDL_Color color);
+		void DECLSPEC RenderLine(int x1, int y1, int x2, int y2, SDL_Color color);
+		void DECLSPEC RenderText(const std::string& text, int x, int y, int fontsize, SDL_Color color, std::string fontpath);
+		void DECLSPEC RenderImage(const std::string& image, int x, int y, SDL_Rect* clip = 0);
+		void DECLSPEC RenderImage(const std::string& image, int x, int y, SDL_Rect* clip, double angle, SDL_Point* center, SDL_RendererFlip flip);
 
-		void Update();
+		void DECLSPEC Update();
 
-		int ScreenWidth() const { return _screenwidth; }
-		int ScreenHeight() const { return _screenheight; }
+		int DECLSPEC ScreenWidth() const { return _screenwidth; }
+		int DECLSPEC ScreenHeight() const { return _screenheight; }
 	
 	private:
 		int _screenwidth;

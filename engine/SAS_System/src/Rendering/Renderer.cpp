@@ -12,15 +12,12 @@ namespace SAS_System {
 		, _renderer(nullptr)
 		, _texturemanager(nullptr)
 		{
-
+			uint32_t initstatus = SDL_WasInit(SDL_INIT_VIDEO);
 			// SDL Needs to be initialized first, so check that
-			if (SDL_WasInit(SDL_INIT_VIDEO) != 0) {
+			if (!(initstatus & SDL_INIT_VIDEO)) {
 				//Initialize SDL
-				if (SDL_Init(SDL_INIT_VIDEO) < 0)
-				{
-					std::cerr << "SDL could not initialize! SDL_Error: %s\n" << SDL_GetError() << std::endl;
-					abort();
-				}
+				std::cerr << "SDL was not initialized! The SystemControl wrapper should of set it up" << std::endl;
+				abort();
 			}
 
 			// Initialize rendering
@@ -77,7 +74,6 @@ namespace SAS_System {
 	Renderer::~Renderer() {
 		TTF_Quit();
 		IMG_Quit();
-		SDL_Quit();
 
 	}
 
