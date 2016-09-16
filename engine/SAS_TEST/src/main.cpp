@@ -29,11 +29,20 @@ int main(int argc, char* argv[])
 
 
 	bool quit = false;
+	std::string stream = "";
+	int mousex, mousey;
 	while (!quit) {
+		renderer.ClearScreen();
 		SAS_System::UpdateInput(&input);
 		quit = input.Quit();
 		if (input.isKeyReleased(SDL_SCANCODE_A) ){
 			std::cout << "Pressed A" << std::endl;
+			input.startRecordingTextInput(10, &stream);
+		}
+
+		if (input.isKeyReleased(SDL_SCANCODE_L) ){
+			std::cout << "Pressed A" << std::endl;
+			input.stopRecordingTextInput(&stream);
 		}
 
 		if (input.leftMousePressed()) {
@@ -43,7 +52,13 @@ int main(int argc, char* argv[])
 		if (input.leftMouseReleased()) {
 			std::cout << "Left Mouse released" << std::endl;
 		}
+		
+		input.getMouseState(mousex, mousey);
 
+		renderer.RenderText(std::to_string(mousex), 100, 200, 12, SDL_Color{ 255,0,0 }, "E:\\GitHub\\SwordsAndStuff\\media\\font.ttf");
+		renderer.RenderText(std::to_string(mousey), 100, 250, 12, SDL_Color{ 255,0,0 }, "E:\\GitHub\\SwordsAndStuff\\media\\font.ttf");
+
+		renderer.RenderText(stream, 300, 200, 12, SDL_Color{ 255,0,0 }, "E:\\GitHub\\SwordsAndStuff\\media\\font.ttf");
 		renderer.RenderFillRectangle(SDL_Rect{ 50, 50, 50, 50 }, SDL_Color{ 255, 0, 0, 255 });
 		renderer.RenderText("FooBar", 100, 100, 12, SDL_Color{ 255,0,0,255 },"E:\\GitHub\\SwordsAndStuff\\media\\font.ttf");
 		SDL_Rect r = { 0,0,50,50 };

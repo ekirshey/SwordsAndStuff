@@ -2,67 +2,43 @@
 #include "SystemDefines.h"
 #include <vector>
 #include <memory>
+#include <string>
 
 namespace SAS_System {
 
 	class Input
 	{
 		public:
+			struct RecordStream {
+				std::string* stream;
+				int maxcharacters;
+				bool AtMaxLength() { return (stream->size() < maxcharacters); }
+
+				RecordStream(std::string* s, int maxchars) : stream(s), maxcharacters(maxchars) {}
+			};
+
 			enum KeyState {PRESSED, RELEASED, STILL};
 
-		    DECLSPEC Input() : _quit(false) {
-				_toupdate = std::make_unique<std::vector<Input::KeyState*>>();
-			}
+			DECLSPEC Input();
+			DECLSPEC ~Input();			
+			
+			bool DECLSPEC isKeyPressed(int key);
+			bool DECLSPEC isKeyReleased(int key);
+			bool DECLSPEC leftMousePressed();
+			bool DECLSPEC leftMouseReleased();
+			bool DECLSPEC Quit();
+			void DECLSPEC startRecordingTextInput(int maxcharacters, std::string* stream);
+			void DECLSPEC stopRecordingTextInput(std::string* stream);
 
-			DECLSPEC ~Input() {
-			}
+			void DECLSPEC getMouseState(int& x, int& y);
+			void setMouseState(int&x, int& y);
 
-			bool DECLSPEC isKeyPressed(int key) {
-				return _activekeys[key] == KeyState::PRESSED;
-			}
-
-			bool DECLSPEC isKeyReleased(int key) {
-				return _activekeys[key] == KeyState::RELEASED;
-			}
-
-			bool DECLSPEC leftMousePressed() {
-				return _activekeys[MouseButtons::LEFT] == KeyState::PRESSED;
-			}
-
-			bool DECLSPEC leftMouseReleased() {
-				return _activekeys[MouseButtons::LEFT] == KeyState::RELEASED;
-			}
-
-			bool DECLSPEC Quit() {
-				return _quit;
-			}
-
-			void updateKeyState(int key, KeyState state) {
-				_activekeys[key] = state;
-				_toupdate->push_back(&_activekeys[key]);
-			}
-
-			void updateMouseState(uint8_t button, KeyState state) {
-				switch (button) {
-					case SDL_BUTTON_LEFT:
-						updateKeyState(Input::MouseButtons::LEFT, state);
-						break;
-					case SDL_BUTTON_RIGHT:
-						updateKeyState(Input::MouseButtons::RIGHT, state);
-						break;
-				}
-			}
-
-			void clear() {
-				for (uint32_t i = 0; i < _toupdate->size(); i++) {
-					*_toupdate->at(i) = KeyState::STILL;
-					_toupdate->pop_back();
-				}
-			}
-
-			void setQuitState(bool quit) {
-				_quit = quit;
-			}
+			void setQuitState(bool quit);
+			void updateKeyState(int key, KeyState state);
+			void updateMouseState(uint8_t button, KeyState state);
+			void updateTextInput(const char* text);
+			void handleBackspace();
+			void clear();
 
 		private:
 			bool _quit;
@@ -70,6 +46,13 @@ namespace SAS_System {
 			enum MouseButtons {LEFT = 800, RIGHT = 801, MIDDLE = 802};
 			std::unique_ptr<std::vector<Input::KeyState*>> _toupdate; // pointer to do warnings about exposing std in a dll. different platforms have different implementations
 			KeyState _activekeys[1000]; // At least all the SDL_SCANCODES and room for possibly more?
+
+			std::vector<RecordStream> _recordstreams;
+			int _activestringlength;
+			int _activestream;
+
+			int _mousex;
+			int _mousey;
 	};
 
 }

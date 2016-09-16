@@ -144,6 +144,11 @@ namespace SAS_System {
 		texture->Render(_renderer, x, y, clip, angle, center, flip);
 	}
 
+	void Renderer::ClearScreen() {
+		SDL_SetRenderDrawColor(_renderer, 0xFF, 0xFF, 0xFF, 0xFF);
+		SDL_RenderClear(_renderer);
+	}
+
 	void Renderer::Update() {
 		SDL_RenderPresent(_renderer);
 	}

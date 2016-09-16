@@ -16,6 +16,9 @@ namespace SAS_System {
 			abort();
 		}
 
+		// Turn off text input initially (?)
+		SDL_StopTextInput();
+
 	}
 
 	void ShutdownSystem() {
@@ -35,10 +38,13 @@ namespace SAS_System {
 					break;
 				case SDL_TEXTINPUT:
 					/* Add new text onto the end of our text */
+					input->updateTextInput(event.text.text);
 					break;
-
 				case SDL_KEYDOWN:
 					input->updateKeyState(event.key.keysym.scancode, Input::KeyState::PRESSED);
+					if (event.key.keysym.sym == SDLK_BACKSPACE) {
+						input->handleBackspace();
+					}
 					break;
 				case SDL_KEYUP:
 					input->updateKeyState(event.key.keysym.scancode, Input::KeyState::RELEASED);
@@ -49,8 +55,15 @@ namespace SAS_System {
 				case SDL_MOUSEBUTTONUP:
 					input->updateMouseState(event.button.button, Input::KeyState::RELEASED);
 					break;
+				default:
+					break;
 			}
 		}
+
+		// Set Mousestate
+		int x, y;
+		SDL_GetMouseState(&x, &y);
+		input->setMouseState(x, y);
 
 	}
 

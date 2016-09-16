@@ -29,6 +29,7 @@ namespace SAS_System {
 		void DECLSPEC RenderImage(const std::string& image, int x, int y, SDL_Rect* clip, double angle, SDL_Point* center, SDL_RendererFlip flip);
 
 		void DECLSPEC Update();
+		void DECLSPEC ClearScreen();
 
 		int DECLSPEC ScreenWidth() const { return _screenwidth; }
 		int DECLSPEC ScreenHeight() const { return _screenheight; }

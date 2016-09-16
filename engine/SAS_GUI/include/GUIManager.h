@@ -9,7 +9,6 @@
 
 
 namespace SAS_GUI {
-	class SAS_Rendering::SDLManager;
 
 	struct GUIKey {
 		GUIWindow* window;
@@ -22,7 +21,7 @@ namespace SAS_GUI {
 	{
 	public:
 		GUIManager();
-		GUIManager(SAS_Rendering::SDLManager* sdlmanager);
+		GUIManager(SAS_System::Renderer* renderer, SAS_System::Input* input);
 		~GUIManager();
 
 		void Update(int elapsedtime);
