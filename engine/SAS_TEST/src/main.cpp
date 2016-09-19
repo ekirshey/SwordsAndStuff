@@ -31,8 +31,11 @@ int main(int argc, char* argv[])
 	bool quit = false;
 	std::string stream = "";
 	int mousex, mousey;
+	int textid = renderer.CreateTargetTexture(600, 600);
+
 	while (!quit) {
 		renderer.ClearScreen();
+		renderer.ClearTargetTexture(textid);
 		SAS_System::UpdateInput(&input);
 		quit = input.Quit();
 		if (input.isKeyReleased(SDL_SCANCODE_A) ){
@@ -55,16 +58,17 @@ int main(int argc, char* argv[])
 		
 		input.getMouseState(mousex, mousey);
 
-		renderer.RenderText(std::to_string(mousex), 100, 200, 12, SDL_Color{ 255,0,0 }, "E:\\GitHub\\SwordsAndStuff\\media\\font.ttf");
-		renderer.RenderText(std::to_string(mousey), 100, 250, 12, SDL_Color{ 255,0,0 }, "E:\\GitHub\\SwordsAndStuff\\media\\font.ttf");
+		renderer.RenderTextToTarget(std::to_string(mousex), textid, 100, 200, 12, SDL_Color{ 255,0,0 }, "C:\\cygwin64\\home\\prome\\code\\SwordsAndStuff\\media\\font.ttf");
+		renderer.RenderTargetTexture(textid, 0, 0);
+		renderer.RenderText(std::to_string(mousey), 100, 250, 12, SDL_Color{ 255,0,0 }, "C:\\cygwin64\\home\\prome\\code\\SwordsAndStuff\\media\\font.ttf");
 
-		renderer.RenderText(stream, 300, 200, 12, SDL_Color{ 255,0,0 }, "E:\\GitHub\\SwordsAndStuff\\media\\font.ttf");
+		renderer.RenderText(stream, 300, 200, 12, SDL_Color{ 255,0,0 }, "..\\media\\font.ttf");
 		renderer.RenderFillRectangle(SDL_Rect{ 50, 50, 50, 50 }, SDL_Color{ 255, 0, 0, 255 });
-		renderer.RenderText("FooBar", 100, 100, 12, SDL_Color{ 255,0,0,255 },"E:\\GitHub\\SwordsAndStuff\\media\\font.ttf");
+		renderer.RenderText("FooBar", 100, 100, 12, SDL_Color{ 255,0,0,255 },"C:\\cygwin64\\home\\prome\\code\\SwordsAndStuff\\media\\font.ttf");
 		SDL_Rect r = { 0,0,50,50 };
-		renderer.RenderImage("E:\\GitHub\\SwordsAndStuff\\media\\sprites\\Pawns.png", 300, 300, &r);
-		renderer.Update();
+		renderer.RenderImage("C:\\cygwin64\\home\\prome\\code\\SwordsAndStuff\\media\\sprites\\Pawns.png", 300, 300, &r);
 
+		renderer.Update();
 	}
 
 //	SAS_GUI::GUIManager guimanager(&sdlmanager);

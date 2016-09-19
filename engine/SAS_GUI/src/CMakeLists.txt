@@ -1,7 +1,7 @@
 include_directories(
   ${PROJECT_SOURCE_DIR}/SAS_GUI/include
   ${PROJECT_SOURCE_DIR}/SAS_GUI/include/GUIComponents
-  ${PROJECT_SOURCE_DIR}/SAS_Rendering/include/
+  ${PROJECT_SOURCE_DIR}/SAS_System/include/
   ${SDL2_INCLUDE_DIR}
   ${SDL2IMAGE_INCLUDE_DIR}
   ${SDL2TTF_INCLUDE_DIR}
@@ -20,7 +20,7 @@ add_library(SAS_GUI
 	${SRCS} 
 )
 
-target_link_libraries (SAS_GUI LINK_PUBLIC SAS_Rendering)
+target_link_libraries (SAS_GUI LINK_PUBLIC SAS_System)
 
 foreach(FILE ${SRCS}) 
 	# Get the directory of the source file

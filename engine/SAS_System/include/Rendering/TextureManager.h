@@ -21,12 +21,17 @@ namespace SAS_System {
 		void RemoveResourceDirectory(const std::string& directory);
 
 		Texture* GetTexture(const std::string& filename);
+		int CreateTargetTexture(int width, int height);
+		Texture* GetTargetTexture(int id);
 
 	private:
 		//TextureManager( const TextureManager& );
 		//TextureManager& operator =( const TextureManager& );
 
 		std::map< std::string, std::unique_ptr<Texture> > textures_;
+		// Separate data structure for managing empty target textures
+		std::vector<std::unique_ptr<Texture>> targettextures_;
+
 		std::vector< std::string > resourcedirectories_;
 		SDL_Renderer* renderer_;
 	};

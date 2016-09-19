@@ -10,11 +10,12 @@ namespace SAS_GUI {
 	class GUIWindow
 	{
 	public:
-		GUIWindow(SAS_Rendering::SDLManager* sdlmanager, std::string windowname, SDL_Rect windowrect,
+		GUIWindow( std::string windowname, SDL_Rect windowrect,
 			std::string focusedwindowtexture, std::string windowtexture, bool open = false);
 		~GUIWindow();
 
-		void Update(int elapsedtime);
+		void Update(int elapsedtime, const SAS_System::Input& input);
+		void Render(SAS_System::Renderer* renderer);
 
 		template<typename T, typename... Args>
 		void AddComponent(Args&&... args) {
@@ -39,8 +40,6 @@ namespace SAS_GUI {
 		std::string focusedwindowtexture_;
 		std::string windowtexture_;
 
-		SAS_Rendering::SDLManager* sdlmanager_;
-		SDL_Texture* guitexture_;
 		std::vector<std::unique_ptr<GUIComponent>> guicomponents_;
 	};
 

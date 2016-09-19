@@ -1,29 +1,31 @@
 #include "GUIManager.h"
-#include "SDLManager.h"
+#include "Input/Input.h"
+#include "Rendering/Renderer.h"
 
 namespace SAS_GUI {
-	GUIManager::GUIManager() : sdlmanager_(nullptr)
+	GUIManager::GUIManager()
 	{
-	}
-
-	GUIManager::GUIManager(::SAS_Rendering::SDLManager* sdlmanager) : sdlmanager_(sdlmanager)
-	{
-
 	}
 
 	GUIManager::~GUIManager()
 	{
 	}
 
-	void GUIManager::Update(int elapsedtime)
+	void GUIManager::Update(int elapsedtime, const SAS_System::Input& input);
 	{
 		HandleInput();
 
 		//Update the opened windows
 		for (int i = 0; i < windows_.size(); i++) {
-			windows_[i]->Update(elapsedtime);
+			windows_[i]->Update(elapsedtime, input);
 		}
 
+	}
+
+	void GUIManager::Render(int elapsedtime, SAS_System::Renderer* renderer) {
+		for (int i = 0; i < windows_.size(); i++) {
+			windows_[i]->Render(renderer);
+		}
 	}
 
 	void GUIManager::HandleInput() {

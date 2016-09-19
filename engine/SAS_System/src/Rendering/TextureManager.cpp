@@ -17,7 +17,6 @@ namespace SAS_System {
 	Texture* TextureManager::GetTexture(const std::string& filename)
 	{
 		// Check, whether the texture already exists
-
 		for (std::map<std::string, std::unique_ptr<Texture>>::iterator it = textures_.begin(); it != textures_.end(); ++it)
 		{
 			if (filename == it->first)
@@ -32,8 +31,6 @@ namespace SAS_System {
 			std::cout << "Loaded new Texture: " << filename << std::endl;
 			return textures_[filename].get();
 		}
-
-
 
 		// If the texture has still not been found, search all registered directories
 		for (std::vector< std::string >::iterator it = resourcedirectories_.begin(); it != resourcedirectories_.end(); ++it)
@@ -51,19 +48,24 @@ namespace SAS_System {
 		return textures_[filename].get();
 	}
 
-#ifdef FOO
-	void TextureManager::DeleteTexture(const Texture& texture)
-	{
-		for (std::map<std::string, std::unique_ptr<Texture>>::const_iterator it = textures_.begin(); it != textures_.end(); ++it)
-		{
-			if (&texture == &it->second)
-			{
-				textures_.erase(it);
-				return;
-			}
+	int TextureManager::CreateTargetTexture(int width, int height) {
+		targettextures_.push_back(std::make_unique<Texture>(width, height, renderer_));
+		return targettextures_.size() - 1;
+	}
+
+	// Not sure if stream textures should be in a different structure
+	// If there is a filename with the same internal stream texture name, it will cause issues
+	Texture* TextureManager::GetTargetTexture(int id) {
+		// Check, whether the texture already exists
+		if ((id >= 0) && (id < targettextures_.size())) {
+			return targettextures_[id].get();
+		}
+		else {
+			std::cout << "GAME_ERROR: Couldn't build Target Texture. It is filled with an empty texture.\n";
+			return nullptr;
 		}
 	}
-#endif
+
 	void TextureManager::DeleteTexture(const std::string& filename)
 	{
 		std::map<std::string, std::unique_ptr<Texture>>::const_iterator it = textures_.find(filename);

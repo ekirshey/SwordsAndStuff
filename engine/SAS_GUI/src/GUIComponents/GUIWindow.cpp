@@ -1,9 +1,9 @@
 #include "GUIWindow.h"
 
 namespace SAS_GUI {
-	GUIWindow::GUIWindow(SAS_Rendering::SDLManager* sdlmanager, std::string windowname, SDL_Rect windowrect,
+	GUIWindow::GUIWindow( std::string windowname, SDL_Rect windowrect,
 		std::string focusedwindowtexture, std::string windowtexture, bool open) :
-		sdlmanager_(sdlmanager), windowname_(windowname), windowrect_(windowrect), focusedwindowtexture_(focusedwindowtexture),
+		windowname_(windowname), windowrect_(windowrect), focusedwindowtexture_(focusedwindowtexture),
 		windowtexture_(windowtexture), open_(open)
 	{
 		guitexture_ = SDL_CreateTexture(sdlmanager_->GetRenderer(), SDL_PIXELFORMAT_RGBA8888,

@@ -11,6 +11,15 @@ namespace SAS_System {
 		height_ = 0;
 	}
 
+	Texture::Texture(int width, int height, SDL_Renderer* renderer)
+		: width_(width)
+		, height_(height)
+	{
+		texture_ = NULL;
+		CreateStreamTexture(width_, height_, renderer);
+
+	}
+
 	Texture::Texture(std::string path, SDL_Renderer* renderer)
 	{
 		//Initialize
@@ -39,6 +48,21 @@ namespace SAS_System {
 		}
 	}
 
+	void Texture::SetAsRenderTarget(SDL_Renderer* renderer) {
+		SDL_SetRenderTarget(renderer, texture_);
+	}
+
+	bool Texture::CreateStreamTexture(int width, int height, SDL_Renderer* renderer) {
+		texture_ = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888,
+			SDL_TEXTUREACCESS_TARGET, width, height);
+	
+		// Check if texture was created correctly
+		if (texture_ == NULL)
+			return false;
+		else
+			return true;
+	}
+
 	bool Texture::LoadFromFile(std::string path, SDL_Renderer* renderer)
 	{
 		//Get rid of preexisting texture
@@ -54,7 +78,7 @@ namespace SAS_System {
 			std::cout << "Unable to load image " << path << "! SDL_image Error: " << IMG_GetError() << std::endl;
 		else
 		{
-			//Color key image
+			//Color key image. It's insane that this is hardcoded!
 			SDL_SetColorKey(loadedsurface, SDL_TRUE, SDL_MapRGB(loadedsurface->format, 0xF0, 0x84, 0xFF));
 
 			//Create texture from surface pixels

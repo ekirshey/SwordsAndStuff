@@ -7,6 +7,10 @@
 #include <unordered_map>
 #include "GUIComponents/GUIWindow.h"
 
+namespace SAS_System {
+	class Input;
+	class Renderer;
+}
 
 namespace SAS_GUI {
 
@@ -21,10 +25,10 @@ namespace SAS_GUI {
 	{
 	public:
 		GUIManager();
-		GUIManager(SAS_System::Renderer* renderer, SAS_System::Input* input);
 		~GUIManager();
 
-		void Update(int elapsedtime);
+		void Update(int elapsedtime,const SAS_System::Input& input);
+		void Render(int elapsedtime,SAS_System::Renderer* renderer);
 
 		void AddWindow(std::unique_ptr<GUIWindow> window, int key = -1);
 
@@ -34,7 +38,6 @@ namespace SAS_GUI {
 		void HandleInput();
 		std::vector<std::unique_ptr<GUIWindow>> windows_;
 		std::unordered_map<int, GUIKey> keymap_;
-		::SAS_Rendering::SDLManager* sdlmanager_;
 	};
 
 }
