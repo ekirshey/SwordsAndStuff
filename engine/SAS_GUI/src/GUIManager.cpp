@@ -11,7 +11,7 @@ namespace SAS_GUI {
 	{
 	}
 
-	void GUIManager::Update(int elapsedtime, const SAS_System::Input& input);
+	void GUIManager::Update(int elapsedtime, const SAS_System::Input& input)
 	{
 		HandleInput();
 
@@ -28,17 +28,11 @@ namespace SAS_GUI {
 		}
 	}
 
-	void GUIManager::HandleInput() {
-
-		auto keyboardstate = sdlmanager_->GetKeyBoardState();
+	void GUIManager::HandleInput(const SAS_System::Input& input) {
 
 		for (auto it = keymap_.begin(); it != keymap_.end(); ++it) {
-			if (!keyboardstate[it->first])
-				it->second.risingEdge = true;
-			else if (it->second.risingEdge && keyboardstate[it->first]) {
-				it->second.window->ToggleWindow();
-				it->second.risingEdge = false;
-			}
+			if (input.isKeyReleased(it->first))
+				it->second->ToggleWindow();
 		}
 
 	}

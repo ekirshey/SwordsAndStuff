@@ -8,11 +8,11 @@ namespace SAS_System {
 			Input::~Input() {
 			}
 
-			bool Input::isKeyPressed(int key) {
+			bool Input::isKeyPressed(int key) const {
 				return _activekeys[key] == KeyState::PRESSED;
 			}
 
-			bool Input::isKeyReleased(int key) {
+			bool Input::isKeyReleased(int key) const {
 				return _activekeys[key] == KeyState::RELEASED;
 			}
 

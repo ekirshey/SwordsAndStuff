@@ -14,10 +14,6 @@ namespace SAS_System {
 
 namespace SAS_GUI {
 
-	struct GUIKey {
-		GUIWindow* window;
-		bool risingEdge;
-	};
 	/*
 	If a window is added without an associated key, then it's assumed the window will always be in it's initial state
 	*/
@@ -35,9 +31,9 @@ namespace SAS_GUI {
 	private:
 		GUIWindow* LastWindow() { return windows_.back().get(); }
 
-		void HandleInput();
+		void HandleInput(const SAS_System::Input& input);
 		std::vector<std::unique_ptr<GUIWindow>> windows_;
-		std::unordered_map<int, GUIKey> keymap_;
+		std::unordered_map<int, GUIWindow*> keymap_;
 	};
 
 }

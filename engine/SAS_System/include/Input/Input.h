@@ -22,8 +22,8 @@ namespace SAS_System {
 			DECLSPEC Input();
 			DECLSPEC ~Input();			
 			
-			bool DECLSPEC isKeyPressed(int key);
-			bool DECLSPEC isKeyReleased(int key);
+			bool DECLSPEC isKeyPressed(int key) const;
+			bool DECLSPEC isKeyReleased(int key) const;
 			bool DECLSPEC leftMousePressed();
 			bool DECLSPEC leftMouseReleased();
 			bool DECLSPEC Quit();
