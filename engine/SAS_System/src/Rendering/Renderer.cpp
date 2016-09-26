@@ -77,6 +77,7 @@ namespace SAS_System {
 
 	}
 
+	/*************************** Base Draw functions **************************/
 	void Renderer::RenderFillRectangle(int X, int Y, int Width, int Height, SDL_Color color) {
 		SDL_Rect rectangle = { X, Y, Width, Height };
 		SDL_SetRenderDrawColor(_renderer, color.r, color.g, color.b, color.a);
@@ -101,16 +102,6 @@ namespace SAS_System {
 	void Renderer::RenderLine(int x1, int y1, int x2, int y2, SDL_Color color) {
 		SDL_SetRenderDrawColor(_renderer, color.r, color.g, color.b, color.a);
 		SDL_RenderDrawLine(_renderer, x1, y1, x2, y2);
-	}
-
-	void Renderer::RenderTextToTarget(const std::string& text, int targetid, int x, int y, int fontsize, SDL_Color color, std::string fontpath) {
-		Texture* desttexture = _texturemanager->GetTargetTexture(targetid);
-
-		if (desttexture != nullptr) {
-			desttexture->SetAsRenderTarget(_renderer);
-			RenderText(text, x, y, fontsize, color, fontpath);
-			SDL_SetRenderTarget(_renderer, NULL);
-		}
 	}
 
 	void Renderer::RenderText(const std::string& text, int x, int y, int fontsize, SDL_Color color, std::string fontpath) {
@@ -139,6 +130,18 @@ namespace SAS_System {
 			}
 		}
 	}
+
+	void Renderer::RenderImage(const std::string& image, int x, int y, SDL_Rect* clip) {
+		Texture* texture = _texturemanager->GetTexture(image);
+		texture->Render(_renderer, x, y, clip);
+	}
+
+	void Renderer::RenderImage(const std::string& image, int x, int y, SDL_Rect* clip, double angle, SDL_Point* center, SDL_RendererFlip flip) {
+		Texture* texture = _texturemanager->GetTexture(image);
+		texture->Render(_renderer, x, y, clip, angle, center, flip);
+	}
+
+	/*************** Target texture function handling *********************************************/
 
 	int Renderer::CreateTargetTexture(int width, int height) {
 		return _texturemanager->CreateTargetTexture(width, height);
@@ -171,6 +174,7 @@ namespace SAS_System {
 
 		if (desttexture != nullptr) {
 			desttexture->SetAsRenderTarget(_renderer);
+			SDL_SetRenderDrawColor(_renderer, 0xFF, 0xFF, 0xFF, 0xFF);
 			SDL_RenderClear(_renderer);
 			SDL_SetRenderTarget(_renderer, NULL);
 		}
@@ -188,16 +192,17 @@ namespace SAS_System {
 			texture->Render(_renderer, x, y, clip, angle, center, flip);
 	}
 
-	void Renderer::RenderImage(const std::string& image, int x, int y, SDL_Rect* clip) {
-		Texture* texture = _texturemanager->GetTexture(image);
-		texture->Render(_renderer, x, y, clip);
+	void Renderer::RenderTextToTarget(const std::string& text, int targetid, int x, int y, int fontsize, SDL_Color color, std::string fontpath) {
+		Texture* desttexture = _texturemanager->GetTargetTexture(targetid);
+
+		if (desttexture != nullptr) {
+			desttexture->SetAsRenderTarget(_renderer);
+			RenderText(text, x, y, fontsize, color, fontpath);
+			SDL_SetRenderTarget(_renderer, NULL);
+		}
 	}
 
-	void Renderer::RenderImage(const std::string& image, int x, int y, SDL_Rect* clip, double angle, SDL_Point* center, SDL_RendererFlip flip) {
-		Texture* texture = _texturemanager->GetTexture(image);
-		texture->Render(_renderer, x, y, clip, angle, center, flip);
-	}
-
+	/***** Main Render Funcions **********/
 	void Renderer::ClearScreen() {
 		SDL_SetRenderDrawColor(_renderer, 0xFF, 0xFF, 0xFF, 0xFF);
 		SDL_RenderClear(_renderer);

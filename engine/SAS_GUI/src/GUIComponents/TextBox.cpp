@@ -2,7 +2,8 @@
 #include "GUIComponents\TextBox.h"
 
 namespace SAS_GUI {
-	void TextBox::HandleInput(const SDL_Rect& windowrect, SAS_Rendering::SDLManager* sdlmanager, int elapsedtime) {
+	void TextBox::HandleInput(const SDL_Rect& windowrect, const SAS_System::Input& input, int elapsedtime) {
+#ifdef FOO
 		auto mousestate = sdlmanager->GetMouseState();
 		int x;
 		int y;
@@ -41,9 +42,11 @@ namespace SAS_GUI {
 		}
 
 		*value_ = storedString;
+#endif
 	}
 
-	void TextBox::Render(const SDL_Rect& windowrect, SAS_Rendering::SDLManager* sdlmanager) {
+	void TextBox::Render(const SDL_Rect& windowrect, SAS_System::Renderer* renderer, int targettexture) {
+#ifdef FOO
 
 		sdlmanager->RenderFillRectangle(rect_, 255, 255, 255, 255);
 
@@ -57,6 +60,6 @@ namespace SAS_GUI {
 				255, 0, 0, 255
 				);
 		}
-
+#endif
 	}
 }

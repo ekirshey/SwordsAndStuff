@@ -5,6 +5,8 @@ include_directories(
   ${PROJECT_SOURCE_DIR}/SAS_System/include
   ${PROJECT_SOURCE_DIR}/SAS_System/include/Rendering
   ${PROJECT_SOURCE_DIR}/SAS_System/include/Input
+  ${PROJECT_SOURCE_DIR}/SAS_GUI/include
+  ${PROJECT_SOURCE_DIR}/SAS_GUI/include/GUIComponents
 )
 
 message("${PROJECT_SOURCE_DIR}")
@@ -14,4 +16,4 @@ file( GLOB SRCS
 
 add_executable(SAS_Test ${SRCS} )
 
-target_link_libraries (SAS_Test ${SDL2_LIBRARY} ${SDL2IMAGE_LIB} ${SDL2TTF_LIB} SAS_System)
+target_link_libraries (SAS_Test ${SDL2_LIBRARY} ${SDL2IMAGE_LIB} ${SDL2TTF_LIB} SAS_System SAS_GUI)

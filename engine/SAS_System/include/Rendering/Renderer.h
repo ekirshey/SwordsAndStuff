@@ -57,7 +57,8 @@ namespace SAS_System {
 
 		std::unique_ptr<TextureManager> _texturemanager;
 
-
+		int targettexture_;
+		bool rendertotexture_;
 	};
 
 }

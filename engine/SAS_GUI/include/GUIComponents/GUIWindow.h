@@ -2,15 +2,15 @@
 #include <string>
 #include <vector>
 #include <memory>
-#include "SDL_Rect.h"
 #include "GUIComponent.h"
-#include "SDLManager.h"
+#include "Input/Input.h"
+#include "Rendering/Renderer.h"
 
 namespace SAS_GUI {
 	class GUIWindow
 	{
 	public:
-		GUIWindow( std::string windowname, SDL_Rect windowrect,
+		GUIWindow( SAS_System::Renderer* renderer, std::string windowname, SDL_Rect windowrect,
 			std::string focusedwindowtexture, std::string windowtexture, bool open = false);
 		~GUIWindow();
 
@@ -41,6 +41,8 @@ namespace SAS_GUI {
 		std::string windowtexture_;
 
 		std::vector<std::unique_ptr<GUIComponent>> guicomponents_;
+
+		int guitexture_;
 	};
 
 }

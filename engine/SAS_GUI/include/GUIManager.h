@@ -6,11 +6,8 @@
 #include <string>
 #include <unordered_map>
 #include "GUIComponents/GUIWindow.h"
-
-namespace SAS_System {
-	class Input;
-	class Renderer;
-}
+#include "Input/Input.h"
+#include "Rendering/Renderer.h"
 
 namespace SAS_GUI {
 
@@ -24,13 +21,11 @@ namespace SAS_GUI {
 		~GUIManager();
 
 		void Update(int elapsedtime,const SAS_System::Input& input);
-		void Render(int elapsedtime,SAS_System::Renderer* renderer);
+		void Render(SAS_System::Renderer* renderer);
 
 		void AddWindow(std::unique_ptr<GUIWindow> window, int key = -1);
 
 	private:
-		GUIWindow* LastWindow() { return windows_.back().get(); }
-
 		void HandleInput(const SAS_System::Input& input);
 		std::vector<std::unique_ptr<GUIWindow>> windows_;
 		std::unordered_map<int, GUIWindow*> keymap_;

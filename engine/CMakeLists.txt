@@ -16,5 +16,5 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/../bin)
 		
 add_subdirectory(SAS_System)
 add_subdirectory(SAS_GUI)
-add_subdirectory(SAS)
+#add_subdirectory(SAS)
 add_subdirectory(SAS_TEST)

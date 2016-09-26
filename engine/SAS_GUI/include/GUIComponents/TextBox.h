@@ -14,8 +14,8 @@ namespace SAS_GUI {
 		~TextBox() {
 		}
 
-		void HandleInput(const SDL_Rect& windowrect, SAS_Rendering::SDLManager* sdlmanager, int elapsedtime);
-		void Render(const SDL_Rect& windowrect, SAS_Rendering::SDLManager* sdlmanager);
+		void HandleInput(const SDL_Rect& windowrect, const SAS_System::Input& input, int elapsedtime);
+		void Render(const SDL_Rect& windowrect, SAS_System::Renderer* renderer, int targettexture);
 
 	private:
 		std::string* value_;

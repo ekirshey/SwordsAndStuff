@@ -24,13 +24,13 @@ namespace SAS_System {
 			
 			bool DECLSPEC isKeyPressed(int key) const;
 			bool DECLSPEC isKeyReleased(int key) const;
-			bool DECLSPEC leftMousePressed();
-			bool DECLSPEC leftMouseReleased();
+			bool DECLSPEC leftMousePressed() const;
+			bool DECLSPEC leftMouseReleased() const;
 			bool DECLSPEC Quit();
 			void DECLSPEC startRecordingTextInput(int maxcharacters, std::string* stream);
 			void DECLSPEC stopRecordingTextInput(std::string* stream);
 
-			void DECLSPEC getMouseState(int& x, int& y);
+			void DECLSPEC getMouseState(int& x, int& y) const;
 			void setMouseState(int&x, int& y);
 
 			void setQuitState(bool quit);

@@ -1,14 +1,15 @@
 #include "GUIWindow.h"
 
 namespace SAS_GUI {
-	GUIWindow::GUIWindow( std::string windowname, SDL_Rect windowrect,
-		std::string focusedwindowtexture, std::string windowtexture, bool open) :
-		windowname_(windowname), windowrect_(windowrect), focusedwindowtexture_(focusedwindowtexture),
-		windowtexture_(windowtexture), open_(open)
+	GUIWindow::GUIWindow( SAS_System::Renderer* renderer, std::string windowname, SDL_Rect windowrect,
+		std::string focusedwindowtexture, std::string windowtexture, bool open) 
+		: windowname_(windowname)
+		, windowrect_(windowrect)
+		, focusedwindowtexture_(focusedwindowtexture)
+		, windowtexture_(windowtexture)
+		, open_(open)
 	{
-		guitexture_ = SDL_CreateTexture(sdlmanager_->GetRenderer(), SDL_PIXELFORMAT_RGBA8888,
-			SDL_TEXTUREACCESS_TARGET, windowrect_.w, windowrect_.h);
-
+		guitexture_ = renderer->CreateTargetTexture(windowrect_.w, windowrect_.h);
 	}
 
 
@@ -16,22 +17,25 @@ namespace SAS_GUI {
 	{
 	}
 
-	void GUIWindow::Update(int elapsedtime) {
+
+
+	void GUIWindow::Update(int elapsedtime, const SAS_System::Input& input) {
 		if (IsOpen()) {
-			SDL_SetRenderTarget(sdlmanager_->GetRenderer(), guitexture_);
-
-			SDL_Rect cliprect = { 0,0,1280,640 };
-			sdlmanager_->RenderImage(windowtexture_, windowrect_.x, windowrect_.y, &cliprect);
-
 			for (int i = 0; i < guicomponents_.size(); i++) {
 				// Split up input and render handling for some hypothetical future where input in a window is disabled
-				guicomponents_[i]->HandleInput(windowrect_, sdlmanager_, elapsedtime);
-				guicomponents_[i]->Render(windowrect_, sdlmanager_);
+				guicomponents_[i]->HandleInput(windowrect_, input, elapsedtime);
 			}
-
-			SDL_SetRenderTarget(sdlmanager_->GetRenderer(), NULL);
-
-			SDL_RenderCopy(sdlmanager_->GetRenderer(), guitexture_, &windowrect_, NULL);
 		}
+	}
+
+	void GUIWindow::Render(SAS_System::Renderer* renderer) {
+
+		renderer->RenderToTargetTexture(windowtexture_, guitexture_, windowrect_.x, windowrect_.y);
+
+		for (int i = 0; i < guicomponents_.size(); i++) {
+			guicomponents_[i]->Render(windowrect_, renderer, guitexture_);
+		}
+
+		renderer->RenderTargetTexture(guitexture_, windowrect_.x, windowrect_.y);
 	}
 }

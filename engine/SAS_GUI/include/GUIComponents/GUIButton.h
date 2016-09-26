@@ -1,7 +1,6 @@
 #pragma once
 #include <string>
 #include "GUIComponent.h"
-#include "SDLManager.h"
 
 namespace SAS_GUI {
 
@@ -42,12 +41,10 @@ namespace SAS_GUI {
 
 		~GUIButton() {}
 
-		void HandleInput(const SDL_Rect& windowrect, SAS_Rendering::SDLManager* sdlmanager, int elapsedtime) {
-
-			auto mousestate = sdlmanager->GetMouseState();
+		void HandleInput(const SDL_Rect& windowrect, const SAS_System::Input& input, int elapsedtime) {
 			int x;
 			int y;
-			SDL_GetMouseState(&x, &y);
+			input.getMouseState(x, y);
 
 			int relativeX = rect_.x + windowrect.x;
 			int relativeY = rect_.y + windowrect.y;
@@ -58,7 +55,7 @@ namespace SAS_GUI {
 			if (((x > relativeX) && (x < (rect_.w + relativeX))) &&
 				((y > relativeY) && (y < (rect_.h + relativeY)))) {
 				workingClipRect_.y += workingClipRect_.h;
-				if (mousestate[SAS_Rendering::LEFT_PRESSED] || (mousestate[SAS_Rendering::LEFT_MOUSEBUTTON_HELD] && clicked_)) {
+				if (input.leftMouseReleased()) { 
 					workingClipRect_.y += workingClipRect_.h;
 					clicked_ = true;
 					if (debouncecounter_ >= debouncelength_) {
@@ -71,9 +68,8 @@ namespace SAS_GUI {
 			}
 		}
 
-		void Render(const SDL_Rect& windowrect, SAS_Rendering::SDLManager* sdlmanager) {
-
-			sdlmanager->RenderImage(texture_, rect_.x + windowrect.x, rect_.y + windowrect.y, &workingClipRect_);
+		void Render(const SDL_Rect& windowrect, SAS_System::Renderer* renderer, int targettexture) {
+			renderer->RenderToTargetTexture(texture_, targettexture, rect_.x + windowrect.x, rect_.y + windowrect.y, &workingClipRect_);
 
 			// Reset the workingClipRect_ to the baseline
 			workingClipRect_ = cliprect_;

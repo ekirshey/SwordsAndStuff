@@ -2,6 +2,9 @@
 #include <memory>
 #include "SystemControl.h"
 #include "Renderer.h"
+#include "GUIManager.h"
+#include "GUIWindow.h"
+#include "GUIButton.h"
 
 struct A {
 };
@@ -27,6 +30,10 @@ int main(int argc, char* argv[])
 	SAS_System::Renderer renderer(600, 600);
 	SAS_System::Input input;
 
+	SAS_GUI::GUIManager guimanager;
+	auto window = std::make_unique<SAS_GUI::GUIWindow>(&renderer, "mainmenu", SDL_Rect{ 0, 0, 1280, 640 }, "E:\\Github\\SwordsAndStuff\\media\\backgrounds\\mainmenubg.bmp", 
+		"E:\\Github\\SwordsAndStuff\\media\\backgrounds\\mainmenubg.bmp", true);
+	guimanager.AddWindow(std::move(window));
 
 	bool quit = false;
 	std::string stream = "";
@@ -38,6 +45,9 @@ int main(int argc, char* argv[])
 		renderer.ClearTargetTexture(textid);
 		SAS_System::UpdateInput(&input);
 		quit = input.Quit();
+
+		guimanager.Update(SAS_System::CurrentTicks(), input);
+		guimanager.Render(&renderer);
 		if (input.isKeyReleased(SDL_SCANCODE_A) ){
 			std::cout << "Pressed A" << std::endl;
 			input.startRecordingTextInput(10, &stream);
@@ -58,16 +68,15 @@ int main(int argc, char* argv[])
 		
 		input.getMouseState(mousex, mousey);
 
-		renderer.RenderTextToTarget(std::to_string(mousex), textid, 100, 200, 12, SDL_Color{ 255,0,0 }, "C:\\cygwin64\\home\\prome\\code\\SwordsAndStuff\\media\\font.ttf");
-		renderer.RenderTargetTexture(textid, 0, 0);
-		renderer.RenderText(std::to_string(mousey), 100, 250, 12, SDL_Color{ 255,0,0 }, "C:\\cygwin64\\home\\prome\\code\\SwordsAndStuff\\media\\font.ttf");
+		renderer.RenderTextToTarget(std::to_string(mousex), textid, 100, 200, 12, SDL_Color{ 255,0,0 }, "E:\\GitHub\\SwordsAndStuff\\media\\font.ttf");
+		//renderer.RenderTargetTexture(textid, 0, 0);
+		renderer.RenderText(std::to_string(mousey), 100, 250, 12, SDL_Color{ 255,0,0 }, "E:\\Github\\SwordsAndStuff\\media\\font.ttf");
 
 		renderer.RenderText(stream, 300, 200, 12, SDL_Color{ 255,0,0 }, "..\\media\\font.ttf");
 		renderer.RenderFillRectangle(SDL_Rect{ 50, 50, 50, 50 }, SDL_Color{ 255, 0, 0, 255 });
-		renderer.RenderText("FooBar", 100, 100, 12, SDL_Color{ 255,0,0,255 },"C:\\cygwin64\\home\\prome\\code\\SwordsAndStuff\\media\\font.ttf");
+		renderer.RenderText("FooBar", 100, 100, 12, SDL_Color{ 255,0,0,255 },"E:\\Github\\SwordsAndStuff\\media\\font.ttf");
 		SDL_Rect r = { 0,0,50,50 };
-		renderer.RenderImage("C:\\cygwin64\\home\\prome\\code\\SwordsAndStuff\\media\\sprites\\Pawns.png", 300, 300, &r);
-
+		renderer.RenderImage("E:\\Github\\SwordsAndStuff\\media\\sprites\\Pawns.png", 300, 300, &r);
 		renderer.Update();
 	}
 
