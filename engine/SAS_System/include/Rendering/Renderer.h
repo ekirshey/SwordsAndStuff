@@ -34,13 +34,9 @@ namespace SAS_System {
 
 		// Handle stream textures
 		int DECLSPEC CreateTargetTexture(int width, int height);
-		void DECLSPEC RenderToTargetTexture(const std::string& source, int targetid, int x, int y, SDL_Rect* clip = 0);
-		void DECLSPEC RenderToTargetTexture(const std::string& source, int targetid, int x, int y, SDL_Rect* clip, 
-			double angle, SDL_Point* center, SDL_RendererFlip flip);
+		void DECLSPEC SetRenderTarget(int targettexture);
+		void DECLSPEC DefaultRenderTarget();
 		void DECLSPEC RenderTargetTexture(int targetid, int x, int y, SDL_Rect* clip = 0);
-		void DECLSPEC RenderTargetTexture(int targetid, int x, int y, SDL_Rect* clip, 
-			double angle, SDL_Point* center, SDL_RendererFlip flip);
-		void DECLSPEC RenderTextToTarget(const std::string& text, int targetid, int x, int y, int fontsize, SDL_Color color, std::string fontpath);
 		void DECLSPEC ClearTargetTexture(int targetid);
 
 		void DECLSPEC Update();
@@ -57,8 +53,8 @@ namespace SAS_System {
 
 		std::unique_ptr<TextureManager> _texturemanager;
 
-		int targettexture_;
-		bool rendertotexture_;
+		// Keep track of render target mainly for debugging
+		int _rendertarget;
 	};
 
 }

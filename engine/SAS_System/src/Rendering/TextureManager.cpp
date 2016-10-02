@@ -57,7 +57,8 @@ namespace SAS_System {
 	// If there is a filename with the same internal stream texture name, it will cause issues
 	Texture* TextureManager::GetTargetTexture(int id) {
 		// Check, whether the texture already exists
-		if ((id >= 0) && (id < targettextures_.size())) {
+		int size = targettextures_.size();
+		if ((id >= 0) && (id < size)) {
 			return targettextures_[id].get();
 		}
 		else {

@@ -17,25 +17,25 @@ namespace SAS_GUI {
 	{
 	}
 
-
-
 	void GUIWindow::Update(int elapsedtime, const SAS_System::Input& input) {
 		if (IsOpen()) {
-			for (int i = 0; i < guicomponents_.size(); i++) {
+			for (auto i = 0; i < guicomponents_.size(); i++) {
 				// Split up input and render handling for some hypothetical future where input in a window is disabled
-				guicomponents_[i]->HandleInput(windowrect_, input, elapsedtime);
+				guicomponents_[i]->Update(windowrect_, input, elapsedtime);
 			}
 		}
 	}
 
 	void GUIWindow::Render(SAS_System::Renderer* renderer) {
 
-		renderer->RenderToTargetTexture(windowtexture_, guitexture_, windowrect_.x, windowrect_.y);
+		renderer->SetRenderTarget(guitexture_);
+		renderer->RenderImage(windowtexture_, windowrect_.x, windowrect_.y);
 
-		for (int i = 0; i < guicomponents_.size(); i++) {
-			guicomponents_[i]->Render(windowrect_, renderer, guitexture_);
+		for (auto i = 0; i < guicomponents_.size(); i++) {
+			guicomponents_[i]->Render(windowrect_, renderer);
 		}
 
+		renderer->DefaultRenderTarget();
 		renderer->RenderTargetTexture(guitexture_, windowrect_.x, windowrect_.y);
 	}
 }

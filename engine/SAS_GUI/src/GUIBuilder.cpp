@@ -35,7 +35,7 @@ namespace SAS_GUI {
 			if (item.empty()) return;
 
 			std::cout << "ITEM: " << item << std::endl;
-			for (int i = 0; i < itemproperties.size(); i++) {
+			for (auto i = 0; i < itemproperties.size(); i++) {
 				std::cout << itemproperties[i] << std::endl;
 			}
 		}

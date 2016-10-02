@@ -1,30 +1,26 @@
 #include <iostream>
 #include "GUIComponents\TextBox.h"
+#include "GUIUtils.h"
+#include "Model.h"
 
 namespace SAS_GUI {
-	void TextBox::HandleInput(const SDL_Rect& windowrect, const SAS_System::Input& input, int elapsedtime) {
-#ifdef FOO
-		auto mousestate = sdlmanager->GetMouseState();
+	void TextBox::Update(const SDL_Rect& windowrect, const SAS_System::Input& input, int elapsedtime) {
 		int x;
 		int y;
-		SDL_GetMouseState(&x, &y);
-
-		int relativeX = rect_.x + windowrect.x;
-		int relativeY = rect_.y + windowrect.y;
+		input.getMouseState(x, y);
 
 		// Check for intersection
-		if (mousestate[SAS_Rendering::LEFT_PRESSED]) {
-			if (((x > relativeX) && (x < (rect_.w + relativeX))) &&
-				((y > relativeY) && (y < (rect_.h + relativeY)))) {
+		if (input.leftMousePressed()) {
+			if (UTILS::isMouseOver(windowrect, _view.position, x, y)) {
 				focus_ = true;
-				sdlmanager->RecordInput(15, &storedString);
+				//input.startRecordingTextInput(15, &storedString);
 
 				//Show the cursor immediately
 				cursortimer_ = cursorperiod_;
 			}
 			else {
 				if (focus_ == true)
-					sdlmanager->StopInput(&storedString);
+					//input.stopRecordingTextInput(&storedString);
 				focus_ = false;
 				showcursor_ = false;
 				cursortimer_ = 0;
@@ -42,10 +38,9 @@ namespace SAS_GUI {
 		}
 
 		*value_ = storedString;
-#endif
 	}
 
-	void TextBox::Render(const SDL_Rect& windowrect, SAS_System::Renderer* renderer, int targettexture) {
+	void TextBox::Render(const SDL_Rect& windowrect, SAS_System::Renderer* renderer) {
 #ifdef FOO
 
 		sdlmanager->RenderFillRectangle(rect_, 255, 255, 255, 255);

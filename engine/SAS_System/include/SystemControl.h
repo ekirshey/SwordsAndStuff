@@ -2,10 +2,10 @@
 #include <memory>
 #include <string>
 #include "SystemDefines.h"
-#include "Input.h"
 
 namespace SAS_System{
 	class Renderer;
+	class Input;
 }
 namespace SAS_System {
 

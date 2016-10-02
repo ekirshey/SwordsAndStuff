@@ -11,10 +11,10 @@ namespace SAS_System {
 		public:
 			struct RecordStream {
 				std::string* stream;
-				int maxcharacters;
+				std::size_t maxcharacters;
 				bool AtMaxLength() { return (stream->size() < maxcharacters); }
 
-				RecordStream(std::string* s, int maxchars) : stream(s), maxcharacters(maxchars) {}
+				RecordStream(std::string* s, size_t maxchars) : stream(s), maxcharacters(maxchars) {}
 			};
 
 			enum KeyState {PRESSED, RELEASED, STILL};

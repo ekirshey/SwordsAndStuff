@@ -11,6 +11,7 @@ namespace SAS_System {
 		, _window(nullptr)
 		, _renderer(nullptr)
 		, _texturemanager(nullptr)
+		, _rendertarget(-1)
 		{
 			uint32_t initstatus = SDL_WasInit(SDL_INIT_VIDEO);
 			// SDL Needs to be initialized first, so check that
@@ -146,27 +147,24 @@ namespace SAS_System {
 	int Renderer::CreateTargetTexture(int width, int height) {
 		return _texturemanager->CreateTargetTexture(width, height);
 	}
-
-	void Renderer::RenderToTargetTexture(const std::string& source, int targetid, int x, int y, SDL_Rect* clip) {
-		Texture* desttexture = _texturemanager->GetTargetTexture(targetid);
-		Texture* sourcetexture = _texturemanager->GetTexture(source);
-
+	
+	void Renderer::SetRenderTarget(int targettexture) {
+		Texture* desttexture = _texturemanager->GetTargetTexture(targettexture);
 		if (desttexture != nullptr) {
+			_rendertarget = targettexture;
 			desttexture->SetAsRenderTarget(_renderer);
-			sourcetexture->Render(_renderer, x, y, clip);
-			SDL_SetRenderTarget(_renderer, NULL);
 		}
 	}
+	
+	void Renderer::DefaultRenderTarget() {
+		_rendertarget = -1;
+		SDL_SetRenderTarget(_renderer, NULL);
+	}
 
-	void Renderer::RenderToTargetTexture(const std::string& source, int targetid, int x, int y, SDL_Rect* clip, double angle, SDL_Point* center, SDL_RendererFlip flip) {
-		Texture* desttexture = _texturemanager->GetTargetTexture(targetid);
-		Texture* sourcetexture = _texturemanager->GetTexture(source);
-
-		if (desttexture != nullptr) {
-			desttexture->SetAsRenderTarget(_renderer);
-			sourcetexture->Render(_renderer, x, y, clip, angle, center, flip);
-			SDL_SetRenderTarget(_renderer, NULL);
-		}
+	void Renderer::RenderTargetTexture(int targetid, int x, int y, SDL_Rect* clip) {
+		Texture* texture = _texturemanager->GetTargetTexture(targetid);
+		if (texture != nullptr)
+			texture->Render(_renderer, x, y, clip);
 	}
 
 	void Renderer::ClearTargetTexture(int targetid) {
@@ -176,28 +174,6 @@ namespace SAS_System {
 			desttexture->SetAsRenderTarget(_renderer);
 			SDL_SetRenderDrawColor(_renderer, 0xFF, 0xFF, 0xFF, 0xFF);
 			SDL_RenderClear(_renderer);
-			SDL_SetRenderTarget(_renderer, NULL);
-		}
-	}
-
-	void Renderer::RenderTargetTexture(int targetid, int x, int y, SDL_Rect* clip) {
-		Texture* texture = _texturemanager->GetTargetTexture(targetid);
-		if ( texture != nullptr)
-			texture->Render(_renderer, x, y, clip);
-	}
-
-	void Renderer::RenderTargetTexture(int targetid, int x, int y, SDL_Rect* clip, double angle, SDL_Point* center, SDL_RendererFlip flip) {
-		Texture* texture = _texturemanager->GetTargetTexture(targetid);
-		if ( texture != nullptr)
-			texture->Render(_renderer, x, y, clip, angle, center, flip);
-	}
-
-	void Renderer::RenderTextToTarget(const std::string& text, int targetid, int x, int y, int fontsize, SDL_Color color, std::string fontpath) {
-		Texture* desttexture = _texturemanager->GetTargetTexture(targetid);
-
-		if (desttexture != nullptr) {
-			desttexture->SetAsRenderTarget(_renderer);
-			RenderText(text, x, y, fontsize, color, fontpath);
 			SDL_SetRenderTarget(_renderer, NULL);
 		}
 	}

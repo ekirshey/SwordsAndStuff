@@ -61,7 +61,7 @@ namespace SAS_System {
 				SDL_StartTextInput();
 
 				bool existingstream = false;
-				for (int i = 0; i < _recordstreams.size(); i++) {
+				for (size_t i = 0; i < _recordstreams.size(); i++) {
 					if (_recordstreams[i].stream == stream) {
 						existingstream = true;
 						_activestream = i;
@@ -76,7 +76,7 @@ namespace SAS_System {
 			
 			void Input::stopRecordingTextInput(std::string* stream) {
 				SDL_StopTextInput();
-				for (int i = 0; i < _recordstreams.size(); i++) {
+				for (size_t i = 0; i < _recordstreams.size(); i++) {
 					if (_recordstreams[i].stream == stream) {
 						_recordstreams.erase(_recordstreams.begin() + i);
 					}

@@ -14,15 +14,15 @@ namespace SAS_GUI {
 		HandleInput(input);
 
 		//Update the opened windows
-		for (int i = 0; i < windows_.size(); i++) {
-			windows_[i]->Update(elapsedtime, input);
+		for (auto& w : windows_) {
+			w->Update(elapsedtime, input);
 		}
-
 	}
 
 	void GUIManager::Render(SAS_System::Renderer* renderer) {
-		for (int i = 0; i < windows_.size(); i++) {
-			windows_[i]->Render(renderer);
+
+		for (auto& w : windows_) {
+			w->Render(renderer);
 		}
 	}
 

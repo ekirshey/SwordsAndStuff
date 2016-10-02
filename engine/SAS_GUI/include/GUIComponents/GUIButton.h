@@ -1,93 +1,44 @@
 #pragma once
 #include <string>
+#include <functional>
 #include "GUIComponent.h"
+#include "GUIViews/ButtonView.h"
+#include "GUIDynamics/Dynamics.h"
 
 namespace SAS_GUI {
 
 #define DEFAULTDEBOUNCECOUNT 200
-
-
-	class ButtonFunction {
-	public:
-		ButtonFunction() {}
-
-		virtual void operator()() = 0;
-	};
+	class Model;
 
 	class GUIButton : public GUIComponent
 	{
 	public:
 		// rect in relation to container window
-		GUIButton(SDL_Rect rect, SDL_Rect cliprect, std::string texture, std::unique_ptr<ButtonFunction> func) :
-			rect_(rect), cliprect_(cliprect), texture_(texture), function_(std::move(func)), clicked_(false), workingClipRect_(cliprect), debouncelength_(DEFAULTDEBOUNCECOUNT), debouncecounter_(0)
-		{
+		GUIButton(const ButtonView& view, std::unique_ptr<Model> model, int clickedkey, 
+			Dynamics dynamics);
 
-		}
-		/*
-			// Templated arguments in order to avoid an unnecessary copy
-			template<typename... Args>
-			GUIButton(SDL_Rect rect, SDL_Rect cliprect, std::string texture, Args&&... args) :
-				rect_(rect), cliprect_(cliprect), texture_(texture), function_(std::forward<Args>(args)...), clicked_(false), workingClipRect_(cliprect), debouncelength_(DEFAULTDEBOUNCECOUNT), debouncecounter_(0)
-			{
+		// Unique_ptr so delete copy
+		GUIButton(const GUIButton&) = delete;
+		GUIButton& operator=(const GUIButton&) = delete;
 
-			}
+		void Update(const SDL_Rect& windowrect, const SAS_System::Input& input, int elapsedtime);
+		void Render(const SDL_Rect& windowrect, SAS_System::Renderer* renderer);
 
-			GUIButton(SDL_Rect rect, SDL_Rect cliprect, std::string texture, const T& func, int debouncecounter) :
-				rect_(rect), cliprect_(cliprect), texture_(texture), function_(func), clicked_(false), workingClipRect_(cliprect), debouncelength_(debouncecounter), debouncecounter_(0)
-			{
-
-			}
-		*/
-
-		~GUIButton() {}
-
-		void HandleInput(const SDL_Rect& windowrect, const SAS_System::Input& input, int elapsedtime) {
-			int x;
-			int y;
-			input.getMouseState(x, y);
-
-			int relativeX = rect_.x + windowrect.x;
-			int relativeY = rect_.y + windowrect.y;
-
-			debouncecounter_ += elapsedtime;
-
-			// Check for intersection
-			if (((x > relativeX) && (x < (rect_.w + relativeX))) &&
-				((y > relativeY) && (y < (rect_.h + relativeY)))) {
-				workingClipRect_.y += workingClipRect_.h;
-				if (input.leftMouseReleased()) { 
-					workingClipRect_.y += workingClipRect_.h;
-					clicked_ = true;
-					if (debouncecounter_ >= debouncelength_) {
-						(*function_)();
-						debouncecounter_ = 0;
-					}
-				}
-				else
-					clicked_ = false;
-			}
-		}
-
-		void Render(const SDL_Rect& windowrect, SAS_System::Renderer* renderer, int targettexture) {
-			renderer->RenderToTargetTexture(texture_, targettexture, rect_.x + windowrect.x, rect_.y + windowrect.y, &workingClipRect_);
-
-			// Reset the workingClipRect_ to the baseline
-			workingClipRect_ = cliprect_;
-		}
+		void NotifyObservers();
+		void AddObserver(std::function<void()> observer);
 
 	private:
-		const SDL_Rect rect_;
-		const SDL_Rect cliprect_;
-		bool clicked_;
+		ButtonView _view;
+		std::unique_ptr<Model> _model;
+		Dynamics _dynamics;
 
-		std::string texture_;
+		std::vector<std::function<void()>> _observers;
 
-		//T function_;
-		std::unique_ptr<ButtonFunction> function_;
-		SDL_Rect workingClipRect_;
+		// Keys for grabbing data from the model
+		int _clickedkey;
 
-		int debouncelength_;
-		int debouncecounter_;
+		int _debouncecounter;
+
 
 	};
 }

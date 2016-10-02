@@ -1,6 +1,8 @@
 include_directories(
   ${PROJECT_SOURCE_DIR}/SAS_GUI/include
   ${PROJECT_SOURCE_DIR}/SAS_GUI/include/GUIComponents
+  ${PROJECT_SOURCE_DIR}/SAS_GUI/include/GUIDynamics
+  ${PROJECT_SOURCE_DIR}/SAS_GUI/include/GUIViews
   ${PROJECT_SOURCE_DIR}/SAS_System/include/
   ${SDL2_INCLUDE_DIR}
   ${SDL2IMAGE_INCLUDE_DIR}
@@ -10,6 +12,8 @@ include_directories(
 file( GLOB SRCS 
 	${PROJECT_SOURCE_DIR}/SAS_GUI/include/*.h
 	${PROJECT_SOURCE_DIR}/SAS_GUI/include/GUIComponents/*.h
+	${PROJECT_SOURCE_DIR}/SAS_GUI/include/GUIDynamics/*.h
+	${PROJECT_SOURCE_DIR}/SAS_GUI/include/GUIViews/*.h
 	${PROJECT_SOURCE_DIR}/SAS_GUI/src/*.cpp
 	${PROJECT_SOURCE_DIR}/SAS_GUI/src/GUIComponents/*.cpp
 )

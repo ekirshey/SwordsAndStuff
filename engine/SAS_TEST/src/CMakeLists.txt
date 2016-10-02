@@ -6,7 +6,6 @@ include_directories(
   ${PROJECT_SOURCE_DIR}/SAS_System/include/Rendering
   ${PROJECT_SOURCE_DIR}/SAS_System/include/Input
   ${PROJECT_SOURCE_DIR}/SAS_GUI/include
-  ${PROJECT_SOURCE_DIR}/SAS_GUI/include/GUIComponents
 )
 
 message("${PROJECT_SOURCE_DIR}")

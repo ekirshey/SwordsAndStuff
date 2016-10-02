@@ -19,7 +19,7 @@ file( GLOB SRCS
 
 #SET( CMAKE_CXX_FLAGS "-g -std=c++11 -DASIO_STANDALONE")
 
-add_library(SAS_System SHARED ${SRCS} )
+add_library(SAS_System ${SRCS} )
 
 target_link_libraries (SAS_System ${SDL2_LIBRARY} ${SDL2IMAGE_LIB} ${SDL2TTF_LIB})
 

@@ -5,7 +5,12 @@
 #include "Input.h"
 
 namespace SAS_System {
-
+	namespace {
+		// Internal linkage
+		// Handle recrod streams in a translation unit local variable and pass
+		// a string and ON bool to the input structure
+	}
+	
 	void InitializeSystem() {
 		// Initialize the base SDL. The Renderer will take care of the rest
 		std::cout << "Initialize SAS System..." << std::endl;

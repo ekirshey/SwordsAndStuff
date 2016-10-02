@@ -1,33 +1,39 @@
 #pragma once
 
 #include "GUIComponent.h"
+#include "GUIViews/TextView.h"
+#include "Model.h"
 #include <iostream>
 
 namespace SAS_GUI {
 	class DynamicText : public GUIComponent
 	{
 	public:
-		DynamicText(const std::string* text, SDL_Rect rect, int fontsize, SDL_Color fontcolor, std::string fontpath) :
-			text_(text), rect_(rect), fontsize_(fontsize), fontcolor_(fontcolor), fontpath_(fontpath) {
-
+		DynamicText(const TextView& view, std::unique_ptr<Model> model, int getstringkey)
+			: _view(view)
+			, _model(std::move(model))
+			, _getstringkey(getstringkey)
+		{
 		}
 
 		~DynamicText() {
 
 		}
-
-		void Render(const SDL_Rect& windowrect, SAS_Rendering::SDLManager* sdlmanager) {
-			sdlmanager->RenderText(*text_, rect_.x + windowrect.x, rect_.y + windowrect.y, fontsize_, fontcolor_, fontpath_);
+		void Update(const SDL_Rect& windowrect, const SAS_System::Input& input, int elapsedtime) {
+			_text = _model->getValue(_getstringkey);
 		}
 
+		void Render(const SDL_Rect& windowrect, SAS_System::Renderer* renderer) {
+			renderer->RenderText(_text, _view.position.x + windowrect.x, _view.position.y + windowrect.y, 
+				_view.fontsize, _view.fontcolor, _view.fontpath);
+		}
+		
 	private:
-		const std::string* text_;
-		SDL_Rect rect_;
+		std::string _text;
+		std::unique_ptr<Model> _model;
+		int _getstringkey;
 
-		// Font look
-		int fontsize_;
-		SDL_Color fontcolor_;
-		std::string fontpath_;
+		TextView _view;
 	};
 
 }
