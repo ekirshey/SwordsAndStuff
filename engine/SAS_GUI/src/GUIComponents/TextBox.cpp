@@ -13,14 +13,15 @@ namespace SAS_GUI {
 		if (input.leftMousePressed()) {
 			if (UTILS::isMouseOver(windowrect, _view.position, x, y)) {
 				focus_ = true;
-				//input.startRecordingTextInput(15, &storedString);
+				SAS_System::StartTextInput(15, &_value);
 
 				//Show the cursor immediately
 				cursortimer_ = cursorperiod_;
 			}
 			else {
 				if (focus_ == true)
-					//input.stopRecordingTextInput(&storedString);
+					SAS_System::StopTextInput(&_value);
+
 				focus_ = false;
 				showcursor_ = false;
 				cursortimer_ = 0;
@@ -37,24 +38,10 @@ namespace SAS_GUI {
 			}
 		}
 
-		*value_ = storedString;
 	}
 
 	void TextBox::Render(const SDL_Rect& windowrect, SAS_System::Renderer* renderer) {
-#ifdef FOO
-
-		sdlmanager->RenderFillRectangle(rect_, 255, 255, 255, 255);
-
-		sdlmanager->RenderText(storedString, rect_.x + windowrect.x, rect_.y + windowrect.y, fontsize_, fontcolor_, fontpath_);
-
-		if (showcursor_) {
-			sdlmanager->RenderLine(rect_.x + windowrect.x + sdlmanager->ActiveStringLength() + 2,
-				rect_.y + windowrect.y + rect_.h - 2,
-				rect_.x + windowrect.x + sdlmanager->ActiveStringLength() + 2,
-				rect_.y + windowrect.y + 2,
-				255, 0, 0, 255
-				);
-		}
-#endif
+		renderer->RenderOutlineRectangle(_view.position, SDL_Color{ 255,255,255,255 });
+		renderer->RenderText(_value, _view.position.x, _view.position.y, _view.fontsize, _view.fontcolor, _view.fontpath);
 	}
 }

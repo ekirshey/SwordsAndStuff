@@ -6,9 +6,10 @@
 
 namespace SAS_System {
 	namespace {
-		// Internal linkage
-		// Handle recrod streams in a translation unit local variable and pass
-		// a string and ON bool to the input structure
+		std::string* _startingstream = nullptr;
+		int _streamlength = 0;
+
+		std::string* _stoppingstream = nullptr;
 	}
 	
 	void InitializeSystem() {
@@ -33,6 +34,12 @@ namespace SAS_System {
 	void UpdateInput(Input* input) {
 		input->clear();
 
+		if (_stoppingstream != nullptr)
+			input->stopRecordingTextInput(_stoppingstream);
+
+		if (_startingstream != nullptr)
+			input->startRecordingTextInput(_streamlength, _startingstream);
+
 		SDL_Event event;
 		while (SDL_PollEvent(&event)) {
 			// handle your event here
@@ -42,7 +49,7 @@ namespace SAS_System {
 					input->setQuitState(true);
 					break;
 				case SDL_TEXTINPUT:
-					/* Add new text onto the end of our text */
+					/* Add new character onto the end of our text */
 					input->updateTextInput(event.text.text);
 					break;
 				case SDL_KEYDOWN:
@@ -75,5 +82,20 @@ namespace SAS_System {
 
 	int CurrentTicks() {
 		return SDL_GetTicks();
+	}
+	
+	void StartTextInput(int streamlength, std::string* stream) {
+		SDL_StartTextInput();
+		_startingstream = stream;
+		_streamlength = streamlength;
+		_stoppingstream = nullptr;
+	}
+
+	void StopTextInput(std::string* stream) {
+		_stoppingstream = stream;
+		if (_stoppingstream == _startingstream) {
+			SDL_StopTextInput();
+			_startingstream = nullptr;
+		}
 	}
 }

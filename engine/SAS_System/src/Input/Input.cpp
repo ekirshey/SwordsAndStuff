@@ -1,7 +1,12 @@
 #include "Input.h"
 
 namespace SAS_System {
-			Input::Input() : _quit(false) {
+			Input::Input() 
+				: _quit(false)
+				, _activestringlength(0)
+				, _activestream(-1)
+			{
+
 				_toupdate = std::make_unique<std::vector<Input::KeyState*>>();
 			}
 
@@ -58,8 +63,6 @@ namespace SAS_System {
 			void Input::startRecordingTextInput(int maxcharacters, std::string* stream) {
 				_activestringlength = 0;
 
-				SDL_StartTextInput();
-
 				bool existingstream = false;
 				for (size_t i = 0; i < _recordstreams.size(); i++) {
 					if (_recordstreams[i].stream == stream) {
@@ -75,10 +78,10 @@ namespace SAS_System {
 			}
 			
 			void Input::stopRecordingTextInput(std::string* stream) {
-				SDL_StopTextInput();
 				for (size_t i = 0; i < _recordstreams.size(); i++) {
 					if (_recordstreams[i].stream == stream) {
 						_recordstreams.erase(_recordstreams.begin() + i);
+						_activestream = -1;
 					}
 				}
 			}

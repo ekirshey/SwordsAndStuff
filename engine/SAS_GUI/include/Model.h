@@ -2,6 +2,7 @@
 #include <string>
 
 namespace SAS_GUI {
+	using pModel = std::unique_ptr<Model>;
 	class Model {
 		public:
 			virtual ~Model() {}

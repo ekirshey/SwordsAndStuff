@@ -5,6 +5,7 @@
 #include "GUIManager.h"
 #include "GUIComponents/GUIWindow.h"
 #include "GUIComponents/GUIButton.h"
+#include  "GUIComponents/TextBox.h"
 #include "GUIComponents/DynamicText.h"
 #include "Model.h"
 #include "GUIDynamics/Dynamics.h"
@@ -60,12 +61,11 @@ int main(int argc, char* argv[])
 	SAS_System::InitializeSystem();
 	SAS_System::Renderer renderer(600, 600);
 	SAS_System::Input input;
-	SAS_System::geti();
 
 	SAS_GUI::GUIManager guimanager;
 	SAS_GUI::ButtonView bv(SDL_Rect{ 200, 200, 60, 20 }, SDL_Rect{ 0,0,60,20 },
-		"E:\\Github\\SwordsAndStuff\\media\\buttons\\startbutton.bmp");
-	SAS_GUI::TextView tv(18, SDL_Color{ 255,0,0 }, "E:\\Github\\SwordsAndStuff\\media\\font.ttf", SDL_Rect{0,200,100,100});
+		"D:\\Github\\SwordsAndStuff\\media\\buttons\\startbutton.bmp");
+	SAS_GUI::TextView tv(18, SDL_Color{ 255,0,0 }, "D:\\Github\\SwordsAndStuff\\media\\font.ttf", SDL_Rect{0,200,100,100});
 	
 	SomeData imp(5, 32.5, "someData");
 
@@ -76,16 +76,28 @@ int main(int argc, char* argv[])
 	SAS_GUI::vec_pInput inputmods; 
 	inputmods.push_back(std::move(std::make_unique<SAS_GUI::HoverModule>(SDL_Rect{ 0,0,60,20 }, SDL_Rect{ 0,20,60,20 })));
 
-	auto window = std::make_unique<SAS_GUI::GUIWindow>(&renderer, "mainmenu", SDL_Rect{ 0, 0, 1280, 640 }, "E:\\Github\\SwordsAndStuff\\media\\backgrounds\\mainmenubg.bmp", 
-		"E:\\Github\\SwordsAndStuff\\media\\backgrounds\\mainmenubg.bmp", true);
+	auto window = std::make_unique<SAS_GUI::GUIWindow>(&renderer, "mainmenu", SDL_Rect{ 0, 0, 1280, 640 }, "D:\\Github\\SwordsAndStuff\\media\\backgrounds\\mainmenubg.bmp", 
+		"D:\\Github\\SwordsAndStuff\\media\\backgrounds\\mainmenubg.bmp", true);
 
 	SAS_GUI::Dynamics i(
 		std::move(updatemods),
 		std::move(inputmods)
 		);
 
-	window->AddComponent<SAS_GUI::GUIButton>(bv, std::unique_ptr<SAS_GUI::Model>(new FooModel(&imp)), 0, std::move(i));
-	window->AddComponent<SAS_GUI::DynamicText>(tv, std::unique_ptr<SAS_GUI::Model>(new FooModel(&imp)), FooModel::DataKeys::CVAL);
+	window->AddComponent<SAS_GUI::GUIButton>(bv, SAS_GUI::pModel(new FooModel(&imp)), 0, std::move(i));
+	window->AddComponent<SAS_GUI::DynamicText>(tv, SAS_GUI::pModel(new FooModel(&imp)), FooModel::DataKeys::CVAL);
+	tv.position = SDL_Rect{ 400, 200, 60, 20 };
+	window->AddComponent<SAS_GUI::TextBox>(tv);
+
+	tv.position = SDL_Rect{ 400, 300, 60, 20 };
+	window->AddComponent<SAS_GUI::TextBox>(tv);
+	
+	tv.position = SDL_Rect{ 400, 400, 60, 20 };
+	window->AddComponent<SAS_GUI::TextBox>(tv);
+
+	tv.position = SDL_Rect{ 400, 500, 60, 20 };
+	window->AddComponent<SAS_GUI::TextBox>(tv);
+
 
 	guimanager.AddWindow(std::move(window));
 
@@ -96,7 +108,6 @@ int main(int argc, char* argv[])
 	int currenttime = 0;
 
 	while (!quit) {
-		SAS_System::seti(SAS_System::geti() + 1);
 		currenttime = SAS_System::CurrentTicks();
 		renderer.ClearScreen();
 		SAS_System::UpdateInput(&input);

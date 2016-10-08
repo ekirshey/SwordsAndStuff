@@ -9,8 +9,8 @@ namespace SAS_GUI {
 	class TextBox : public GUIComponent
 	{
 	public:
-		TextBox(std::string* valueToChange, const TextView& view) 
-			: value_(valueToChange)
+		TextBox(const TextView& view) 
+			: _value("")
 			, _view(view)
 			, focus_(false) 
 			, cursortimer_(0)
@@ -26,8 +26,7 @@ namespace SAS_GUI {
 		void Render(const SDL_Rect& windowrect, SAS_System::Renderer* renderer);
 
 	private:
-		std::string* value_;
-		std::string storedString;
+		std::string _value;
 		std::unique_ptr<Model> _model;
 
 		TextView _view;

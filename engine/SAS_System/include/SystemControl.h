@@ -3,15 +3,15 @@
 #include <string>
 #include "SystemDefines.h"
 
-namespace SAS_System{
+namespace SAS_System {
 	class Renderer;
 	class Input;
-}
-namespace SAS_System {
 
 	DECLSPEC void InitializeSystem();
 	DECLSPEC void ShutdownSystem();
 	DECLSPEC int CurrentTicks();
 	DECLSPEC void UpdateInput(Input* input);
+	DECLSPEC void StartTextInput(int streamlength, std::string* stream);
+	DECLSPEC void StopTextInput(std::string* stream);
 
 }

@@ -21,7 +21,6 @@ namespace SAS_GUI {
 			int y;
 			input.getMouseState(x, y);
 
-			SAS_System::geti();
 			_debouncecounter += elapsedtime;
 
 			// Model independent update and input handling
