@@ -117,6 +117,7 @@ namespace SAS_GUI {
 
 	class Dynamics {
 		public:
+			Dynamics() {}
 			
 			Dynamics(std::vector<std::unique_ptr<UpdateModule> > update, 
 						  std::vector<std::unique_ptr<InputModule> > input) 
@@ -124,6 +125,14 @@ namespace SAS_GUI {
 				, _inputModules(std::move(input))
 			{
 
+			}
+
+			void addUpdateModule(std::unique_ptr<UpdateModule> update) {
+				_updateModules.push_back(std::move(update));
+			}
+			
+			void addInputModule(std::unique_ptr<InputModule> input) {
+				_inputModules.push_back(std::move(input));
 			}
 
 			void update(const SDL_Rect windowrect, SDL_Rect& position, SDL_Rect& cliprect) {

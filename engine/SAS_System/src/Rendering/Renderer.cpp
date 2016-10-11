@@ -30,7 +30,7 @@ namespace SAS_System {
 			}
 
 			//Create window
-			_window = SDL_CreateWindow("Cannon Game", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, _screenwidth, _screenheight, SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL);
+			_window = SDL_CreateWindow("SAS", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, _screenwidth, _screenheight, SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL);
 			if (_window == NULL)
 			{
 				std::cerr << "Window could not be created! SDL_Error: " << SDL_GetError() << std::endl;

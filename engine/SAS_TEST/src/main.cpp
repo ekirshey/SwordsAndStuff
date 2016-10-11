@@ -10,6 +10,16 @@
 #include "Model.h"
 #include "GUIDynamics/Dynamics.h"
 
+const std::string laptoppath  = "C:\\cygwin64\\home\\prome\\code\\SwordsAndStuff\\";
+const std::string desktoppath = "D:\\Github\\SwordsAndStuff\\";
+
+#ifdef LAPTOP
+	std::string path = laptoppath;
+#else
+	std::string path = desktoppath;
+#endif
+
+
 struct SomeData {
 	void dataFunc() {
 		std::cout << _a << " " << _b << " " << _c << std::endl;
@@ -53,7 +63,9 @@ private:
 	SomeData* _data;
 };
 
-
+std::unique_ptr<SAS_GUI::Model> FooModelFactory(SomeData* data) {
+	return std::unique_ptr<SAS_GUI::Model>(new FooModel(data));
+}
 
 
 int main(int argc, char* argv[])
@@ -64,8 +76,8 @@ int main(int argc, char* argv[])
 
 	SAS_GUI::GUIManager guimanager;
 	SAS_GUI::ButtonView bv(SDL_Rect{ 200, 200, 60, 20 }, SDL_Rect{ 0,0,60,20 },
-		"D:\\Github\\SwordsAndStuff\\media\\buttons\\startbutton.bmp");
-	SAS_GUI::TextView tv(18, SDL_Color{ 255,0,0 }, "D:\\Github\\SwordsAndStuff\\media\\font.ttf", SDL_Rect{0,200,100,100});
+		path + "media\\buttons\\startbutton.bmp");
+	SAS_GUI::TextView tv(18, SDL_Color{ 255,0,0 }, path + "media\\font.ttf", SDL_Rect{0,200,100,100});
 	
 	SomeData imp(5, 32.5, "someData");
 
@@ -74,18 +86,14 @@ int main(int argc, char* argv[])
 	//updatemods.push_back(std::move(std::make_unique<SAS_GUI::HorizontalBounceModule>(200)));
 	
 	SAS_GUI::vec_pInput inputmods; 
-	inputmods.push_back(std::move(std::make_unique<SAS_GUI::HoverModule>(SDL_Rect{ 0,0,60,20 }, SDL_Rect{ 0,20,60,20 })));
+	inputmods.push_back(std::make_unique<SAS_GUI::HoverModule>(SDL_Rect{ 0,0,60,20 }, SDL_Rect{ 0,20,60,20 }));
 
-	auto window = std::make_unique<SAS_GUI::GUIWindow>(&renderer, "mainmenu", SDL_Rect{ 0, 0, 1280, 640 }, "D:\\Github\\SwordsAndStuff\\media\\backgrounds\\mainmenubg.bmp", 
-		"D:\\Github\\SwordsAndStuff\\media\\backgrounds\\mainmenubg.bmp", true);
+	auto window = std::make_unique<SAS_GUI::GUIWindow>(&renderer, "mainmenu", SDL_Rect{ 0, 0, 1280, 640 }, path + "media\\backgrounds\\mainmenubg.bmp", 
+		path + "media\\backgrounds\\mainmenubg.bmp", true);
 
-	SAS_GUI::Dynamics i(
-		std::move(updatemods),
-		std::move(inputmods)
-		);
+	window->AddComponent<SAS_GUI::GUIButton>(bv, FooModelFactory(&imp), 0, SAS_GUI::Dynamics(std::move(updatemods), std::move(inputmods)));
+	window->AddComponent<SAS_GUI::DynamicText>(tv, FooModelFactory(&imp), FooModel::DataKeys::CVAL);
 
-	window->AddComponent<SAS_GUI::GUIButton>(bv, SAS_GUI::pModel(new FooModel(&imp)), 0, std::move(i));
-	window->AddComponent<SAS_GUI::DynamicText>(tv, SAS_GUI::pModel(new FooModel(&imp)), FooModel::DataKeys::CVAL);
 	tv.position = SDL_Rect{ 400, 200, 60, 20 };
 	window->AddComponent<SAS_GUI::TextBox>(tv);
 
@@ -97,7 +105,6 @@ int main(int argc, char* argv[])
 
 	tv.position = SDL_Rect{ 400, 500, 60, 20 };
 	window->AddComponent<SAS_GUI::TextBox>(tv);
-
 
 	guimanager.AddWindow(std::move(window));
 

@@ -5,6 +5,7 @@ namespace SAS_GUI {
 		std::string focusedwindowtexture, std::string windowtexture, bool open) 
 		: windowname_(windowname)
 		, windowrect_(windowrect)
+		, tabindex_(0)
 		, focusedwindowtexture_(focusedwindowtexture)
 		, windowtexture_(windowtexture)
 		, open_(open)

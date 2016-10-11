@@ -13,7 +13,14 @@ message("${CMAKE_BINARY_DIR}")
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/../lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/../lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/../bin)
-		
+
+# Using cmd line settings to determine media path until I set up config files
+OPTION(LAPTOP "Option description" OFF) 
+
+IF(LAPTOP)
+    ADD_DEFINITIONS(-DLAPTOP)
+ENDIF(LAPTOP)
+
 add_subdirectory(SAS_System)
 add_subdirectory(SAS_GUI)
 #add_subdirectory(SAS)

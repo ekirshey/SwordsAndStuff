@@ -35,6 +35,7 @@ namespace SAS_GUI {
 		bool open_;
 		std::string windowname_;
 		SDL_Rect windowrect_;
+		int tabindex_;
 
 		// Textures
 		std::string focusedwindowtexture_;
