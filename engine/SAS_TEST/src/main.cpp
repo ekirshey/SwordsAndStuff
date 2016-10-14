@@ -5,7 +5,7 @@
 #include "GUIManager.h"
 #include "GUIComponents/GUIWindow.h"
 #include "GUIComponents/GUIButton.h"
-#include  "GUIComponents/TextBox.h"
+#include "GUIComponents/TextBox.h"
 #include "GUIComponents/DynamicText.h"
 #include "Model.h"
 #include "GUIDynamics/Dynamics.h"
@@ -87,9 +87,8 @@ int main(int argc, char* argv[])
 	
 	SAS_GUI::vec_pInput inputmods; 
 	inputmods.push_back(std::make_unique<SAS_GUI::HoverModule>(SDL_Rect{ 0,0,60,20 }, SDL_Rect{ 0,20,60,20 }));
-
-	auto window = std::make_unique<SAS_GUI::GUIWindow>(&renderer, "mainmenu", SDL_Rect{ 0, 0, 1280, 640 }, path + "media\\backgrounds\\mainmenubg.bmp", 
-		path + "media\\backgrounds\\mainmenubg.bmp", true);
+	SAS_GUI::WindowView wv(SDL_Rect{ 0,0,600,600 }, SDL_Rect{0,0,1280,640}, path + "media\\backgrounds\\mainmenubg.bmp");
+	auto window = std::make_unique<SAS_GUI::GUIWindow>(&renderer, "mainmenu", wv,  true);
 
 	window->AddComponent<SAS_GUI::GUIButton>(bv, FooModelFactory(&imp), 0, SAS_GUI::Dynamics(std::move(updatemods), std::move(inputmods)));
 	window->AddComponent<SAS_GUI::DynamicText>(tv, FooModelFactory(&imp), FooModel::DataKeys::CVAL);
@@ -106,7 +105,16 @@ int main(int argc, char* argv[])
 	tv.position = SDL_Rect{ 400, 500, 60, 20 };
 	window->AddComponent<SAS_GUI::TextBox>(tv);
 
+	SAS_GUI::WindowView wv2(SDL_Rect{ 400,400,200,200 }, SDL_Rect{0,0,200,200}, path + "media\\backgrounds\\somemenu.bmp");
+	auto window2 = std::make_unique<SAS_GUI::GUIWindow>(&renderer, "somewindow", wv2,  true);
+
+	// Relative to window position? going with yes for now
+	// What makes more sense?
+	tv.position = SDL_Rect{ 20, 20, 60, 20 };
+	window2->AddComponent<SAS_GUI::TextBox>(tv);
+
 	guimanager.AddWindow(std::move(window));
+	guimanager.AddWindow(std::move(window2));
 
 	bool quit = false;
 	std::string stream = "";

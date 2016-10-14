@@ -2,6 +2,7 @@
 
 namespace SAS_GUI {
 	GUIManager::GUIManager()
+		: focusedwindow_(nullptr)
 	{
 	}
 

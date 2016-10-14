@@ -39,9 +39,9 @@ namespace SAS_GUI {
 			}
 		}
 
-		void GUIButton::Render(const SDL_Rect& windowrect, SAS_System::Renderer* renderer) {
-			renderer->RenderImage(_view.texture, _view.position.x + windowrect.x, 
-				_view.position.y + windowrect.y, &_view.cliprect);
+		void GUIButton::Render( SAS_System::Renderer* renderer) {
+			renderer->RenderImage(_view.texture, _view.position.x, 
+				_view.position.y, &_view.cliprect);
 		}
 
 		void GUIButton::NotifyObservers() {

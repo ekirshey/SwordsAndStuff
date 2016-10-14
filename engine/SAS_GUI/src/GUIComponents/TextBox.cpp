@@ -40,7 +40,9 @@ namespace SAS_GUI {
 
 	}
 
-	void TextBox::Render(const SDL_Rect& windowrect, SAS_System::Renderer* renderer) {
+	// Relative to window or not??
+	// Because im rendering to a texture, the position is already relative to the window                  
+	void TextBox::Render(SAS_System::Renderer* renderer) {
 		renderer->RenderOutlineRectangle(_view.position, SDL_Color{ 255,255,255,255 });
 		renderer->RenderText(_value, _view.position.x, _view.position.y, _view.fontsize, _view.fontcolor, _view.fontpath);
 	}

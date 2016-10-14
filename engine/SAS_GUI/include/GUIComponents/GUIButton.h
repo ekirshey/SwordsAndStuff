@@ -22,7 +22,7 @@ namespace SAS_GUI {
 		GUIButton& operator=(const GUIButton&) = delete;
 
 		void Update(const SDL_Rect& windowrect, const SAS_System::Input& input, int elapsedtime);
-		void Render(const SDL_Rect& windowrect, SAS_System::Renderer* renderer);
+		void Render(SAS_System::Renderer* renderer);
 
 		void NotifyObservers();
 		void AddObserver(std::function<void()> observer);

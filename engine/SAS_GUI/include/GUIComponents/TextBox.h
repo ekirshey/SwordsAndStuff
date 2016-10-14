@@ -23,7 +23,7 @@ namespace SAS_GUI {
 		}
 
 		void Update(const SDL_Rect& windowrect, const SAS_System::Input& input, int elapsedtime);
-		void Render(const SDL_Rect& windowrect, SAS_System::Renderer* renderer);
+		void Render(SAS_System::Renderer* renderer);
 
 	private:
 		std::string _value;

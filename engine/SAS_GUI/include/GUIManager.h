@@ -29,6 +29,8 @@ namespace SAS_GUI {
 		void HandleInput(const SAS_System::Input& input);
 		std::vector<std::unique_ptr<GUIWindow>> windows_;
 		std::unordered_map<int, GUIWindow*> keymap_;
+		
+		GUIWindow* focusedwindow_;
 	};
 
 }

@@ -23,8 +23,8 @@ namespace SAS_GUI {
 			_text = _model->getValue(_getstringkey);
 		}
 
-		void Render(const SDL_Rect& windowrect, SAS_System::Renderer* renderer) {
-			renderer->RenderText(_text, _view.position.x + windowrect.x, _view.position.y + windowrect.y, 
+		void Render(SAS_System::Renderer* renderer) {
+			renderer->RenderText(_text, _view.position.x, _view.position.y, 
 				_view.fontsize, _view.fontcolor, _view.fontpath);
 		}
 		

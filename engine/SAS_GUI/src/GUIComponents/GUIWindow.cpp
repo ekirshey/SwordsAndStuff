@@ -1,18 +1,13 @@
 #include "GUIWindow.h"
-
+#include <iostream>
 namespace SAS_GUI {
-	GUIWindow::GUIWindow( SAS_System::Renderer* renderer, std::string windowname, SDL_Rect windowrect,
-		std::string focusedwindowtexture, std::string windowtexture, bool open) 
+	GUIWindow::GUIWindow(SAS_System::Renderer* renderer, std::string windowname, const WindowView& view, bool open) 
 		: windowname_(windowname)
-		, windowrect_(windowrect)
-		, tabindex_(0)
-		, focusedwindowtexture_(focusedwindowtexture)
-		, windowtexture_(windowtexture)
+		, view_(view)
 		, open_(open)
 	{
-		guitexture_ = renderer->CreateTargetTexture(windowrect_.w, windowrect_.h);
+		guitexture_ = renderer->CreateTargetTexture(view_.position.w, view_.position.h);
 	}
-
 
 	GUIWindow::~GUIWindow()
 	{
@@ -22,21 +17,21 @@ namespace SAS_GUI {
 		if (IsOpen()) {
 			for (auto i = 0; i < guicomponents_.size(); i++) {
 				// Split up input and render handling for some hypothetical future where input in a window is disabled
-				guicomponents_[i]->Update(windowrect_, input, elapsedtime);
+				guicomponents_[i]->Update(view_.position, input, elapsedtime);
 			}
 		}
 	}
 
 	void GUIWindow::Render(SAS_System::Renderer* renderer) {
-
 		renderer->SetRenderTarget(guitexture_);
-		renderer->RenderImage(windowtexture_, windowrect_.x, windowrect_.y);
+		// Render to target texture at the origin
+		renderer->RenderImage(view_.texture, 0, 0);
 
 		for (auto i = 0; i < guicomponents_.size(); i++) {
-			guicomponents_[i]->Render(windowrect_, renderer);
+			guicomponents_[i]->Render(renderer);
 		}
 
 		renderer->DefaultRenderTarget();
-		renderer->RenderTargetTexture(guitexture_, windowrect_.x, windowrect_.y);
+		renderer->RenderTargetTexture(guitexture_, view_.position.x, view_.position.y);
 	}
 }
