@@ -3,6 +3,15 @@
 #include "GUIUtils.h"
 
 namespace SAS_GUI {
+		
+		GUIButton::GUIButton(const ButtonView& view) 
+			: _view(view)
+			, _model(nullptr)
+			, _dynamics(Dynamics())
+			, _debouncecounter(0)
+		{
+
+		}
 
 		// rect in relation to container window
 		GUIButton::GUIButton(const ButtonView& view, std::unique_ptr<Model> model, int clickedkey,
@@ -16,7 +25,9 @@ namespace SAS_GUI {
 
 		}
 
-		void GUIButton::Update(const SDL_Rect& windowrect, const SAS_System::Input& input, int elapsedtime) {
+		
+
+		void GUIButton::Update(const SDL_Rect& windowrect, const SAS_System::Input& input, bool& hasFocus, int elapsedtime) {
 			int x;
 			int y;
 			input.getMouseState(x, y);
@@ -31,7 +42,9 @@ namespace SAS_GUI {
 			if (input.leftMouseReleased()) { 
 				if (UTILS::isMouseOver(windowrect, _view.position, x, y)) {
 					if (_debouncecounter >= DEFAULTDEBOUNCECOUNT) {
-						_model->callFunction(_clickedkey);
+						// Not all buttons have a model
+						if (_model != nullptr)
+							_model->callFunction(_clickedkey);
 						NotifyObservers();
 						_debouncecounter = 0;
 					}

@@ -4,7 +4,7 @@
 #include "Model.h"
 
 namespace SAS_GUI {
-	void TextBox::Update(const SDL_Rect& windowrect, const SAS_System::Input& input, int elapsedtime) {
+	void TextBox::Update(const SDL_Rect& windowrect, const SAS_System::Input& input, bool& hasFocus, int elapsedtime) {
 		int x;
 		int y;
 		input.getMouseState(x, y);
@@ -37,7 +37,7 @@ namespace SAS_GUI {
 				showcursor_ = !showcursor_;
 			}
 		}
-
+		hasFocus = focus_;
 	}
 
 	// Relative to window or not??

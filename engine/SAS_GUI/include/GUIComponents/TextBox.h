@@ -22,7 +22,7 @@ namespace SAS_GUI {
 		~TextBox() {
 		}
 
-		void Update(const SDL_Rect& windowrect, const SAS_System::Input& input, int elapsedtime);
+		void Update(const SDL_Rect& windowrect, const SAS_System::Input& input, bool& hasFocus, int elapsedtime);
 		void Render(SAS_System::Renderer* renderer);
 
 	private:

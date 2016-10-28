@@ -19,7 +19,7 @@ namespace SAS_GUI {
 		~DynamicText() {
 
 		}
-		void Update(const SDL_Rect& windowrect, const SAS_System::Input& input, int elapsedtime) {
+		void Update(const SDL_Rect& windowrect, const SAS_System::Input& input, bool& hasFocus, int elapsedtime) {
 			_text = _model->getValue(_getstringkey);
 		}
 

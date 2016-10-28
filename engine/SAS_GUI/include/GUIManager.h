@@ -23,7 +23,10 @@ namespace SAS_GUI {
 		void Update(int elapsedtime,const SAS_System::Input& input);
 		void Render(SAS_System::Renderer* renderer);
 
-		void AddWindow(std::unique_ptr<GUIWindow> window, int key = -1);
+		//returns pointer to the moved window
+		GUIWindow* AddWindow(std::unique_ptr<GUIWindow> window, int key = -1);
+
+		GUIWindow* GetWindow(std::string windowname);
 
 	private:
 		void HandleInput(const SAS_System::Input& input);

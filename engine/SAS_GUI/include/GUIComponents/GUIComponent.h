@@ -8,7 +8,7 @@ namespace SAS_GUI {
 	{
 
 	public:
-		virtual void Update(const SDL_Rect& windowrect, const SAS_System::Input& input, int elapsedtime) {}
+		virtual void Update(const SDL_Rect& windowrect, const SAS_System::Input& input, bool& hasFocus, int elapsedtime) {}
 		virtual void Render(SAS_System::Renderer* renderer) = 0;
 
 		virtual ~GUIComponent() {}

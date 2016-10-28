@@ -89,7 +89,7 @@ int main(int argc, char* argv[])
 	inputmods.push_back(std::make_unique<SAS_GUI::HoverModule>(SDL_Rect{ 0,0,60,20 }, SDL_Rect{ 0,20,60,20 }));
 	SAS_GUI::WindowView wv(SDL_Rect{ 0,0,600,600 }, SDL_Rect{0,0,1280,640}, path + "media\\backgrounds\\mainmenubg.bmp");
 	auto window = std::make_unique<SAS_GUI::GUIWindow>(&renderer, "mainmenu", wv,  true);
-
+	
 	window->AddComponent<SAS_GUI::GUIButton>(bv, FooModelFactory(&imp), 0, SAS_GUI::Dynamics(std::move(updatemods), std::move(inputmods)));
 	window->AddComponent<SAS_GUI::DynamicText>(tv, FooModelFactory(&imp), FooModel::DataKeys::CVAL);
 
@@ -113,8 +113,15 @@ int main(int argc, char* argv[])
 	tv.position = SDL_Rect{ 20, 20, 60, 20 };
 	window2->AddComponent<SAS_GUI::TextBox>(tv);
 
-	guimanager.AddWindow(std::move(window));
-	guimanager.AddWindow(std::move(window2));
+	auto wp = guimanager.AddWindow(std::move(window));
+	guimanager.AddWindow(std::move(window2), SDL_SCANCODE_A);
+
+	std::function<void()> window_close = [wp]() {wp->CloseWindow(); };
+	auto closebutton = std::make_unique<SAS_GUI::GUIButton>(bv, FooModelFactory(&imp), 0, SAS_GUI::Dynamics(std::move(updatemods), std::move(inputmods)));
+	// why models instead of just return string callbacks and void(void) callbacks?
+
+	closebutton->AddObserver(window_close);
+	wp->AddComponent(std::move(closebutton));
 
 	bool quit = false;
 	std::string stream = "";

@@ -15,7 +15,7 @@ namespace SAS_GUI {
 
 		~GUIWindow();
 
-		void Update(int elapsedtime, const SAS_System::Input& input);
+		bool Update(int elapsedtime, const SAS_System::Input& input);
 		void Render(SAS_System::Renderer* renderer);
 
 		template<typename T, typename... Args>
@@ -32,6 +32,7 @@ namespace SAS_GUI {
 		void CloseWindow() { open_ = false; }
 		void ToggleWindow() { open_ = !open_; }
 
+		std::string WindowName() { return windowname_; }
 	private:
 		std::string windowname_;
 		WindowView view_;
