@@ -1,30 +1,21 @@
 #include <iostream>
 #include "MainMenuState.h"
-#include "SDLManager.h"
 #include "RenderSystem.h"
 #include "RenderComponent.h"
 #include "PositionComponent.h"
 #include "GameRunningState.h"
 #include "CharacterCreationState.h"
-#include "GUIButton.h"
+#include "Config/GameDefines.h"
+//GUI Includes
+#include "GUIViews/ButtonView.h"
+#include "GUIComponents/Button.h"
+#include "GUIDynamics/Dynamics.h"
 
-
-template<typename T>
-class LoadNextState : public SAS_GUI::ButtonFunction {
-public:
-	LoadNextState(GameState* state) : state_(state){}
-	void operator()() {
-		state_->AddNextState(std::make_unique<T>(false));
-		state_->SetCurrentState(TRANSITIONOUT);
-	}
-
-private:
-	GameState* state_;
-};
-
-MainMenuState::MainMenuState(bool persistent) : GameState(persistent)
+MainMenuState::MainMenuState(const GeneralConfig& config )
+	: _nextstate(MAINMENU_IDX)
+	, _exit(false)
+	, _generalconfig(config)
 {
-    SetCurrentState(INITIALIZE);
 }
 
 MainMenuState::~MainMenuState()
@@ -32,52 +23,63 @@ MainMenuState::~MainMenuState()
 
 }
 
-void MainMenuState::InitializeState()
+int MainMenuState::InitializeState(SAS_System::Renderer& renderer, const SAS_System::Input& input)
 {
     std::cout << "Initialize" << std::endl;
 	//std::string path = "media\\backgrounds\\mainmenubg.bmp";
 	//path = "media\\buttons\\startbutton.bmp";
     // Build systems and entities
-	guimanager_ = std::make_unique<SAS_GUI::GUIManager>(GetSDLManager());
-	auto window = std::make_unique<SAS_GUI::GUIWindow>(GetSDLManager(), "mainmenu", SDL_Rect{ 0, 0, 1280, 640 }, "../../../media//backgrounds/mainmenubg.bmp", "../../../media/backgrounds/mainmenubg.bmp", true);
-	//window->AddComponent<GUIButton<LoadNextState<CharacterCreationState>>>(SDL_Rect{ 610,400,60,20 }, SDL_Rect{ 0,0,60,20 }, "../../../media/buttons/startbutton.bmp", this );
-	//window->AddComponent<GUIButton<LoadNextState<GameRunningState>>>(SDL_Rect{ 610,450,60,20 }, SDL_Rect{ 0,0,60,20 }, "../../../media/buttons/startbutton.bmp", this );
-	window->AddComponent<SAS_GUI::GUIButton>(SDL_Rect{ 610,400,60,20 }, SDL_Rect{ 0,0,60,20 }, "../../../media/buttons/startbutton.bmp", 
-		std::unique_ptr<LoadNextState<CharacterCreationState>>(new LoadNextState<CharacterCreationState>(this)));
+
+	SAS_GUI::WindowView wv(SDL_Rect{ 0,0,SCREEN_WIDTH,SCREEN_HEIGHT }, SDL_Rect{0,0,SCREEN_WIDTH,SCREEN_HEIGHT}, _generalconfig.mediaroot + "media\\backgrounds\\mainmenubg.bmp");
+	auto mainwindow = std::make_unique<SAS_GUI::Window>(&renderer, "mainmenu", wv,  true);
+
+	SAS_GUI::ButtonView bv(SDL_Rect{ 200, 200, 60, 20 }, SDL_Rect{ 0,0,60,20 },
+		_generalconfig.mediaroot + "media\\buttons\\startbutton.bmp");
+
+	mainwindow->AddComponent<SAS_GUI::Button>(bv, 
+		[this]() {
+			_nextstate = CHARCREATION_IDX;
+			_exit = true;
+		}
+	);
+
+	_guimanager.AddWindow(std::move(mainwindow));
+
+#ifdef FOO
 	window->AddComponent<SAS_GUI::GUIButton>(SDL_Rect{ 610,450,60,20 }, SDL_Rect{ 0,0,60,20 }, "../../../media/buttons/startbutton.bmp", 
 		std::unique_ptr<LoadNextState<GameRunningState>>(new LoadNextState<GameRunningState>(this)));
 	//window->AddComponent<GUIButton>(SDL_Rect{ 610,500,60,20 }, SDL_Rect{ 0,0,60,20 }, "../../../media/buttons/startbutton.bmp");
 	guimanager_->AddWindow(std::move(window));
-
-    SetCurrentState(TRANSITIONIN);
+#endif
+	return TRANSITIONIN;
 }
 
-void MainMenuState::TransitionIntoState()
+int MainMenuState::TransitionIntoState(SAS_System::Renderer& renderer)
 {
     std::cout << "Transition Into State" << std::endl;
 	
-    SetCurrentState(UPDATE);
+	return UPDATE;
 }
 
-void MainMenuState::UpdateState(int elapsedtime)
+int MainMenuState::UpdateState(int elapsedtime, SAS_System::Renderer& renderer, const SAS_System::Input& input)
 {
-	auto keyboardstate = GetSDLManager()->GetKeyBoardState();
+	int ret = UPDATE;
 
-	guimanager_->Update(elapsedtime);
+	_guimanager.Update(elapsedtime, input);
+	_guimanager.Render(&renderer);
 
-	if (keyboardstate[SDL_SCANCODE_Q]) {
-		SetCurrentState(TRANSITIONOUT);
+	if (_exit) {
+		ret = TRANSITIONOUT;
 	}
+
+	return ret;
 }
 
-void MainMenuState::TransitionFromState()
+int MainMenuState::TransitionFromState(SAS_System::Renderer& renderer)
 {
     std::cout << "Transition From State" << std::endl;
 
     std::cout << "Exit State" << std::endl;
 	
-    SetCurrentState(EXIT);
+	return EXIT;
 }
-
-
-

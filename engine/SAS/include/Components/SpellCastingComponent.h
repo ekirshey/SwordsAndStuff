@@ -1,8 +1,8 @@
 #pragma once
 
 #include <string>
-#include "../../include/ECSFramework/Component.h"
-#include "../Config/ComponentDefines.h"
+#include "ECSFramework/Component.h"
+#include "Config/ComponentDefines.h"
 
 #define NO_CAST -1
 

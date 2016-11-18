@@ -1,8 +1,8 @@
 #ifndef VELOCITYCOMPONENT_H
 #define VELOCITYCOMPONENT_H
 
-#include "../ECSFramework/Component.h"
-#include "../Config/ComponentDefines.h"
+#include "ECSFramework/Component.h"
+#include "Config/ComponentDefines.h"
 
 class VelocityComponent : public Component
 {

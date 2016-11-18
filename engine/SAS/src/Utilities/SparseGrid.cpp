@@ -70,13 +70,13 @@ void SparseGrid::clear()
 	grid_.resize(gridwidth_*gridheight_);
 }
 
-void SparseGrid::Draw(SAS_Rendering::SDLManager* sdlmanager)
+void SparseGrid::Draw(SAS_System::Renderer* renderer)
 {
 	for (int j = 0; j < gridheight_; j++)
 	{
 		for (int i = 0; i < gridwidth_; i++)
 		{
-			sdlmanager->RenderOutlineRectangle(SDL_Rect{ i*cellwidth_, j*cellheight_,cellwidth_,cellheight_ }, 0xFF, 0x00, 0x00, 0xFF);
+			renderer->RenderOutlineRectangle(SDL_Rect{ i*cellwidth_, j*cellheight_,cellwidth_,cellheight_ }, SDL_Color{ 0xFF, 0x00, 0x00, 0xFF });
 			//for (int z = 0; z < grid_[(gridwidth_*j) + i].size(); z++)
 			//	sdlmanager->RenderOutlineRectangle(grid_[(gridwidth_*j) + i].at(z).boundingrectangle->Rectangle(), 0x00, 0x00, 0x00, 0xFF);
 		}

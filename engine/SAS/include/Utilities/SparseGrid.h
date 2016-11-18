@@ -2,12 +2,11 @@
 #include <vector>
 #include <stdint.h>
 #include <memory>
-#include <SDL_rect.h>
-#include "../Components/BoundingRectangleComponent.h"
-#include "../Components/PositionComponent.h"
-#include "../Components/CollisionComponent.h"
+#include "Components/BoundingRectangleComponent.h"
+#include "Components/PositionComponent.h"
+#include "Components/CollisionComponent.h"
 #include "UtilityStructures.h"
-#include "SDLManager.h"
+#include "Renderer.h"
 
 class SparseGrid
 {
@@ -17,7 +16,7 @@ public:
 
 	bool Insert(QuadElement entity);
 	void clear();
-	void Draw(SAS_Rendering::SDLManager* sdlmanager);
+	void Draw(SAS_System::Renderer* renderer);
 
 	std::vector<QuadElement> QueryRange(const SDL_Rect& boundary) const;
 private:

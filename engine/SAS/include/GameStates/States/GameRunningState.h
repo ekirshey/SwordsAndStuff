@@ -1,16 +1,15 @@
-#ifndef GAMERUNNINGSTATE_H
-#define GAMERUNNINGSTATE_H
+#pragma once
 
 #include <memory>
-#include "../StateFramework/GameState.h"
-#include "../../HUD/HUDManager.h"
-#include "../../GameWorld/GameWorld.h"
-#include "../../GameWorld/Camera.h"
+#include "StateFramework/GameState.h"
+#include "GameWorld/GameWorld.h"
+#include "GameWorld/Camera.h"
 #include "GUIManager.h"
-#include "../../ECSFramework/ECSManager.h"
-#include "../../GameMechanics/Spells/GlobalSpellbook.h"
-#include "../../DataManagement/ItemDatabase.h"
+#include "ECSFramework/ECSManager.h"
+#include "GameMechanics/Spells/GlobalSpellbook.h"
+#include "DataManagement/ItemDatabase.h"
 
+#ifdef FOO
 class MonsterSpawner;
 
 class GameRunningState : public GameState
@@ -44,5 +43,4 @@ class GameRunningState : public GameState
 
 		std::unique_ptr<Items::ItemDatabase> itemdatabase_;
 };
-
-#endif // GAMERUNNINGSTATE_H
+#endif

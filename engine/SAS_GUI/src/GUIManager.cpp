@@ -39,7 +39,7 @@ namespace SAS_GUI {
 
 	}
 
-	GUIWindow* GUIManager::AddWindow(std::unique_ptr<GUIWindow> window, int key) {
+	Window* GUIManager::AddWindow(std::unique_ptr<Window> window, int key) {
 		windows_.push_back(std::move(window));
 
 		keymap_[key] = windows_.back().get();
@@ -47,7 +47,7 @@ namespace SAS_GUI {
 	}
 
 
-	GUIWindow* GUIManager::GetWindow(std::string windowname) {
+	Window* GUIManager::GetWindow(std::string windowname) {
 		for (auto& w : windows_) {
 			if (w->WindowName() == windowname)
 				return w.get();

@@ -1,39 +1,22 @@
 #include <iostream>
 #include <vector>
-#include "../../../include/GameStates/States/CharacterCreationState.h"
-#include "../../../include/GameStates/States/GameRunningState.h"
-#include "SDLManager.h"
-#include "TextBox.h"
-#include "DynamicText.h"
-#include "GUIImage.h"
-#include "GUIButton.h"
-#include "GUIBuilder.h"
+#include "GameStates/States/CharacterCreationState.h"
+#include "GameStates/States/GameRunningState.h"
+#include "Config/GameDefines.h"
 
-class IncrementClip {
-public:
-	IncrementClip(SAS_GUI::GUIImage* image) : image_(image) {}
-	void operator()() {
-		image_->NextClip();
-	}
+#include "GUIViews/ButtonView.h"
+#include "GUIViews/DropdownMenuView.h"
+#include "GUIComponents/Label.h"
+#include "GUIComponents/TextBox.h"
+#include "GUIComponents/Button.h"
+#include "GUIComponents/DynamicText.h"
+#include "GUIComponents/DropdownMenu.h"
 
-private:
-	SAS_GUI::GUIImage* image_;
-};
-
-class DecrementClip {
-public:
-	DecrementClip(SAS_GUI::GUIImage* image) : image_(image) {}
-	void operator()() {
-		image_->PreviousClip();
-	}
-
-private:
-	SAS_GUI::GUIImage* image_;
-};
-
-CharacterCreationState::CharacterCreationState(bool persistent) : GameState(persistent)
+CharacterCreationState::CharacterCreationState(const GeneralConfig& config)
+	: _generalconfig(config)
+	, _nextstate(CHARCREATION_IDX)
+	, _availablestatpoints(10)
 {
-	SetCurrentState(INITIALIZE);
 }
 
 
@@ -42,13 +25,80 @@ CharacterCreationState::~CharacterCreationState()
 
 }
 
-void CharacterCreationState::InitializeState() {
+int CharacterCreationState::InitializeState(SAS_System::Renderer& renderer, const SAS_System::Input& input) {
 
-	guimanager_ = std::make_unique<SAS_GUI::GUIManager>(GetSDLManager());
+	SAS_GUI::WindowView wv(SDL_Rect{ 0,0,SCREEN_WIDTH,SCREEN_HEIGHT }, SDL_Rect{0,0,SCREEN_WIDTH,SCREEN_HEIGHT}, _generalconfig.mediaroot + "media\\backgrounds\\character_creation_bg.bmp");
+	auto mainwindow = std::make_unique<SAS_GUI::Window>(&renderer, "mainmenu", wv,  true);
 
-	SAS_GUI::GUIBuilder::BuildGUIFromFile(guimanager_.get(), "../../../config/gui/charcreationconfig.txt");
+	SAS_GUI::TextView tv(18, SDL_Color{ 255,0,0 }, _generalconfig.mediaroot + "media\\font.ttf", SDL_Rect{50,10,100,100});
+	auto namelabel = std::make_unique<SAS_GUI::Label>(tv, "Name:");
+	
+	SAS_GUI::DropdownMenuView ddv(SDL_Rect{ 400,400,100,20 }, SDL_Rect{ 400,410,100,20 });
+	mainwindow->AddComponent<SAS_GUI::DropdownMenu>(ddv, tv, std::vector<std::string>{"a"});
+
+	tv.position = SDL_Rect{ 100, 10, 60, 20 };
+	auto namebox = std::make_unique<SAS_GUI::TextBox>(tv);
+	_valuecomponentmap["NameBox"] = namebox.get();
+	mainwindow->AddComponent(std::move(namebox));
+	mainwindow->AddComponent(std::move(namelabel));
+
+	tv.position = SDL_Rect{ 50, 40, 60, 20 };
+	mainwindow->AddComponent<SAS_GUI::Label>(tv, "Available Points:");
+
+	tv.position = SDL_Rect{ 250, 40, 60, 20 };
+	mainwindow->AddComponent<SAS_GUI::DynamicText<int>>(tv, _availablestatpoints);
+
+	// Stat Labels
+	tv.position = SDL_Rect{ 50, 70, 60, 20 };
+	mainwindow->AddComponent<SAS_GUI::Label>(tv, "Strength:");
+
+	tv.position = SDL_Rect{ 250, 70, 60, 20 };
+	mainwindow->AddComponent<SAS_GUI::DynamicText<float>>(tv, _characterstats.stats_[STRENGTH]);
+
+	SAS_GUI::ButtonView bv(SDL_Rect{ 200, 200, 25, 25 }, SDL_Rect{ 0,0,25,25 },
+		_generalconfig.mediaroot + "media\\buttons\\arrows.bmp");
+
+	mainwindow->AddComponent<SAS_GUI::Button>(bv, 
+		[this]() {
+			if (_availablestatpoints > 0) {
+				_availablestatpoints--;
+				_characterstats.SetStat(STRENGTH, _characterstats.GetStat(STRENGTH) + 1);
+			}
+		}
+	);
+
+	bv.position = SDL_Rect{ 200, 245, 25, 25};
+	mainwindow->AddComponent<SAS_GUI::Button>(bv, 
+		[this]() {
+			if (_availablestatpoints > 0) {
+				_availablestatpoints--;
+				_characterstats.SetStat(INTELLIGENCE, _characterstats.GetStat(INTELLIGENCE) + 1);
+			}
+		}
+	);
+
+	tv.position = SDL_Rect{ 50, 90, 60, 20 };
+	mainwindow->AddComponent<SAS_GUI::Label>(tv, "Intelligence:");
+
+	tv.position = SDL_Rect{ 250, 90, 60, 20 };
+	mainwindow->AddComponent<SAS_GUI::DynamicText<float>>(tv, _characterstats.stats_[INTELLIGENCE]);
+
+	tv.position = SDL_Rect{ 50, 110, 60, 20 };
+	mainwindow->AddComponent<SAS_GUI::Label>(tv, "Health:");
+
+	tv.position = SDL_Rect{ 250, 110, 60, 20 };
+	mainwindow->AddComponent<SAS_GUI::DynamicText<float>>(tv, _characterstats.stats_[HEALTH]);
+
+	tv.position = SDL_Rect{ 50, 130, 60, 20 };
+	mainwindow->AddComponent<SAS_GUI::Label>(tv, "Mana:");
+
+	tv.position = SDL_Rect{ 250, 130, 60, 20 };
+	mainwindow->AddComponent<SAS_GUI::DynamicText<float>>(tv, _characterstats.stats_[MANA]);
+
+	_guimanager.AddWindow(std::move(mainwindow));
+	//SAS_GUI::GUIBuilder::BuildGUIFromFile(_guimanager.get(), "../../../config/gui/charcreationconfig.txt");
 /*
-	auto window = std::make_unique<GUIWindow>(GetSDLManager(), "mainmenu", SDL_Rect{ 0, 0, 1280, 640 }, "../../../media//backgrounds/charcreationbg.bmp", "../../../media/backgrounds/charcreationbg.bmp", true);
+	auto window = std::make_unique<Window>(GetSDLManager(), "mainmenu", SDL_Rect{ 0, 0, 1280, 640 }, "../../../media//backgrounds/charcreationbg.bmp", "../../../media/backgrounds/charcreationbg.bmp", true);
 
 	window->AddComponent<TextBox>(&characterDescription.name_, SDL_Rect{ 200, 200, 100, 25 }, 20, SDL_Color{ 0,0,0,255 }, "..\\..\\..\\media\\font.ttf");
 	window->AddComponent<DynamicText>(&characterDescription.name_, SDL_Rect{ 400, 200, 100, 25 }, 20, SDL_Color{ 255,0,0,255 }, "..\\..\\..\\media\\font.ttf");
@@ -72,28 +122,31 @@ void CharacterCreationState::InitializeState() {
 
 	window->AddComponent(std::move(image));
 
-	guimanager_->AddWindow(std::move(window));
+	_guimanager->AddWindow(std::move(window));
 */
-	SetCurrentState(TRANSITIONIN);
+	return TRANSITIONIN;
 }
 
-void CharacterCreationState::TransitionIntoState() {
-	std::cout << "Entering Character Creation state Update!" << std::endl;
-	SetCurrentState(UPDATE);
-}
 
-void CharacterCreationState::UpdateState(int elapsedtime) {
 
-	auto keyboardstate_ = GetSDLManager()->GetKeyBoardState();
+int CharacterCreationState::UpdateState(int elapsedtime, SAS_System::Renderer& renderer, const SAS_System::Input& input) {
+	int ret = UPDATE;
 
-	guimanager_->Update(elapsedtime);
-
-	if (keyboardstate_[SDL_SCANCODE_RETURN]) {
-		AddNextState(std::make_unique<GameRunningState>(true));
-		SetCurrentState(TRANSITIONOUT);
+	_guimanager.Update(elapsedtime, input);
+	_guimanager.Render(&renderer);
+	if (input.isKeyPressed(SDL_SCANCODE_Q)) {
+		_characterdescription._name = _valuecomponentmap["NameBox"]->GetValue();
+		std::cout << _characterdescription._name << std::endl;
 	}
+
+	return ret;
 }
 
-void CharacterCreationState::TransitionFromState() {
-	SetCurrentState(EXIT);
+int CharacterCreationState::TransitionIntoState(SAS_System::Renderer& renderer) {
+	std::cout << "Entering Character Creation state Update!" << std::endl;
+	return UPDATE;
+}
+
+int CharacterCreationState::TransitionFromState(SAS_System::Renderer& renderer) {
+	return EXIT;
 }

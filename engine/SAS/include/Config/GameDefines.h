@@ -1,0 +1,9 @@
+#pragma once
+
+enum GameStates {MAINMENU_IDX = 0, CHARCREATION_IDX, GAMERUNNING_IDX};
+
+#define EXIT_IDX -1
+#define NUM_STATES 3
+
+#define SCREEN_WIDTH 1280
+#define SCREEN_HEIGHT 640

@@ -8,14 +8,6 @@ namespace SAS_System {
 	class Renderer
 	{
 	public:
-		// I need to decide what to really do with this
-		typedef enum
-		{
-			SAS_FLIP_NONE = 0x00000000,     /**< Do not flip */
-			SAS_FLIP_HORIZONTAL = 0x00000001,    /**< flip horizontally */
-			SAS_FLIP_VERTICAL = 0x00000002     /**< flip vertically */
-		} SAS_RendererFlip;
-
 		DECLSPEC Renderer(int screenwidth, int screenheight);
 		DECLSPEC ~Renderer();
 
@@ -48,6 +40,7 @@ namespace SAS_System {
 	private:
 		int _screenwidth;
 		int _screenheight;
+		//SDL stuff requires pointer
 		SDL_Window* _window;
 		SDL_Renderer* _renderer;
 

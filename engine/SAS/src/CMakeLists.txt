@@ -1,28 +1,29 @@
 include_directories(
+	${SDL2_INCLUDE_DIR}
+	${SDL2IMAGE_INCLUDE_DIR}
+	${SDL2TTF_INCLUDE_DIR}
+	${PROJECT_SOURCE_DIR}/SAS_System/include
+	${PROJECT_SOURCE_DIR}/SAS_System/include/Rendering
+	${PROJECT_SOURCE_DIR}/SAS_System/include/Input
 	${PROJECT_SOURCE_DIR}/SAS_GUI/include
-	${PROJECT_SOURCE_DIR}/SAS_GUI/include/GUIComponents
-	${PROJECT_SOURCE_DIR}/SAS_Rendering/include/
+	${PROJECT_SOURCE_DIR}/SAS/include/
 	${PROJECT_SOURCE_DIR}/SAS/include/Components
 	${PROJECT_SOURCE_DIR}/SAS/include/Config
 	${PROJECT_SOURCE_DIR}/SAS/include/DataManagement
 	${PROJECT_SOURCE_DIR}/SAS/include/ECSFramework
 	${PROJECT_SOURCE_DIR}/SAS/include/GameMechanics
 	${PROJECT_SOURCE_DIR}/SAS/include/GameMechanics/Spells
+	${PROJECT_SOURCE_DIR}/SAS/include/GameStates
 	${PROJECT_SOURCE_DIR}/SAS/include/GameStates/StateFramework
 	${PROJECT_SOURCE_DIR}/SAS/include/GameStates/States
 	${PROJECT_SOURCE_DIR}/SAS/include/GameWorld
 	${PROJECT_SOURCE_DIR}/SAS/include/GameWorld/Cities
 	${PROJECT_SOURCE_DIR}/SAS/include/GameWorld/Lore
-	${PROJECT_SOURCE_DIR}/SAS/include/HUD
-	${PROJECT_SOURCE_DIR}/SAS/include/HUD/HUDComponents
 	${PROJECT_SOURCE_DIR}/SAS/include/SubSystems
 	${PROJECT_SOURCE_DIR}/SAS/include/Systems
 	${PROJECT_SOURCE_DIR}/SAS/include/Types
 	${PROJECT_SOURCE_DIR}/SAS/include/Types/AITypes
 	${PROJECT_SOURCE_DIR}/SAS/include/Utilities
-	${SDL2_INCLUDE_DIR}
-	${SDL2IMAGE_INCLUDE_DIR}
-	${SDL2TTF_INCLUDE_DIR}
 )
 
 file( GLOB SRCS 
@@ -38,8 +39,6 @@ file( GLOB SRCS
 	${PROJECT_SOURCE_DIR}/SAS/include/GameWorld/*.h
 	${PROJECT_SOURCE_DIR}/SAS/include/GameWorld/Cities/*.h
 	${PROJECT_SOURCE_DIR}/SAS/include/GameWorld/Lore/*.h
-	${PROJECT_SOURCE_DIR}/SAS/include/HUD/*.h
-	${PROJECT_SOURCE_DIR}/SAS/include/HUD/HUDComponents/*.h
 	${PROJECT_SOURCE_DIR}/SAS/include/SubSystems/*.h
 	${PROJECT_SOURCE_DIR}/SAS/include/Systems/*.h
 	${PROJECT_SOURCE_DIR}/SAS/include/Types/*.h
@@ -57,8 +56,6 @@ file( GLOB SRCS
 	${PROJECT_SOURCE_DIR}/SAS/src/GameWorld/*.cpp
 	${PROJECT_SOURCE_DIR}/SAS/src/GameWorld/Cities/*.cpp
 	${PROJECT_SOURCE_DIR}/SAS/src/GameWorld/Lore/*.cpp
-	${PROJECT_SOURCE_DIR}/SAS/src/HUD/*.cpp
-	${PROJECT_SOURCE_DIR}/SAS/src/HUD/HUDComponents/*.cpp
 	${PROJECT_SOURCE_DIR}/SAS/src/SubSystems/*.cpp
 	${PROJECT_SOURCE_DIR}/SAS/src/Systems/*.cpp
 	${PROJECT_SOURCE_DIR}/SAS/src/Types/*.cpp
@@ -72,7 +69,7 @@ add_executable(SAS_GAME
 	${SRCS} 
 )
 
-target_link_libraries (SAS_GAME LINK_PUBLIC ${SDL2_LIBRARY} ${SDL2IMAGE_LIB} ${SDL2TTF_LIB} SAS_Rendering SAS_GUI )
+target_link_libraries (SAS_GAME LINK_PUBLIC ${SDL2_LIBRARY} ${SDL2IMAGE_LIB} ${SDL2TTF_LIB} SAS_System SAS_GUI )
 
 foreach(FILE ${SRCS}) 
 	# Get the directory of the source file

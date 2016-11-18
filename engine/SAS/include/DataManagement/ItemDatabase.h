@@ -1,7 +1,7 @@
 #pragma once
 #include <list>
 #include <memory>
-#include "../Types/Items.h"
+#include "Types/Items.h"
 
 namespace Items {
 

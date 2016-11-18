@@ -3,9 +3,8 @@
 #include <math.h>
 #include <cstdlib>
 #include <ctime>
-#include "../../include/GameWorld/TileMap.h"
-#include "SDLManager.h"
-#include "../../include/GameWorld/Tile.h"
+#include "GameWorld/TileMap.h"
+#include "GameWorld/Tile.h"
 
 
 TileMap::TileMap(int mapwidth, int mapheight, int tilesize, std::string filetoload, const std::vector<Tile> &uniquetiles) :
@@ -123,7 +122,7 @@ bool TileMap::LoadMapFromFile(std::string filename, const std::vector<Tile> &uni
 	return tilesLoaded;
 }
 
-void TileMap::Render(SAS_Rendering::SDLManager* sdlmanager, SDL_Rect boundsrect)
+void TileMap::Render(SAS_System::Renderer* renderer, SDL_Rect boundsrect)
 {
     int col, row;
     SDL_Rect tilerect;
@@ -157,14 +156,14 @@ void TileMap::Render(SAS_Rendering::SDLManager* sdlmanager, SDL_Rect boundsrect)
                 row = tilesize_*j;
 				//http://stackoverflow.com/questions/22132531/fastest-way-to-render-a-tiled-map-with-sdl2
 				//http://stackoverflow.com/questions/20730900/creating-a-new-texture-from-several-textures-sdl-2
-                sdlmanager->RenderImage(tilemap_[i].Imagepath(),col,row,&cliprect);
+                renderer->RenderImage(tilemap_[i].Imagepath(),col,row,&cliprect);
             //}
         }
     }
 
 }
 
-void TileMap::Render(SAS_Rendering::SDLManager* sdlmanager)
+void TileMap::Render(SAS_System::Renderer* renderer)
 {
 	int col, row;
 	SDL_Rect tilerect;
@@ -181,7 +180,7 @@ void TileMap::Render(SAS_Rendering::SDLManager* sdlmanager)
 				row = tilesize_*j;
 				//http://stackoverflow.com/questions/22132531/fastest-way-to-render-a-tiled-map-with-sdl2
 				//http://stackoverflow.com/questions/20730900/creating-a-new-texture-from-several-textures-sdl-2
-				sdlmanager->RenderImage(tilemap_[i].Imagepath(), col, row, &cliprect);
+				renderer->RenderImage(tilemap_[i].Imagepath(), col, row, &cliprect);
 			//}
 
 		}

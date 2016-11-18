@@ -4,7 +4,7 @@
 #include "GUIManager.h"
 
 namespace SAS_GUI {
-	namespace GUIBuilder {
+	namespace Builder {
 
 		void BuildGUIFromFile(GUIManager* guimanager, std::string file);
 

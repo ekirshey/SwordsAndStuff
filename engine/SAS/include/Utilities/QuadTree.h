@@ -2,12 +2,12 @@
 #include <vector>
 #include <stdint.h>
 #include <memory>
-#include <SDL_rect.h>
-#include "../Components/BoundingRectangleComponent.h"
-#include "../Components/PositionComponent.h"
-#include "../Components/CollisionComponent.h"
-#include "SDLManager.h"
+#include "Components/BoundingRectangleComponent.h"
+#include "Components/PositionComponent.h"
+#include "Components/CollisionComponent.h"
 #include "UtilityStructures.h"
+#include "Renderer.h"
+
 // QuadTree class designed for the ECS
 
 enum QuadNodes { NORTHWEST, NORTHEAST, SOUTHWEST, SOUTHEAST };
@@ -20,7 +20,7 @@ public:
 
 	bool Insert(QuadElement entity);
 	void clear();
-	void Draw(SAS_Rendering::SDLManager* sdlmanager);
+	void Draw(SAS_System::Renderer* renderer);
 
 	std::vector<QuadElement> QueryRange(const SDL_Rect& boundary);
 

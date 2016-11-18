@@ -1,6 +1,6 @@
 #pragma once
 #include <unordered_map>
-#include "../../Types/Spells.h"
+#include "Types/Spells.h"
 
 // I think I can replace this with just a map... Consider future functionality before removal.
 class GlobalSpellbook

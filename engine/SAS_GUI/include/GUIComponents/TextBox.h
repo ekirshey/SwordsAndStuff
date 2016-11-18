@@ -1,20 +1,20 @@
 #pragma once
-#include "GUIComponent.h"
+#include "ValueComponent.h"
 #include "GUIViews/TextView.h"
 
 namespace SAS_GUI {
 
-	class Model;
-	
-	class TextBox : public GUIComponent
+	class TextBox : public ValueComponent<std::string>
 	{
 	public:
+
 		TextBox(const TextView& view) 
 			: _value("")
 			, _view(view)
 			, focus_(false) 
 			, cursortimer_(0)
 			, showcursor_(true) 
+			, cursorperiod_(500)
 		{
 
 		}
@@ -25,16 +25,16 @@ namespace SAS_GUI {
 		void Update(const SDL_Rect& windowrect, const SAS_System::Input& input, bool& hasFocus, int elapsedtime);
 		void Render(SAS_System::Renderer* renderer);
 
+		std::string GetValue() { return _value; }
+
 	private:
 		std::string _value;
-		std::unique_ptr<Model> _model;
-
 		TextView _view;
 
 		bool focus_;
 		int cursortimer_;
 		bool showcursor_;
-		const int cursorperiod_ = 500;
+		const int cursorperiod_;
 
 	};
 }

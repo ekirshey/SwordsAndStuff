@@ -1,7 +1,6 @@
 #include <iostream>
 #include <SDL.h>
 #include "../../include/ECSFramework/ECSManager.h"
-#include "SDLManager.h"
 #include "../../include/Systems/InputSystem.h"
 #include "../../include/Components/InputComponent.h"
 #include "../../include/Types/MessageTypes.h"
@@ -11,8 +10,8 @@
 
 #define MAXANGLE 90.0
 #define MINANGLE -90.0
-
-InputSystem::InputSystem(std::string systemname, ECSManager* ecsmanager, SAS_Rendering::SDLManager* sdlmanager) : 
+#ifdef FOO
+InputSystem::InputSystem(std::string systemname, ECSManager* ecsmanager, SAS_System::Renderer* renderer) : 
 	ProcessingSystem(systemname, ecsmanager), sdlmanager_(sdlmanager)
 {
 	SetSystemName("InputSystem");
@@ -62,4 +61,4 @@ void InputSystem::ProcessEntity(uint_fast64_t entity)
 
 
 }
-
+#endif

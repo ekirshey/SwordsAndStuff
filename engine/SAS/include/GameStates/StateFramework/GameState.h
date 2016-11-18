@@ -3,79 +3,88 @@
 
 #include <memory>
 #include <iostream>
+#include "SystemControl.h"
+#include "Renderer.h"
+#include "Input.h"
 
 enum States {INITIALIZE, TRANSITIONIN, UPDATE, TRANSITIONOUT, EXIT};
 
-namespace SAS_Rendering{
-	class SDLManager;
-}
+class GameStateImpl {
+	public:
+		virtual ~GameStateImpl() {}
+
+		// Every state must handle init and update
+		virtual int InitializeState(SAS_System::Renderer& renderer, const SAS_System::Input& input) = 0;
+		virtual int UpdateState(int elapsedtime, SAS_System::Renderer& renderer, const SAS_System::Input& input) = 0;
+		// Not every state has to do these
+		virtual int TransitionIntoState(SAS_System::Renderer& renderer) = 0;
+		virtual int TransitionFromState(SAS_System::Renderer& renderer) = 0;
+		virtual int NextState() = 0;
+};
 
 class GameState
 {
 	public:
-		GameState(bool persistent) : persistent_(persistent), nextstate_(nullptr) {}
+		GameState(int stateid, SAS_System::Renderer& renderer, SAS_System::Input& input, bool persistent, std::unique_ptr<GameStateImpl> impl) 
+			: _stateid(stateid)
+			, _renderer(renderer)
+			, _input(input)
+			, _persistent(persistent)
+			, _impl(std::move(impl))
+			, _currentfsmstate(INITIALIZE)
+		{
+
+		}
+
+		GameState(const GameState& g) = delete;
+
 		virtual ~GameState() {}
 
 		// Default FSM for a state
-		virtual void FiniteStateMachine(int elapsedtime)
+		int FiniteStateMachine(int elapsedtime)
 		{
-			switch(currentstate_)
+			int nextgamestate = _stateid;
+			switch(_currentfsmstate)
 			{
 				case INITIALIZE:
-					InitializeState();
+					_currentfsmstate = _impl->InitializeState(_renderer, _input);
 					break;
 				case TRANSITIONIN:
-					TransitionIntoState();
+					_currentfsmstate = _impl->TransitionIntoState(_renderer);
 					break;
 				case UPDATE:
-					UpdateState(elapsedtime);
+					_currentfsmstate = _impl->UpdateState(elapsedtime, _renderer, _input);
 					break;
 				case TRANSITIONOUT:
-					TransitionFromState();
+					_currentfsmstate =_impl->TransitionFromState(_renderer);
 					break;
 				case EXIT:
+					nextgamestate = _impl->NextState();
+					if (_persistent)
+						_currentfsmstate = TRANSITIONIN;
+					else
+						_currentfsmstate = INITIALIZE;
 				default:
 					break;
 			}
+			return nextgamestate;
 		}
 
-		void SetCurrentState(int state) {currentstate_ = state;}
-		int GetCurrentState() {return currentstate_;}
-
-		void AssignSDLManager(SAS_Rendering::SDLManager* sdlmanager) {
-			if (sdlmanager != nullptr)
-				sdlmanager_ = sdlmanager;
-			else
-				std::cout << "Bad SDLManager" << std::endl;
-		}
-
-		bool HasNextState() {
-			return nextstate_ != nullptr;
-		}
-		
-		void AddNextState(std::unique_ptr<GameState> nextstate) { nextstate_ = std::move(nextstate); }
-
-		bool IsPersistent() { return persistent_; }
-
-		// Source
-		std::unique_ptr<GameState> PopNextState() { return std::move(nextstate_); }
-
-		SAS_Rendering::SDLManager* GetSDLManager() { return sdlmanager_; }
+		bool IsPersistent() { return _persistent; }
 
 	private:
-		SAS_Rendering::SDLManager* sdlmanager_;
-		std::unique_ptr<GameState> nextstate_;
-		bool persistent_;
+		int _stateid;
 
-		// Every state must handle init, update and exit
-		virtual void InitializeState() = 0;
-		virtual void UpdateState(int elapsedtime) = 0;
-		// Not every state has to do these
-		virtual void TransitionIntoState() = 0;
-		virtual void TransitionFromState() = 0;
+		//System variables. References cause the class can't exist without them
+		SAS_System::Renderer& _renderer;
+		SAS_System::Input& _input;
 
-		
-		int currentstate_;
+		bool _persistent;
+
+		std::unique_ptr<GameStateImpl> _impl;
+
+		int _currentfsmstate;
 };
+
 
 #endif // GAMESTATE_H

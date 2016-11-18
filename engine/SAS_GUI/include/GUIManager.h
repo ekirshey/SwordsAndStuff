@@ -5,7 +5,7 @@
 #include <memory>
 #include <string>
 #include <unordered_map>
-#include "GUIComponents/GUIWindow.h"
+#include "GUIComponents/Window.h"
 #include "Input/Input.h"
 #include "Rendering/Renderer.h"
 
@@ -24,16 +24,16 @@ namespace SAS_GUI {
 		void Render(SAS_System::Renderer* renderer);
 
 		//returns pointer to the moved window
-		GUIWindow* AddWindow(std::unique_ptr<GUIWindow> window, int key = -1);
+		Window* AddWindow(std::unique_ptr<Window> window, int key = -1);
 
-		GUIWindow* GetWindow(std::string windowname);
+		Window* GetWindow(std::string windowname);
 
 	private:
 		void HandleInput(const SAS_System::Input& input);
-		std::vector<std::unique_ptr<GUIWindow>> windows_;
-		std::unordered_map<int, GUIWindow*> keymap_;
+		std::vector<std::unique_ptr<Window>> windows_;
+		std::unordered_map<int, Window*> keymap_;
 		
-		GUIWindow* focusedwindow_;
+		Window* focusedwindow_;
 	};
 
 }

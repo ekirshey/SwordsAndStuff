@@ -9,16 +9,16 @@
 #include <iostream>
 #include <sstream>
 
-RenderSystem::RenderSystem(std::string systemname, ECSManager* ecsmanager, SAS_Rendering::SDLManager* sdlmanager) : 
-	ProcessingSystem(systemname, ecsmanager), sdlmanager_(sdlmanager), gameworld_(nullptr)
+RenderSystem::RenderSystem(std::string systemname, ECSManager* ecsmanager, SAS_System::Renderer* renderer) : 
+	ProcessingSystem(systemname, ecsmanager), _renderer(renderer), _gameworld(nullptr)
 {
 
 }
 
-RenderSystem::RenderSystem(std::string systemname, ECSManager* ecsmanager, SAS_Rendering::SDLManager* sdlmanager, GameWorld* gameworld, Camera* camera) : 
-	ProcessingSystem(systemname, ecsmanager), sdlmanager_(sdlmanager), gameworld_(gameworld), camera_(camera)
+RenderSystem::RenderSystem(std::string systemname, ECSManager* ecsmanager, SAS_System::Renderer* renderer, GameWorld* gameworld, Camera* camera) : 
+	ProcessingSystem(systemname, ecsmanager), _renderer(renderer), _gameworld(gameworld), _camera(camera)
 {
-	gameworld_->BuildTileMapTexture(sdlmanager_);
+	_gameworld->BuildTileMapTexture(_renderer);
 
 	SetSystemName("RenderSystem");
 }
@@ -30,10 +30,10 @@ RenderSystem::~RenderSystem()
 
 void RenderSystem::BeforeObjectProcessing()
 {
-	SDL_Rect camerarect = camera_->GetCameraRect();
+	SDL_Rect camerarect = _camera->GetCameraRect();
 
 	// Render tilemap texture
-	gameworld_->Render(sdlmanager_, &camerarect);
+	_gameworld->Render(_renderer, &camerarect);
 
 }
 
@@ -46,16 +46,16 @@ void RenderSystem::AfterObjectProcessing()
 		strs << " ";
 		strs << GetECSManager()->EntityCount();
 		std::string str = "FPS: " + strs.str();
-		//sdlmanager_->RenderText(str);
+		//_renderer->RenderText(str);
 	}
 
-	//gameworld_->DrawSparseGrid(sdlmanager_);
+	//_gameworld->DrawSparseGrid(_renderer);
 }
 
 void RenderSystem::ProcessEntity(uint_fast64_t entity)
 {
 
-    SDL_Rect camerarect = camera_->GetCameraRect();
+    SDL_Rect camerarect = _camera->GetCameraRect();
     RenderComponent* rendercomponent = nullptr;
     PositionComponent* positioncomponent = nullptr;
     AngleComponent* anglecomponent = nullptr;
@@ -77,13 +77,13 @@ void RenderSystem::ProcessEntity(uint_fast64_t entity)
 /*
 	if (entity == 0)
 	{
-		std::vector<QuadElement> elements = gameworld_->SparseGridQueryRange(entityrect->Rectangle());
+		std::vector<QuadElement> elements = _gameworld->SparseGridQueryRange(entityrect->Rectangle());
 
 		for (int i = 0; i < elements.size(); i++)
 		{
-			SDL_Rect rect{ elements[i].boundingrectangle->Rectangle().x - camera_->x_,elements[i].boundingrectangle->Rectangle().y - camera_->y_,
+			SDL_Rect rect{ elements[i].boundingrectangle->Rectangle().x - _camera->x_,elements[i].boundingrectangle->Rectangle().y - _camera->y_,
 				elements[i].boundingrectangle->Rectangle().w,elements[i].boundingrectangle->Rectangle().h };
-			sdlmanager_->RenderOutlineRectangle(rect, 0x00, 0x00, 0x00, 0xFF);
+			_renderer->RenderOutlineRectangle(rect, 0x00, 0x00, 0x00, 0xFF);
 		}
 	}
 */
@@ -96,10 +96,10 @@ void RenderSystem::ProcessEntity(uint_fast64_t entity)
 			if (rendercomponent->RenderAngle() != 0.0)
 			{
 				SDL_Point center = { (cliprect.w / 2), (cliprect.h / 2) };
-				sdlmanager_->RenderImage(rendercomponent->ImagePath(), positioncomponent->x_ - camera_->X(), positioncomponent->y_ - camera_->Y(), &cliprect, rendercomponent->RenderAngle(), &center, SDL_FLIP_NONE);
+				_renderer->RenderImage(rendercomponent->ImagePath(), positioncomponent->x_ - _camera->X(), positioncomponent->y_ - _camera->Y(), &cliprect, rendercomponent->RenderAngle(), &center, SDL_FLIP_NONE);
 			}
 			else
-				sdlmanager_->RenderImage(rendercomponent->ImagePath(), positioncomponent->x_ - camera_->X(), positioncomponent->y_ - camera_->Y(), &cliprect);
+				_renderer->RenderImage(rendercomponent->ImagePath(), positioncomponent->x_ - _camera->X(), positioncomponent->y_ - _camera->Y(), &cliprect);
 		}
 
 	}

@@ -4,8 +4,8 @@
 #include <memory>
 #include "TileMap.h"
 #include "Tile.h"
-#include "../Utilities/QuadTree.h"
-#include "../Utilities/SparseGrid.h"
+#include "Utilities/QuadTree.h"
+#include "Utilities/SparseGrid.h"
 
 class SDLManager;
 
@@ -26,15 +26,15 @@ class GameWorld
 
         TileMap* GetTileMap() const { return tilemap_.get();}
 
-		void Render(SAS_Rendering::SDLManager* sdlmanager, const SDL_Rect* camera);
+		void Render(SAS_System::Renderer* sdlmanager, const SDL_Rect* camera);
 
 		// Temp SparseGrid functions
 		bool SparseGridInsert(QuadElement entity) { return sparsegrid_->Insert(entity); }
 		std::vector<QuadElement> SparseGridQueryRange(const SDL_Rect& rect) const { return sparsegrid_->QueryRange(rect); }
 		void ClearSparseGrid() { sparsegrid_->clear(); }
-		void DrawSparseGrid(SAS_Rendering::SDLManager* sdlmanager) { sparsegrid_->Draw(sdlmanager); }
+		void DrawSparseGrid(SAS_System::Renderer* renderer) { sparsegrid_->Draw(renderer); }
 
-		void BuildTileMapTexture(SAS_Rendering::SDLManager* sdlmanager);
+		void BuildTileMapTexture(SAS_System::Renderer* renderer);
 
 		int width_;
 		int height_;

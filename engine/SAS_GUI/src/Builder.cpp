@@ -1,37 +1,37 @@
-#include "GUIBuilder.h"
-#include "GUIWindow.h"
+#include "Builder.h"
+#include "Window.h"
 
 #include <iostream>
 #include <fstream>
 
 namespace SAS_GUI {
-	namespace GUIBuilder {
+	namespace Builder {
 #define COMMENT '$'
 #define NEWITEM '#'
 
 		// Creation methods
-		void CreateWindow(GUIWindow* activewindow, const std::vector<std::string>& itemproperties) {
-			//auto window = std::make_unique<GUIWindow>(GetSDLManager(), "mainmenu", SDL_Rect{ 0, 0, 1280, 640 }, "../../../media//backgrounds/charcreationbg.bmp", "../../../media/backgrounds/charcreationbg.bmp", true);
+		void CreateWindow(Window* activewindow, const std::vector<std::string>& itemproperties) {
+			//auto window = std::make_unique<Window>(GetSDLManager(), "mainmenu", SDL_Rect{ 0, 0, 1280, 640 }, "../../../media//backgrounds/charcreationbg.bmp", "../../../media/backgrounds/charcreationbg.bmp", true);
 
 		}
 
-		void CreateTextbox(GUIWindow* activewindow, const std::vector<std::string>& itemproperties) {
+		void CreateTextbox(Window* activewindow, const std::vector<std::string>& itemproperties) {
 
 		}
 
-		void CreateDynamicText(GUIWindow* activewindow, const std::vector<std::string>& itemproperties) {
+		void CreateDynamicText(Window* activewindow, const std::vector<std::string>& itemproperties) {
 
 		}
 
-		void CreateButton(GUIWindow* activewindow, const std::vector<std::string>& itemproperties) {
+		void CreateButton(Window* activewindow, const std::vector<std::string>& itemproperties) {
 
 		}
 
-		void CreateGUIImage(GUIWindow* activewindow, const std::vector<std::string>& itemproperties) {
+		void CreateGUIImage(Window* activewindow, const std::vector<std::string>& itemproperties) {
 
 		}
 
-		void CreateNewItem(std::string item, const std::vector<std::string>& itemproperties, GUIWindow* window, GUIManager* guimanager) {
+		void CreateNewItem(std::string item, const std::vector<std::string>& itemproperties, Window* window, GUIManager* guimanager) {
 			if (item.empty()) return;
 
 			std::cout << "ITEM: " << item << std::endl;
@@ -41,7 +41,7 @@ namespace SAS_GUI {
 		}
 
 		void BuildGUIFromFile(GUIManager* guimanager, std::string file) {
-			GUIWindow* activewindow = nullptr;
+			Window* activewindow = nullptr;
 			std::string activeitemtype = "";
 			std::vector<std::string> itemproperties;
 

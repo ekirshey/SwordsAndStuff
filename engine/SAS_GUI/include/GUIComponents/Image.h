@@ -1,23 +1,23 @@
 #pragma once
 
 #include <vector>
-#include "GUIComponent.h"
+#include "Component.h"
 
 namespace SAS_GUI {
 	/*
 		Can be a single image or a vector of rectangles.
 	*/
-	class GUIImage : public GUIComponent
+	class Image : public Component
 	{
 	public:
-		GUIImage(std::string imagepath, SDL_Point position, std::vector<SDL_Rect> cliprect) : imagepath_(imagepath), position_(position), cliprect_(cliprect), clipstate_(0) {
+		Image(std::string imagepath, SDL_Point position, std::vector<SDL_Rect> cliprect) : imagepath_(imagepath), position_(position), cliprect_(cliprect), clipstate_(0) {
 		}
 
-		GUIImage(std::string imagepath, SDL_Point position, SDL_Rect cliprect) : imagepath_(imagepath), position_(position), clipstate_(0) {
+		Image(std::string imagepath, SDL_Point position, SDL_Rect cliprect) : imagepath_(imagepath), position_(position), clipstate_(0) {
 			cliprect_.push_back(cliprect);
 		}
 
-		~GUIImage() {
+		~Image() {
 
 		}
 

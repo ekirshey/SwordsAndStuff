@@ -1,7 +1,6 @@
-#include "../../include/GameWorld/GameWorld.h"
-#include "../../include/Components/PositionComponent.h"
-#include "SDLManager.h"
-#include "../../include/GameWorld/Camera.h"
+#include "GameWorld/GameWorld.h"
+#include "Components/PositionComponent.h"
+#include "GameWorld/Camera.h"
 
 #include <iostream>
 GameWorld::GameWorld()
@@ -12,7 +11,7 @@ GameWorld::GameWorld()
 GameWorld::GameWorld(int width, int height) : width_(width), height_(height)
 {
 	//quadtree_ = std::unique_ptr<QuadTree>(new QuadTree(SDL_Rect{0,0,SCREEN_WIDTH,SCREEN_HEIGHT },4,6));
-	sparsegrid_ = std::make_unique<SparseGrid>(SDL_Rect{ 0,0,SAS_Rendering::SCREEN_WIDTH,SAS_Rendering::SCREEN_HEIGHT }, SAS_Rendering::SCREEN_WIDTH/32, SAS_Rendering::SCREEN_HEIGHT/32);
+	//sparsegrid_ = std::make_unique<SparseGrid>(SDL_Rect{ 0,0,SAS_Rendering::SCREEN_WIDTH,SAS_Rendering::SCREEN_HEIGHT }, SAS_Rendering::SCREEN_WIDTH/32, SAS_Rendering::SCREEN_HEIGHT/32);
 }
 
 
@@ -22,8 +21,9 @@ GameWorld::~GameWorld()
 	SDL_DestroyTexture(tilemaptexture_);
 }
 
-void GameWorld::BuildTileMapTexture(SAS_Rendering::SDLManager* sdlmanager) {
+void GameWorld::BuildTileMapTexture(SAS_System::Renderer* renderer) {
 
+#ifdef FOO
 	tilemaptexture_ = SDL_CreateTexture(sdlmanager->GetRenderer(), SDL_PIXELFORMAT_RGBA8888,
 		SDL_TEXTUREACCESS_TARGET, width_, height_);
 
@@ -32,8 +32,9 @@ void GameWorld::BuildTileMapTexture(SAS_Rendering::SDLManager* sdlmanager) {
 	tilemap_->Render(sdlmanager);
 
 	SDL_SetRenderTarget(sdlmanager->GetRenderer(), NULL);
-
+#endif
 }
+
 void GameWorld::BuiltTileMapFromFile(int tilesize, std::string file)
 {
     SDL_Rect cliprect = {96,0,tilesize,tilesize};
@@ -65,7 +66,7 @@ void GameWorld::BuildProceduralTileMap(int tilesize)
 	
 }
 
-void GameWorld::Render(SAS_Rendering::SDLManager* sdlmanager, const SDL_Rect* camera)
+void GameWorld::Render(SAS_System::Renderer* renderer, const SDL_Rect* camera)
 {
-	SDL_RenderCopy(sdlmanager->GetRenderer(), tilemaptexture_, camera, NULL);
+	//SDL_RenderCopy(sdlmanager->GetRenderer(), tilemaptexture_, camera, NULL);
 }

@@ -4,7 +4,7 @@
 #include <vector>
 #include <string>
 #include <memory>
-#include "SDL_rect.h"
+#include "Renderer.h"
 
 class Tile;
 namespace SAS_Rendering {
@@ -30,8 +30,8 @@ class TileMap
         bool LoadMapFromFile(std::string filename, const std::vector<Tile> &uniquetiles);
         bool LoadMapProcedurally(const std::vector<Tile> &uniquetiles);
 
-        void Render(SAS_Rendering::SDLManager* sdlmanager, SDL_Rect boundsrect);
-		void Render(SAS_Rendering::SDLManager* sdlmanager);
+        void Render(SAS_System::Renderer* renderer, SDL_Rect boundsrect);
+		void Render(SAS_System::Renderer* renderer);
     private:
         int mapwidth_;      // In Tiles
         int mapheight_;     // In Tiles

@@ -2,7 +2,7 @@
 #define RENDERCOMPONENT_H
 
 #include <string>
-#include <SDL.h>
+#include "SDL_Rect.h"
 #include "../../include/ECSFramework/Component.h"
 #include "../Config/ComponentDefines.h"
 

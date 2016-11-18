@@ -1,6 +1,6 @@
 #pragma once
-#include "../ECSFramework/Component.h"
-#include "../Config/ComponentDefines.h"
+#include "ECSFramework/Component.h"
+#include "Config/ComponentDefines.h"
 
 #define NOTARGET 0x7FFFFFFFFFFFFFFF
 

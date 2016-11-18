@@ -90,9 +90,9 @@ void QuadTree::clear()
 		nodes_[i].reset();
 }
 
-void QuadTree::Draw(SAS_Rendering::SDLManager* sdlmanager)
+void QuadTree::Draw(SAS_System::Renderer* renderer)
 {
-	sdlmanager->RenderOutlineRectangle(boundary_, 0xFF, 0x00, 0x00, 0xFF);
+	renderer->RenderOutlineRectangle(boundary_, SDL_Color{ 0xFF, 0x00, 0x00, 0xFF });
 /*
 	for (int i = 0; i < entities_.size(); i++)
 	{
@@ -103,7 +103,7 @@ void QuadTree::Draw(SAS_Rendering::SDLManager* sdlmanager)
 	if (nodes_[NORTHWEST] != nullptr)
 	{
 		for (int i = 0; i < nodecount_; i++)
-			nodes_[i]->Draw(sdlmanager);
+			nodes_[i]->Draw(renderer);
 	}
 }
 

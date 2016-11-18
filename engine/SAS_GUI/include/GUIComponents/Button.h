@@ -1,7 +1,7 @@
 #pragma once
 #include <string>
 #include <functional>
-#include "GUIComponent.h"
+#include "Component.h"
 #include "GUIViews/ButtonView.h"
 #include "GUIDynamics/Dynamics.h"
 
@@ -10,19 +10,19 @@ namespace SAS_GUI {
 #define DEFAULTDEBOUNCECOUNT 200
 	class Model;
 
-	class GUIButton : public GUIComponent
+	class Button : public Component
 	{
 	public:
 
-		GUIButton(const ButtonView& view);
+		Button(const ButtonView& view);
 
 		// rect in relation to container window
-		GUIButton(const ButtonView& view, std::unique_ptr<Model> model, int clickedkey, 
-			Dynamics dynamics);
+		Button(const ButtonView& view, std::function<void()> func);
+		Button(const ButtonView& view, Dynamics dynamics, std::function<void()> func);
 
 		// Unique_ptr so delete copy
-		GUIButton(const GUIButton&) = delete;
-		GUIButton& operator=(const GUIButton&) = delete;
+		Button(const Button&) = delete;
+		Button& operator=(const Button&) = delete;
 
 		void Update(const SDL_Rect& windowrect, const SAS_System::Input& input, bool& hasFocus, int elapsedtime);
 		void Render(SAS_System::Renderer* renderer);
@@ -32,13 +32,9 @@ namespace SAS_GUI {
 
 	private:
 		ButtonView _view;
-		std::unique_ptr<Model> _model;
 		Dynamics _dynamics;
-
+		std::function<void()> _callback;
 		std::vector<std::function<void()>> _observers;
-
-		// Keys for grabbing data from the model
-		int _clickedkey;
 
 		int _debouncecounter;
 

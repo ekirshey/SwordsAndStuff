@@ -1,6 +1,6 @@
+#ifdef FOO
 #include <iostream>
 #include "../../../include/GameStates/States/GameRunningState.h"
-#include "SDLManager.h"
 #include "../../../include/SubSystems/MonsterSpawner.h"
 
 #include "../../../include/Systems/RenderSystem.h"
@@ -224,3 +224,4 @@ void GameRunningState::TransitionFromState()
 
 
 
+#endif

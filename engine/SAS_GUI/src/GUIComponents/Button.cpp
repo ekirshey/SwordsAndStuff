@@ -1,12 +1,11 @@
-#include "GUIButton.h"
+#include "Button.h"
 #include "Model.h"
 #include "GUIUtils.h"
 
 namespace SAS_GUI {
 		
-		GUIButton::GUIButton(const ButtonView& view) 
+		Button::Button(const ButtonView& view) 
 			: _view(view)
-			, _model(nullptr)
 			, _dynamics(Dynamics())
 			, _debouncecounter(0)
 		{
@@ -14,12 +13,19 @@ namespace SAS_GUI {
 		}
 
 		// rect in relation to container window
-		GUIButton::GUIButton(const ButtonView& view, std::unique_ptr<Model> model, int clickedkey,
-			Dynamics dynamics) 
+		Button::Button(const ButtonView& view, std::function<void()> func) 
 			: _view(view)
-			, _model(std::move(model))
-			, _clickedkey(clickedkey)
+			, _callback(func)
+			, _debouncecounter(0)
+		{
+
+		}
+
+		// rect in relation to container window
+		Button::Button(const ButtonView& view, Dynamics dynamics, std::function<void()> func) 
+			: _view(view)
 			, _dynamics(std::move(dynamics))
+			, _callback(func)
 			, _debouncecounter(0)
 		{
 
@@ -27,11 +33,12 @@ namespace SAS_GUI {
 
 		
 
-		void GUIButton::Update(const SDL_Rect& windowrect, const SAS_System::Input& input, bool& hasFocus, int elapsedtime) {
+		void Button::Update(const SDL_Rect& windowrect, const SAS_System::Input& input, bool& hasFocus, int elapsedtime) {
 			int x;
 			int y;
 			input.getMouseState(x, y);
 
+			// Do i need the debounce counter?
 			_debouncecounter += elapsedtime;
 
 			// Model independent update and input handling
@@ -41,29 +48,27 @@ namespace SAS_GUI {
 			// Update the model based on input
 			if (input.leftMouseReleased()) { 
 				if (UTILS::isMouseOver(windowrect, _view.position, x, y)) {
-					if (_debouncecounter >= DEFAULTDEBOUNCECOUNT) {
-						// Not all buttons have a model
-						if (_model != nullptr)
-							_model->callFunction(_clickedkey);
+					//if (_debouncecounter >= DEFAULTDEBOUNCECOUNT) {
+						_callback();
 						NotifyObservers();
 						_debouncecounter = 0;
-					}
+					//}
 				}
 			}
 		}
 
-		void GUIButton::Render( SAS_System::Renderer* renderer) {
+		void Button::Render( SAS_System::Renderer* renderer) {
 			renderer->RenderImage(_view.texture, _view.position.x, 
 				_view.position.y, &_view.cliprect);
 		}
 
-		void GUIButton::NotifyObservers() {
+		void Button::NotifyObservers() {
 			for (auto& f : _observers) {
 				f();
 			}
 		}
 
-		void GUIButton::AddObserver(std::function<void()> observer) {
+		void Button::AddObserver(std::function<void()> observer) {
 			_observers.push_back(observer);
 		}
 }

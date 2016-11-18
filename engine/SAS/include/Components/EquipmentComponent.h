@@ -1,9 +1,9 @@
 #pragma once
 #include <cstdint>
 #include <vector>
-#include "../../include/ECSFramework/Component.h"
-#include "../Config/ComponentDefines.h"
-#include "../Types/Items.h"
+#include "ECSFramework/Component.h"
+#include "Config/ComponentDefines.h"
+#include "Types/Items.h"
 
 struct EquipmentSlot {
 	Items::Item* item;

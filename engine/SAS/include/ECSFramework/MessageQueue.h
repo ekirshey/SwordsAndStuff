@@ -7,15 +7,6 @@ class Message {
 		virtual ~Message() {}
 		virtual int GetID() = 0;
 };
-/*
-template <typename Derived>
-class TMessage : public Message {
-	public:
-		Derived* self() const {
-			return static_cast<Derived*>(this);
-		}
-};
-*/
 
 class MessageQueue
 {

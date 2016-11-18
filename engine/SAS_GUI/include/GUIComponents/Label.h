@@ -5,27 +5,21 @@
 #include <iostream>
 
 namespace SAS_GUI {
-	template<typename T>
-	class DynamicText : public Component
+	class Label : public Component
 	{
 	public:
-		DynamicText(const TextView& view, const T& data) 
+		Label(const TextView& view, std::string text)
 			: _view(view)
-			, _data(data)
-			, _currentdata(data)
-			, _text(std::to_string(data))
+			, _text(text)
 		{
 		}
 
-		~DynamicText() {
+		~Label() {
 
 		}
 
 		void Update(const SDL_Rect& windowrect, const SAS_System::Input& input, bool& hasFocus, int elapsedtime) {
-			if (_data != _currentdata) {
-				_currentdata = _data;
-				_text = std::to_string(_currentdata);
-			}
+		
 		}
 
 		void Render(SAS_System::Renderer* renderer) {
@@ -34,10 +28,10 @@ namespace SAS_GUI {
 		}
 		
 	private:
-		TextView _view;
-		const T& _data;
-		T _currentdata;
 		std::string _text;
+		int _getstringkey;
+
+		TextView _view;
 	};
 
 }

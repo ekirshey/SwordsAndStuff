@@ -2,7 +2,6 @@
 #include <string>
 
 namespace SAS_GUI {
-	using pModel = std::unique_ptr<Model>;
 	class Model {
 		public:
 			virtual ~Model() {}
@@ -10,5 +9,6 @@ namespace SAS_GUI {
 			virtual void callFunction(int key) = 0;
 			virtual void updateValue(int key, std::string value) = 0;
 	};
+	using pModel = std::unique_ptr<Model>;
 }
 

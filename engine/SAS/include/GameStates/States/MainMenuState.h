@@ -2,24 +2,30 @@
 #define MAINMENUSTATE_H
 
 #include <memory>
-#include "GameState.h"
-#include "ECSManager.h"
+#include "StateFramework/GameState.h"
+#include "ECSFramework/ECSManager.h"
 #include "GUIManager.h"
+#include "Config/GeneralConfig.h"
 
-class MainMenuState : public GameState
+class MainMenuState : public GameStateImpl
 {
     public:
-		MainMenuState(bool persistent);
+		MainMenuState(const GeneralConfig& config);
         virtual ~MainMenuState();
 
-    private:
-        // Removed an exit state cause i dont think it is necessary, just set to exit at end of transition
-        void TransitionIntoState();
-        void InitializeState();
-        void UpdateState(int elapsedtime);
-        void TransitionFromState();
+		int InitializeState(SAS_System::Renderer& renderer, const SAS_System::Input& input);
+		int UpdateState(int elapsedtime, SAS_System::Renderer& renderer, const SAS_System::Input& input);
+		int TransitionIntoState(SAS_System::Renderer& renderer);
+		int TransitionFromState(SAS_System::Renderer& renderer);
+		int NextState() { return _nextstate; }
 
-		std::unique_ptr<SAS_GUI::GUIManager> guimanager_;
+	private:
+		// Config Structs
+		GeneralConfig _generalconfig;
+
+		int _nextstate;
+		bool _exit;
+		SAS_GUI::GUIManager _guimanager;
 };
 
 #endif // MAINMENUSTATE_H

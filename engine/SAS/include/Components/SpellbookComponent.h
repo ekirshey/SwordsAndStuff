@@ -2,9 +2,9 @@
 
 #include <string>
 #include <unordered_map>
-#include "../../include/ECSFramework/Component.h"
-#include "../Config/ComponentDefines.h"
-#include "../Types/Spells.h"
+#include "ECSFramework/Component.h"
+#include "Config/ComponentDefines.h"
+#include "Types/Spells.h"
 
 class SpellbookComponent : public Component
 {
