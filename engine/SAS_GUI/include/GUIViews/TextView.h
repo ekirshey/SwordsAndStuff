@@ -5,13 +5,11 @@ namespace SAS_GUI {
 		int fontsize;
 		SDL_Color fontcolor;
 		std::string fontpath;
-		SDL_Rect position;
 
-		TextView(int fontsize, SDL_Color fontcolor, std::string fontpath, SDL_Rect position) 
+		TextView(int fontsize, SDL_Color fontcolor, std::string fontpath) 
 			: fontsize(fontsize)
 			, fontcolor(fontcolor)
 			, fontpath(fontpath)
-			, position(position)
 		{
 
 		}

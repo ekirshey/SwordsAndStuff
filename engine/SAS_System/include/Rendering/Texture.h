@@ -11,12 +11,14 @@ namespace SAS_System {
 		Texture();
 		Texture(std::string path, SDL_Renderer* renderer);
 		Texture(int width, int height, SDL_Renderer* renderer);
+		Texture(int width, int height, SDL_Renderer* renderer, Uint32 format, int access);
 		
-			//Deallocates memory
+		//Deallocates memory
 		~Texture();
 
 		// Builds a blank "stream" texture
 		bool CreateStreamTexture(int width, int height, SDL_Renderer* renderer);
+		bool CreateStreamTexture(int width, int height, SDL_Renderer* renderer, Uint32 format, int access);
 
 		//Loads image at specified path
 		bool LoadFromFile(std::string path, SDL_Renderer* renderer);
@@ -30,6 +32,8 @@ namespace SAS_System {
 
 		// Set as render target, for if being streamed to
 		void SetAsRenderTarget(SDL_Renderer* renderer);
+
+		void SetBlendMode(SDL_BlendMode blendmode);
 
 		//Gets image dimensions
 		int Width() const { return width_; }

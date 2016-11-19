@@ -14,11 +14,11 @@ namespace SAS_GUI {
 	{
 	public:
 
-		Button(const ButtonView& view);
+		Button(SDL_Rect position, const ButtonView& view);
 
 		// rect in relation to container window
-		Button(const ButtonView& view, std::function<void()> func);
-		Button(const ButtonView& view, Dynamics dynamics, std::function<void()> func);
+		Button(SDL_Rect position, const ButtonView& view, std::function<void()> func);
+		Button(SDL_Rect position, const ButtonView& view, Dynamics dynamics, std::function<void()> func);
 
 		// Unique_ptr so delete copy
 		Button(const Button&) = delete;
@@ -33,6 +33,7 @@ namespace SAS_GUI {
 	private:
 		ButtonView _view;
 		Dynamics _dynamics;
+		SDL_Rect _position;
 		std::function<void()> _callback;
 		std::vector<std::function<void()>> _observers;
 

@@ -9,8 +9,9 @@ namespace SAS_GUI {
 	class DynamicText : public Component
 	{
 	public:
-		DynamicText(const TextView& view, const T& data) 
+		DynamicText(SDL_Rect position, const TextView& view, const T& data) 
 			: _view(view)
+			, _position(position)
 			, _data(data)
 			, _currentdata(data)
 			, _text(std::to_string(data))
@@ -29,12 +30,13 @@ namespace SAS_GUI {
 		}
 
 		void Render(SAS_System::Renderer* renderer) {
-			renderer->RenderText(_text, _view.position.x, _view.position.y, 
+			renderer->RenderText(_text, _position.x, _position.y, 
 				_view.fontsize, _view.fontcolor, _view.fontpath);
 		}
 		
 	private:
 		TextView _view;
+		SDL_Rect _position;
 		const T& _data;
 		T _currentdata;
 		std::string _text;

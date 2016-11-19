@@ -53,6 +53,11 @@ namespace SAS_System {
 		return targettextures_.size() - 1;
 	}
 
+	int TextureManager::CreateTargetTexture(int width, int height, Uint32 format, int access) {
+		targettextures_.push_back(std::make_unique<Texture>(width, height, renderer_, format, access));
+		return targettextures_.size() - 1;
+	}
+
 	// Not sure if stream textures should be in a different structure
 	// If there is a filename with the same internal stream texture name, it will cause issues
 	Texture* TextureManager::GetTargetTexture(int id) {

@@ -8,9 +8,10 @@ namespace SAS_GUI {
 	{
 	public:
 
-		TextBox(const TextView& view) 
+		TextBox(SDL_Rect position, const TextView& view) 
 			: _value("")
 			, _view(view)
+			, _position(position)
 			, focus_(false) 
 			, cursortimer_(0)
 			, showcursor_(true) 
@@ -30,6 +31,7 @@ namespace SAS_GUI {
 	private:
 		std::string _value;
 		TextView _view;
+		SDL_Rect _position;
 
 		bool focus_;
 		int cursortimer_;

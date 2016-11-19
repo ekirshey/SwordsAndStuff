@@ -8,8 +8,9 @@ namespace SAS_GUI {
 	class Label : public Component
 	{
 	public:
-		Label(const TextView& view, std::string text)
+		Label(SDL_Rect position, const TextView& view, std::string text)
 			: _view(view)
+			, _position(position)
 			, _text(text)
 		{
 		}
@@ -23,15 +24,16 @@ namespace SAS_GUI {
 		}
 
 		void Render(SAS_System::Renderer* renderer) {
-			renderer->RenderText(_text, _view.position.x, _view.position.y, 
+			renderer->RenderText(_text, _position.x, _position.y, 
 				_view.fontsize, _view.fontcolor, _view.fontpath);
 		}
 		
 	private:
+		TextView _view;
+		SDL_Rect _position;
 		std::string _text;
 		int _getstringkey;
 
-		TextView _view;
 	};
 
 }

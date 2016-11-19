@@ -20,6 +20,14 @@ namespace SAS_System {
 
 	}
 
+	Texture::Texture(int width, int height, SDL_Renderer* renderer, Uint32 format, int access) 
+		: width_(width)
+		, height_(height)
+	{
+		texture_ = NULL;
+		CreateStreamTexture(width_, height_, renderer, format, access);
+	}
+
 	Texture::Texture(std::string path, SDL_Renderer* renderer)
 	{
 		//Initialize
@@ -55,12 +63,27 @@ namespace SAS_System {
 	bool Texture::CreateStreamTexture(int width, int height, SDL_Renderer* renderer) {
 		texture_ = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888,
 			SDL_TEXTUREACCESS_TARGET, width, height);
+
+		// Check if texture was created correctly
+		if (texture_ == NULL)
+			return false;
+		else
+			return true;
+	}
+
+	bool Texture::CreateStreamTexture(int width, int height, SDL_Renderer* renderer, Uint32 format, int access) {
+		texture_ = SDL_CreateTexture(renderer, format,
+			access, width, height);
 	
 		// Check if texture was created correctly
 		if (texture_ == NULL)
 			return false;
 		else
 			return true;
+	}
+
+	void Texture::SetBlendMode(SDL_BlendMode blendmode) {
+		SDL_SetTextureBlendMode(texture_, blendmode);
 	}
 
 	bool Texture::LoadFromFile(std::string path, SDL_Renderer* renderer)

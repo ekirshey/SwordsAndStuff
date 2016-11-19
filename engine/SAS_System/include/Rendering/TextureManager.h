@@ -22,6 +22,7 @@ namespace SAS_System {
 
 		Texture* GetTexture(const std::string& filename);
 		int CreateTargetTexture(int width, int height);
+		int CreateTargetTexture(int width, int height, Uint32 format, int access);
 		Texture* GetTargetTexture(int id);
 
 	private:

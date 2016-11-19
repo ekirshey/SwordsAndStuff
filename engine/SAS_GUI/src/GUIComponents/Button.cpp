@@ -4,17 +4,19 @@
 
 namespace SAS_GUI {
 		
-		Button::Button(const ButtonView& view) 
+		Button::Button(SDL_Rect position, const ButtonView& view) 
 			: _view(view)
 			, _dynamics(Dynamics())
+			, _position(position)
 			, _debouncecounter(0)
 		{
 
 		}
 
 		// rect in relation to container window
-		Button::Button(const ButtonView& view, std::function<void()> func) 
+		Button::Button(SDL_Rect position, const ButtonView& view, std::function<void()> func) 
 			: _view(view)
+			, _position(position)
 			, _callback(func)
 			, _debouncecounter(0)
 		{
@@ -22,9 +24,10 @@ namespace SAS_GUI {
 		}
 
 		// rect in relation to container window
-		Button::Button(const ButtonView& view, Dynamics dynamics, std::function<void()> func) 
+		Button::Button(SDL_Rect position, const ButtonView& view, Dynamics dynamics, std::function<void()> func) 
 			: _view(view)
 			, _dynamics(std::move(dynamics))
+			, _position(position)
 			, _callback(func)
 			, _debouncecounter(0)
 		{
@@ -42,12 +45,12 @@ namespace SAS_GUI {
 			_debouncecounter += elapsedtime;
 
 			// Model independent update and input handling
-			_dynamics.update(windowrect, _view.position, _view.cliprect);
-			_dynamics.handleInput(windowrect, input, _view.position, _view.cliprect);
+			_dynamics.update(windowrect, _position, _view.cliprect);
+			_dynamics.handleInput(windowrect, input, _position, _view.cliprect);
 
 			// Update the model based on input
 			if (input.leftMouseReleased()) { 
-				if (UTILS::isMouseOver(windowrect, _view.position, x, y)) {
+				if (UTILS::isMouseOver(windowrect, _position, x, y)) {
 					//if (_debouncecounter >= DEFAULTDEBOUNCECOUNT) {
 						_callback();
 						NotifyObservers();
@@ -58,8 +61,8 @@ namespace SAS_GUI {
 		}
 
 		void Button::Render( SAS_System::Renderer* renderer) {
-			renderer->RenderImage(_view.texture, _view.position.x, 
-				_view.position.y, &_view.cliprect);
+			renderer->RenderImage(_view.texture, _position.x, 
+				_position.y, &_view.cliprect);
 		}
 
 		void Button::NotifyObservers() {

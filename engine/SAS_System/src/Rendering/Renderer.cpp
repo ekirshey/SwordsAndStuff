@@ -143,11 +143,28 @@ namespace SAS_System {
 	}
 
 	/*************** Target texture function handling *********************************************/
+	void Renderer::SetRenderDrawBlendMode(SDL_BlendMode blendmode) {
+		SDL_SetRenderDrawBlendMode(_renderer, blendmode);
+	}
+
+	void Renderer::FillRenderingTarget(SDL_Color color) {
+		SDL_SetRenderDrawColor(_renderer, color.r, color.g, color.b, color.a);
+		SDL_RenderFillRect(_renderer, NULL);
+	}
 
 	int Renderer::CreateTargetTexture(int width, int height) {
 		return _texturemanager->CreateTargetTexture(width, height);
 	}
-	
+
+	int Renderer::CreateTargetTexture(int width, int height, Uint32 format, int access) {
+		return _texturemanager->CreateTargetTexture(width, height, format, access);
+	}
+
+	void Renderer::SetTextureBlendMode(int targettexture, SDL_BlendMode blendmode) {
+		auto tt = _texturemanager->GetTargetTexture(targettexture);
+		SDL_SetTextureBlendMode(tt->GetTexture(), blendmode);
+	}
+
 	void Renderer::SetRenderTarget(int targettexture) {
 		Texture* desttexture = _texturemanager->GetTargetTexture(targettexture);
 		if (desttexture != nullptr) {

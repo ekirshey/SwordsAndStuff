@@ -11,7 +11,7 @@ namespace SAS_GUI {
 	class Window
 	{
 	public:
-		Window( SAS_System::Renderer* renderer, std::string windowname, const WindowView& view, bool open = false);
+		Window(SDL_Rect position, SAS_System::Renderer* renderer, std::string windowname, const WindowView& view, bool open = false);
 
 		~Window();
 
@@ -34,6 +34,7 @@ namespace SAS_GUI {
 
 		std::string WindowName() { return _windowname; }
 	private:
+		SDL_Rect _position;
 		std::string _windowname;
 		WindowView _view;
 

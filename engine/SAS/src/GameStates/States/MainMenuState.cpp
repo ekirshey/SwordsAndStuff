@@ -30,13 +30,13 @@ int MainMenuState::InitializeState(SAS_System::Renderer& renderer, const SAS_Sys
 	//path = "media\\buttons\\startbutton.bmp";
     // Build systems and entities
 
-	SAS_GUI::WindowView wv(SDL_Rect{ 0,0,SCREEN_WIDTH,SCREEN_HEIGHT }, SDL_Rect{0,0,SCREEN_WIDTH,SCREEN_HEIGHT}, _generalconfig.mediaroot + "media\\backgrounds\\mainmenubg.bmp");
-	auto mainwindow = std::make_unique<SAS_GUI::Window>(&renderer, "mainmenu", wv,  true);
+	SAS_GUI::WindowView wv( SDL_Rect{0,0,SCREEN_WIDTH,SCREEN_HEIGHT}, _generalconfig.mediaroot + "media\\backgrounds\\mainmenubg.bmp");
+	auto mainwindow = std::make_unique<SAS_GUI::Window>(SDL_Rect{ 0,0,SCREEN_WIDTH,SCREEN_HEIGHT }, &renderer, "mainmenu", wv,  true);
 
-	SAS_GUI::ButtonView bv(SDL_Rect{ 200, 200, 60, 20 }, SDL_Rect{ 0,0,60,20 },
+	SAS_GUI::ButtonView bv(SDL_Rect{ 0,0,60,20 },
 		_generalconfig.mediaroot + "media\\buttons\\startbutton.bmp");
 
-	mainwindow->AddComponent<SAS_GUI::Button>(bv, 
+	mainwindow->AddComponent<SAS_GUI::Button>(SDL_Rect{ 200, 200, 60, 20 }, bv, 
 		[this]() {
 			_nextstate = CHARCREATION_IDX;
 			_exit = true;

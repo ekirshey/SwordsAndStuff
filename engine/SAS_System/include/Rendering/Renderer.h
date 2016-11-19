@@ -24,13 +24,18 @@ namespace SAS_System {
 		void DECLSPEC RenderImage(const std::string& image, int x, int y, SDL_Rect* clip, 
 			double angle, SDL_Point* center, SDL_RendererFlip flip);
 
+		void SetRenderDrawBlendMode(SDL_BlendMode blendmode);
+		void FillRenderingTarget(SDL_Color color);
+
 		// Handle stream textures
 		int DECLSPEC CreateTargetTexture(int width, int height);
+		int DECLSPEC CreateTargetTexture(int width, int height, Uint32 format, int access);
 		void DECLSPEC SetRenderTarget(int targettexture);
 		void DECLSPEC DefaultRenderTarget();
 		void DECLSPEC RenderTargetTexture(int targetid, int x, int y, SDL_Rect* clip = 0);
 		void DECLSPEC ClearTargetTexture(int targetid);
-
+		void SetTextureBlendMode(int targettexture, SDL_BlendMode blendmode);
+		
 		void DECLSPEC Update();
 		void DECLSPEC ClearScreen();
 
