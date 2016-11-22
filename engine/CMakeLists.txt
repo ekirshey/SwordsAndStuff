@@ -23,5 +23,7 @@ ENDIF(LAPTOP)
 
 add_subdirectory(SAS_System/src)
 add_subdirectory(SAS_GUI/src)
+add_subdirectory(SAS_Utils/src)
 add_subdirectory(SAS/src)
 add_subdirectory(SAS_TEST/src)
+add_subdirectory(SAS_Utils_TEST/src)
