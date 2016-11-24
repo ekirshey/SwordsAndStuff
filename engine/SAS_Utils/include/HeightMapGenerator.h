@@ -4,6 +4,6 @@
 namespace SAS_Utils {
 	enum HeightMapAlgorithm {DIAMONDSQUARE};
 
-	std::vector<int> GenerateHeightMap(HeightMapAlgorithm type, int n);
+	std::vector<double> GenerateHeightMap(HeightMapAlgorithm type, int n);
 }
 

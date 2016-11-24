@@ -1,4 +1,6 @@
 #include "MapMath.h"
+#include <string>
+#include <fstream>
 #include <iostream>
 
 namespace SAS_Utils {
@@ -6,11 +8,11 @@ namespace SAS_Utils {
 		return  x + (width*y);
 	}
 
-	void DisplayASCIIMap(const std::vector<int> map, int width) {
+	void DisplayASCIIMap(const std::vector<double> map, int width) {
 		for (auto j = 0; j < map.size(); j++) {
 			if ( (j> 0) && (j % width) == 0)
 				std::cout << std::endl;
-			std::cout << " " << map[j];
+			std::cout << std::fixed << " " << map[j];
 			if (map[j] >= 10)
 				std::cout << "  ";
 			else
@@ -19,7 +21,22 @@ namespace SAS_Utils {
 		std::cout << std::endl;
 	}
 
-	void DisplayOffsetASCIIMap(const std::vector<int> map, int x, int y, int ogwidth, int width) {
+	void WriteASCIIMapFile(const std::vector<double> map, int width, std::string file) {
+		std::ofstream outfile;
+		outfile.open(file);
+
+		for (auto j = 0; j < map.size(); j++) {
+			if (j > 0)
+				outfile << ",";
+			if ((j > 0) && (j % width) == 0)
+				outfile << std::endl;
+			outfile << map[j];
+		}
+
+		outfile.close();
+	}
+
+	void DisplayOffsetASCIIMap(const std::vector<double> map, int x, int y, int ogwidth, int width) {
 		int startingidx = CoordsToIdx(x, y, ogwidth);
 
 		int count = 0;
@@ -33,6 +50,5 @@ namespace SAS_Utils {
 			
 			count++;
 		}
-
 	}
 }

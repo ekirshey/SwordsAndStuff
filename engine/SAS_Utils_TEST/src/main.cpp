@@ -6,9 +6,9 @@
 
 int main() {
 
-	auto hm = SAS_Utils::DiamondSquare(3, 10);
+	auto hm = SAS_Utils::DiamondSquare(8, 10.0, 100);
 
-	//SAS_Utils::DisplayASCIIMap(hm, 9);
+	SAS_Utils::WriteASCIIMapFile(hm,257 , "out.txt");
 
 	system("PAUSE");
 	return 0;

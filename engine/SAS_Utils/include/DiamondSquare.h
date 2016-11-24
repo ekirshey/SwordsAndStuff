@@ -3,6 +3,6 @@
 
 namespace SAS_Utils {
 
-	std::vector<int> DiamondSquare(int n, int maxelevation);
+	std::vector<double> DiamondSquare(int n, double scale, int maxelevation);
 
 }
