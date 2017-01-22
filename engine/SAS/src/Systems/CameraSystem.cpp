@@ -1,10 +1,10 @@
 #include <vector>
 #include <iostream>
-#include "../../include/ECSFramework/ECSManager.h"
-#include "../../include/Components/PositionComponent.h"
-#include "../../include/Components/VelocityComponent.h"
-#include "../../include/Systems/CameraSystem.h"
-#include "../../include/GameWorld/Camera.h"
+#include "ECSFramework/ECSManager.h"
+#include "Components/PositionComponent.h"
+#include "Components/VelocityComponent.h"
+#include "Systems/CameraSystem.h"
+#include "GameWorld/Camera.h"
 
 #define NOTARGET 0x7FFFFFFFFFFFFFFF
 

@@ -2,6 +2,7 @@
 #include <SDL_image.h>
 #include <SDL_ttf.h>
 #include "Renderer.h"
+#include "TypeConversions.h"
 
 namespace SAS_System {
 
@@ -137,9 +138,10 @@ namespace SAS_System {
 		texture->Render(_renderer, x, y, clip);
 	}
 
-	void Renderer::RenderImage(const std::string& image, int x, int y, SDL_Rect* clip, double angle, SDL_Point* center, SDL_RendererFlip flip) {
+	void Renderer::RenderImage(const std::string& image, int x, int y, SDL_Rect* clip, double angle, const SAS_Utils::Point& center, SDL_RendererFlip flip) {
 		Texture* texture = _texturemanager->GetTexture(image);
-		texture->Render(_renderer, x, y, clip, angle, center, flip);
+		auto p = SASPointToSDLPoint(center);
+		texture->Render(_renderer, x, y, clip, angle, &p, flip);
 	}
 
 	/*************** Target texture function handling *********************************************/
@@ -178,7 +180,7 @@ namespace SAS_System {
 		SDL_SetRenderTarget(_renderer, NULL);
 	}
 
-	void Renderer::RenderTargetTexture(int targetid, int x, int y, SDL_Rect* clip) {
+	void Renderer::RenderTargetTexture(int targetid, int x, int y, const SDL_Rect* clip) {
 		Texture* texture = _texturemanager->GetTargetTexture(targetid);
 		if (texture != nullptr)
 			texture->Render(_renderer, x, y, clip);

@@ -1,10 +1,12 @@
 include_directories(
   ${SDL2_INCLUDE_DIR}
   ${SDL2IMAGE_INCLUDE_DIR}
-  ${SDL2TTF_INCLUDE_DIR}
+  ${SDL2TTF_INCLUDE_DIR}	
+  ${Boost_INCLUDE_DIRS}
   ${PROJECT_SOURCE_DIR}/SAS_System/include
   ${PROJECT_SOURCE_DIR}/SAS_System/include/Rendering
   ${PROJECT_SOURCE_DIR}/SAS_System/include/Input
+  ${PROJECT_SOURCE_DIR}/SAS_Utils/include
 )
 
 message("${PROJECT_SOURCE_DIR}")
@@ -21,7 +23,7 @@ file( GLOB SRCS
 
 add_library(SAS_System ${SRCS} )
 
-target_link_libraries (SAS_System ${SDL2_LIBRARY} ${SDL2IMAGE_LIB} ${SDL2TTF_LIB})
+target_link_libraries (SAS_System ${SDL2_LIBRARY} ${SDL2IMAGE_LIB} ${SDL2TTF_LIB} SAS_Utils)
 
 foreach(FILE ${SRCS}) 
 	# Get the directory of the source file

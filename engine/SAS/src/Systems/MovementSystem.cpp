@@ -25,7 +25,6 @@ MovementSystem::~MovementSystem()
 
 void MovementSystem::BeforeObjectProcessing()
 {
-
 	//gameworld_->ClearQuadTree();
 	gameworld_->ClearSparseGrid();
 }

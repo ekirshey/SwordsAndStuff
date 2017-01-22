@@ -27,8 +27,8 @@ namespace SAS_System {
 		void Free();
 
 		//Renders texture at given point
-		void Render(SDL_Renderer* renderer, int x, int y, SDL_Rect* clip = NULL);
-		void Render(SDL_Renderer* renderer, int x, int y, SDL_Rect* clip, double angle, SDL_Point* center, SDL_RendererFlip flip);
+		void Render(SDL_Renderer* renderer, int x, int y, const SDL_Rect* clip = NULL);
+		void Render(SDL_Renderer* renderer, int x, int y, const SDL_Rect* clip, double angle, SDL_Point* center, SDL_RendererFlip flip);
 
 		// Set as render target, for if being streamed to
 		void SetAsRenderTarget(SDL_Renderer* renderer);

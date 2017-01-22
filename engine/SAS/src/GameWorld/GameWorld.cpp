@@ -1,38 +1,43 @@
+#include <iostream>
 #include "GameWorld/GameWorld.h"
 #include "Components/PositionComponent.h"
 #include "GameWorld/Camera.h"
-
-#include <iostream>
+#include "Config/GameDefines.h"
 GameWorld::GameWorld()
 {
     //ctor
 }
 
-GameWorld::GameWorld(int width, int height) : width_(width), height_(height)
+GameWorld::GameWorld(SAS_System::Renderer& renderer, int width, int height, std::string mediaroot) 
+	: _width(width)
+	, _height(height)
+	, _mediaroot(mediaroot)
 {
 	//quadtree_ = std::unique_ptr<QuadTree>(new QuadTree(SDL_Rect{0,0,SCREEN_WIDTH,SCREEN_HEIGHT },4,6));
-	//sparsegrid_ = std::make_unique<SparseGrid>(SDL_Rect{ 0,0,SAS_Rendering::SCREEN_WIDTH,SAS_Rendering::SCREEN_HEIGHT }, SAS_Rendering::SCREEN_WIDTH/32, SAS_Rendering::SCREEN_HEIGHT/32);
+	_sparsegrid = std::make_unique<SparseGrid>(SDL_Rect{ 0,0,SCREEN_WIDTH,SCREEN_HEIGHT }, SCREEN_WIDTH/32, SCREEN_HEIGHT/32);
+	_tilemaptexture = renderer.CreateTargetTexture(_width, _height);
 }
 
 
 GameWorld::~GameWorld()
 {
-    //dtor
-	SDL_DestroyTexture(tilemaptexture_);
 }
 
 void GameWorld::BuildTileMapTexture(SAS_System::Renderer* renderer) {
+	/*
+	_tilemaptexture = SDL_CreateTexture(sdlmanager->GetRenderer(), SDL_PIXELFORMAT_RGBA8888,
+		SDL_TEXTUREACCESS_TARGET, _width, _height);
 
-#ifdef FOO
-	tilemaptexture_ = SDL_CreateTexture(sdlmanager->GetRenderer(), SDL_PIXELFORMAT_RGBA8888,
-		SDL_TEXTUREACCESS_TARGET, width_, height_);
+	SDL_SetRenderTarget(sdlmanager->GetRenderer(), _tilemaptexture);
 
-	SDL_SetRenderTarget(sdlmanager->GetRenderer(), tilemaptexture_);
-
-	tilemap_->Render(sdlmanager);
+	_tilemap->Render(sdlmanager);
 
 	SDL_SetRenderTarget(sdlmanager->GetRenderer(), NULL);
-#endif
+	*/
+
+	renderer->SetRenderTarget(_tilemaptexture);
+	_tilemap->Render(renderer);
+	renderer->DefaultRenderTarget();
 }
 
 void GameWorld::BuiltTileMapFromFile(int tilesize, std::string file)
@@ -40,15 +45,15 @@ void GameWorld::BuiltTileMapFromFile(int tilesize, std::string file)
     SDL_Rect cliprect = {96,0,tilesize,tilesize};
 
     // Manually building tiles here FOR NOW
-    uniquetiles_.push_back(Tile(0,false,"..\\..\\..\\media\\tiles\\tileset.bmp",cliprect));
+    _uniquetiles.push_back(Tile(0,false,_mediaroot+"media\\tiles\\tileset.bmp",cliprect));
     cliprect.x = 64;
     cliprect.y = 32;
-    uniquetiles_.push_back(Tile(1,false,"..\\..\\..\\media\\tiles\\tileset.bmp",cliprect));
+    _uniquetiles.push_back(Tile(1,false,_mediaroot+"media\\tiles\\tileset.bmp",cliprect));
     cliprect.x = 32;
     cliprect.y = 64;
-    uniquetiles_.push_back(Tile(2,false,"..\\..\\..\\media\\tiles\\tileset.bmp",cliprect));
+    _uniquetiles.push_back(Tile(2,false,_mediaroot+"media\\tiles\\tileset.bmp",cliprect));
 
-    tilemap_ = std::make_unique<TileMap>(width_/tilesize, height_/tilesize, tilesize,file, uniquetiles_);
+    _tilemap = std::make_unique<TileMap>(_width/tilesize, _height/tilesize, tilesize,file, _uniquetiles);
 
 }
 
@@ -57,16 +62,16 @@ void GameWorld::BuildProceduralTileMap(int tilesize)
     SDL_Rect cliprect = {608,288,tilesize,tilesize};
 	
     // Manually building tiles here FOR NOW
-    uniquetiles_.push_back(Tile(0,false,"..\\..\\..\\media\\tiles\\tileset2.png",cliprect));
-    uniquetiles_.push_back(Tile(1,false,"..\\..\\..\\media\\tiles\\tileset2.png",cliprect));
-    uniquetiles_.push_back(Tile(2,false,"..\\..\\..\\media\\tiles\\tileset2.png",cliprect));
-    uniquetiles_.push_back(Tile(3,false,"..\\..\\..\\media\\tiles\\tileset2.png",cliprect));
+    _uniquetiles.push_back(Tile(0,false,_mediaroot+"media\\tiles\\tileset2.png",cliprect));
+    _uniquetiles.push_back(Tile(1,false,_mediaroot+"media\\tiles\\tileset2.png",cliprect));
+    _uniquetiles.push_back(Tile(2,false,_mediaroot+"media\\tiles\\tileset2.png",cliprect));
+    _uniquetiles.push_back(Tile(3,false,_mediaroot+"media\\tiles\\tileset2.png",cliprect));
 	
-    tilemap_ = std::make_unique<TileMap>(width_/tilesize, height_/tilesize, tilesize,uniquetiles_);
+    _tilemap = std::make_unique<TileMap>(_width/tilesize, _height/tilesize, tilesize,_uniquetiles);
 	
 }
 
 void GameWorld::Render(SAS_System::Renderer* renderer, const SDL_Rect* camera)
 {
-	//SDL_RenderCopy(sdlmanager->GetRenderer(), tilemaptexture_, camera, NULL);
+	renderer->RenderTargetTexture(_tilemaptexture, 0, 0, camera);
 }

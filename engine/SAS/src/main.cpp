@@ -32,6 +32,7 @@ int main(int argc, char *argv[])
     // Add states
 	gamestatemanager.AddState<MainMenuState>(true, MAINMENU_IDX, config);
 	gamestatemanager.AddState<CharacterCreationState>(false, CHARCREATION_IDX, config);
+	gamestatemanager.AddState<GameRunningState>(false, GAMERUNNING_IDX, config);
 
     // Loop forever
     gamestatemanager.Run();

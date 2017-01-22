@@ -2,6 +2,8 @@
 #include <vector>
 #include <algorithm>
 #include <SDL.h>
+#include "Geometry.h"
+#include "Voronoi.h"
 
 void fillTexture(SDL_Renderer *renderer, SDL_Texture *texture, int r, int g, int b, int a)
 {
@@ -34,13 +36,13 @@ int main(int argc, char *argv[])
 	SDL_Window *window = SDL_CreateWindow("SDL test",
 		SDL_WINDOWPOS_CENTERED,
 		SDL_WINDOWPOS_CENTERED,
-		320, 240,
+		720, 740,
 		SDL_WINDOW_OPENGL);
 	SDL_Renderer *renderer = SDL_CreateRenderer(
 		window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_TARGETTEXTURE);
 
-	const int width = 50;
-	const int height = 50;
+	const int width = 750;
+	const int height = 750;
 
 	::std::vector<SDL_Texture*> textures;
 
@@ -70,6 +72,12 @@ int main(int argc, char *argv[])
 
 	prepareForRendering(renderer);
 
+	std::vector<SAS_Utils::Point> points;
+	SAS_Utils::VoronoiDiagram vd;
+	points.push_back(SAS_Utils::Point(50,50));
+	points.push_back(SAS_Utils::Point(100,200));
+	points.push_back(SAS_Utils::Point(500,400));
+	SAS_Utils::GenerateVoronoi(points, vd);
 	bool running = true;
 	while (running)
 	{
@@ -77,19 +85,51 @@ int main(int argc, char *argv[])
 		rect.w = width;
 		rect.h = height;
 
+		SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
 		SDL_RenderClear(renderer);
 
-		rect.x = 50;
-		rect.y = 50;
-		SDL_RenderCopy(renderer, redTexture, NULL, &rect);
+		SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
+		for (int i = 0; i < points.size(); i++) {
+			int x = points[i].x();
+			int y = points[i].y();
+			SDL_RenderDrawPoint(renderer, points[i].x(), points[i].y());
 
-		rect.x = 75;
-		rect.y = 70;
-		SDL_RenderCopy(renderer, greenTexture, NULL, &rect);
+		}
 
-		rect.x = 75;
-		rect.y = 30;
-		SDL_RenderCopy(renderer, purpleTexture, NULL, &rect);
+		//SDL_RenderDrawLine(renderer, 0, 0, 100, 100);
+		for (SAS_Utils::VoronoiDiagram::const_edge_iterator it = vd.edges().begin();
+			it != vd.edges().end(); ++it) {
+			if (it->is_primary() && it->is_linear()) {
+				auto c1 = it->cell();
+				auto idx1 = c1->source_index();
+				auto c2 = it->twin()->cell();
+				auto idx2 = c2->source_index();
+				SAS_Utils::Point o((points[idx1].x() + points[idx2].x() *0.5), (points[idx1].y() + points[idx2].y() *0.5));
+				SAS_Utils::Point d((points[idx1].y() - points[idx2].y()), (points[idx1].x() - points[idx2].x()));
+				double side = 720;
+				double koef = side / (std::max)(fabs(d.x()), fabs(d.y()));
+				SAS_Utils::Point p1;
+				if (it->vertex0() == NULL) {
+					p1.x(o.x() - d.x() * koef);
+					p1.y(o.y() - d.y() * koef);
+				}
+				else {
+					p1.x(it->vertex0()->x());
+					p1.y(it->vertex0()->y());
+				}
+
+				SAS_Utils::Point p2;
+				if (it->vertex1() == NULL) {
+					p2.x(o.x() + d.x() * koef);
+					p2.y(o.y() + d.y() * koef);
+				}
+				else {
+					p2.x(it->vertex1()->x());
+					p2.y(it->vertex1()->y());
+				}
+				SDL_RenderDrawLine(renderer, p1.x(), p1.y(), p2.x(), p2.y());
+			}
+		}
 
 		SDL_RenderPresent(renderer);
 
@@ -102,28 +142,8 @@ int main(int argc, char *argv[])
 				{
 					running = false;
 				}
-				else if (event.type == SDL_KEYDOWN)
-				{
-					switch (event.key.keysym.sym)
-					{
-					case SDLK_ESCAPE:
-						running = false;
-						break;
-					case SDLK_a:
-						purpleAlpha = ::std::max(purpleAlpha - 32, 0);
-						fillTexture(renderer, purpleTexture, 255, 0, 255, purpleAlpha);
-						prepareForRendering(renderer);
-						::std::cout << "Alpha: " << purpleAlpha << ::std::endl;
-						break;
-					case SDLK_s:
-						purpleAlpha = ::std::min(purpleAlpha + 32, 255);
-						fillTexture(renderer, purpleTexture, 255, 0, 255, purpleAlpha);
-						prepareForRendering(renderer);
-						::std::cout << "Alpha: " << purpleAlpha << ::std::endl;
-						break;
-					}
-				}
 			}
+
 
 			checkSdlError();
 		}

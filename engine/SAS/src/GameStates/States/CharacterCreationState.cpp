@@ -89,8 +89,6 @@ int CharacterCreationState::InitializeState(SAS_System::Renderer& renderer, cons
 	return TRANSITIONIN;
 }
 
-
-
 int CharacterCreationState::UpdateState(int elapsedtime, SAS_System::Renderer& renderer, const SAS_System::Input& input) {
 	int ret = UPDATE;
 
@@ -99,6 +97,10 @@ int CharacterCreationState::UpdateState(int elapsedtime, SAS_System::Renderer& r
 	if (input.isKeyPressed(SDL_SCANCODE_Q)) {
 		_characterdescription._name = _valuecomponentmap["NameBox"]->GetValue();
 		std::cout << _characterdescription._name << std::endl;
+	}
+	else if (input.isKeyPressed(SDL_SCANCODE_E)) {
+		_nextstate = GAMERUNNING_IDX;
+		ret = TRANSITIONOUT;
 	}
 
 	return ret;

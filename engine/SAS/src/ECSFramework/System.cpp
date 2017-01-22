@@ -1,6 +1,6 @@
 #include <algorithm>
 #include <iostream>
-#include "../../include/ECSFramework/System.h"
+#include "ECSFramework/System.h"
 
 System::System() : systemname_(""), ecsmanager_(nullptr), elapsedtime_(0), frametime_(0), entitycount_(0) {
 

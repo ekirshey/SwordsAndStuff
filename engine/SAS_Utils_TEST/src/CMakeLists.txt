@@ -1,5 +1,6 @@
 include_directories(
-  ${PROJECT_SOURCE_DIR}/SAS_Utils/include
+	${PROJECT_SOURCE_DIR}/SAS_Utils/include
+	${Boost_INCLUDE_DIRS}
 )
 
 message("${PROJECT_SOURCE_DIR}")

@@ -1,11 +1,12 @@
-#include "../../include/ECSFramework/ECSManager.h"
-#include "../../include/Systems/RenderSystem.h"
-#include "../../include/Components/RenderComponent.h"
-#include "../../include/Components/PositionComponent.h"
-#include "../../include/Components/AngleComponent.h"
+#include "ECSFramework/ECSManager.h"
+#include "Systems/RenderSystem.h"
+#include "Components/RenderComponent.h"
+#include "Components/PositionComponent.h"
+#include "Components/AngleComponent.h"
 //#include "../../include/Components/BoundingRectangleComponent.h" 
-#include "../../include/GameWorld/GameWorld.h"
-#include "../../include/GameWorld/Camera.h"
+#include "GameWorld/GameWorld.h"
+#include "GameWorld/Camera.h"
+#include "Geometry.h"
 #include <iostream>
 #include <sstream>
 
@@ -18,7 +19,7 @@ RenderSystem::RenderSystem(std::string systemname, ECSManager* ecsmanager, SAS_S
 RenderSystem::RenderSystem(std::string systemname, ECSManager* ecsmanager, SAS_System::Renderer* renderer, GameWorld* gameworld, Camera* camera) : 
 	ProcessingSystem(systemname, ecsmanager), _renderer(renderer), _gameworld(gameworld), _camera(camera)
 {
-	_gameworld->BuildTileMapTexture(_renderer);
+	//_gameworld->BuildTileMapTexture(_renderer);
 
 	SetSystemName("RenderSystem");
 }
@@ -95,8 +96,8 @@ void RenderSystem::ProcessEntity(uint_fast64_t entity)
 		{
 			if (rendercomponent->RenderAngle() != 0.0)
 			{
-				SDL_Point center = { (cliprect.w / 2), (cliprect.h / 2) };
-				_renderer->RenderImage(rendercomponent->ImagePath(), positioncomponent->x_ - _camera->X(), positioncomponent->y_ - _camera->Y(), &cliprect, rendercomponent->RenderAngle(), &center, SDL_FLIP_NONE);
+				SAS_Utils::Point center = { (cliprect.w / 2), (cliprect.h / 2) };
+				_renderer->RenderImage(rendercomponent->ImagePath(), positioncomponent->x_ - _camera->X(), positioncomponent->y_ - _camera->Y(), &cliprect, rendercomponent->RenderAngle(), center, SDL_FLIP_NONE);
 			}
 			else
 				_renderer->RenderImage(rendercomponent->ImagePath(), positioncomponent->x_ - _camera->X(), positioncomponent->y_ - _camera->Y(), &cliprect);

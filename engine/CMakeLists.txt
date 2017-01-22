@@ -7,6 +7,7 @@ set (CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${PROJECT_SOURCE_DIR}/../cmake")
 find_package(SDL2)
 find_package(SDL2_image)
 find_package(SDL2_ttf)
+find_package(Boost 1.62.0)
 
 message("${CMAKE_BINARY_DIR}")
 

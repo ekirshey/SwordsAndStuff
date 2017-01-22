@@ -2,6 +2,7 @@
 #include <SDL.h>
 #include "SystemDefines.h"
 #include "TextureManager.h"
+#include "Geometry.h"
 
 namespace SAS_System {
 
@@ -22,7 +23,7 @@ namespace SAS_System {
 		// Textures from image file
 		void DECLSPEC RenderImage(const std::string& image, int x, int y, SDL_Rect* clip = 0);
 		void DECLSPEC RenderImage(const std::string& image, int x, int y, SDL_Rect* clip, 
-			double angle, SDL_Point* center, SDL_RendererFlip flip);
+			double angle, const SAS_Utils::Point& center, SDL_RendererFlip flip);
 
 		void SetRenderDrawBlendMode(SDL_BlendMode blendmode);
 		void FillRenderingTarget(SDL_Color color);
@@ -32,7 +33,7 @@ namespace SAS_System {
 		int DECLSPEC CreateTargetTexture(int width, int height, Uint32 format, int access);
 		void DECLSPEC SetRenderTarget(int targettexture);
 		void DECLSPEC DefaultRenderTarget();
-		void DECLSPEC RenderTargetTexture(int targetid, int x, int y, SDL_Rect* clip = 0);
+		void DECLSPEC RenderTargetTexture(int targetid, int x, int y, const SDL_Rect* clip = 0);
 		void DECLSPEC ClearTargetTexture(int targetid);
 		void SetTextureBlendMode(int targettexture, SDL_BlendMode blendmode);
 		

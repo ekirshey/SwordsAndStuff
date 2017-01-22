@@ -1,6 +1,4 @@
-#ifndef GAMESTATEMANAGER_H
-#define GAMESTATEMANAGER_H
-
+#pragma once
 #include <vector>
 #include <memory>
 
@@ -8,8 +6,6 @@
 #include "SystemControl.h"
 #include "Renderer.h"
 
-//class SDLManager;
-// NOTE For now im using SDLManager as a non-dynamic object since it doesnt seem to have to be one
 class Game
 {
     public:
@@ -37,5 +33,3 @@ class Game
 		SAS_System::Input _input;
 
 };
-
-#endif // GAMESTATEMANAGER_H

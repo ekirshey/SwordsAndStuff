@@ -1,8 +1,9 @@
 #ifndef INPUTCOMPONENT_H
 #define INPUTCOMPONENT_H
 
-#include "../../include/ECSFramework/Component.h"
-#include "../Config/ComponentDefines.h"
+#include "ECSFramework/Component.h"
+#include "Config/ComponentDefines.h"
+#include "Input.h"
 #include <unordered_map>
 
 enum INPUTS { MOVE_LEFT, MOVE_RIGHT, MOVE_UP, MOVE_DOWN, MELEE, INVENTORY };

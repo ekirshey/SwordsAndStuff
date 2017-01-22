@@ -128,7 +128,7 @@ namespace SAS_System {
 	}
 
 
-	void Texture::Render(SDL_Renderer* renderer, int x, int y, SDL_Rect* clip)
+	void Texture::Render(SDL_Renderer* renderer, int x, int y, const SDL_Rect* clip)
 	{
 		//Set rendering space and render to screen
 		SDL_Rect renderquad = { x, y, width_, height_ };
@@ -144,7 +144,7 @@ namespace SAS_System {
 		SDL_RenderCopy(renderer, texture_, clip, &renderquad);
 	}
 
-	void Texture::Render(SDL_Renderer* renderer, int x, int y, SDL_Rect* clip, double angle, SDL_Point* center, SDL_RendererFlip flip)
+	void Texture::Render(SDL_Renderer* renderer, int x, int y, const SDL_Rect* clip, double angle, SDL_Point* center, SDL_RendererFlip flip)
 	{
 		SDL_Rect renderquad = { x, y, width_, height_ };
 

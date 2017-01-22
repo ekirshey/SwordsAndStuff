@@ -14,7 +14,7 @@ class GameWorld
 {
     public:
         GameWorld();
-        GameWorld(int width, int height);
+		GameWorld(SAS_System::Renderer& renderer, int width, int height, std::string mediaroot);
 
 		GameWorld(const GameWorld&) = default;
 		GameWorld& operator=(const GameWorld&) = default;
@@ -24,27 +24,28 @@ class GameWorld
         void BuiltTileMapFromFile(int tilesize, std::string file);
         void BuildProceduralTileMap(int tilesize);
 
-        TileMap* GetTileMap() const { return tilemap_.get();}
+        TileMap* GetTileMap() const { return _tilemap.get();}
 
 		void Render(SAS_System::Renderer* sdlmanager, const SDL_Rect* camera);
 
 		// Temp SparseGrid functions
-		bool SparseGridInsert(QuadElement entity) { return sparsegrid_->Insert(entity); }
-		std::vector<QuadElement> SparseGridQueryRange(const SDL_Rect& rect) const { return sparsegrid_->QueryRange(rect); }
-		void ClearSparseGrid() { sparsegrid_->clear(); }
-		void DrawSparseGrid(SAS_System::Renderer* renderer) { sparsegrid_->Draw(renderer); }
+		bool SparseGridInsert(QuadElement entity) { return _sparsegrid->Insert(entity); }
+		std::vector<QuadElement> SparseGridQueryRange(const SDL_Rect& rect) const { return _sparsegrid->QueryRange(rect); }
+		void ClearSparseGrid() { _sparsegrid->clear(); }
+		void DrawSparseGrid(SAS_System::Renderer* renderer) { _sparsegrid->Draw(renderer); }
 
 		void BuildTileMapTexture(SAS_System::Renderer* renderer);
 
-		int width_;
-		int height_;
     private:
-		SDL_Texture* tilemaptexture_;
+		int _width;
+		int _height;
+		std::string _mediaroot;
+		int _tilemaptexture;
 
         // some sort of Tiled Map
-        std::unique_ptr<TileMap> tilemap_;
-        std::vector<Tile> uniquetiles_;
-		std::unique_ptr<SparseGrid> sparsegrid_;
+        std::unique_ptr<TileMap> _tilemap;
+        std::vector<Tile> _uniquetiles;
+		std::unique_ptr<SparseGrid> _sparsegrid;
 };
 
 #endif // GAMEWORLD_H

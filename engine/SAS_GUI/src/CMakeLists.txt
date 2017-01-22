@@ -1,12 +1,14 @@
 include_directories(
-  ${PROJECT_SOURCE_DIR}/SAS_GUI/include
-  ${PROJECT_SOURCE_DIR}/SAS_GUI/include/GUIComponents
-  ${PROJECT_SOURCE_DIR}/SAS_GUI/include/GUIDynamics
-  ${PROJECT_SOURCE_DIR}/SAS_GUI/include/GUIViews
-  ${PROJECT_SOURCE_DIR}/SAS_System/include/
-  ${SDL2_INCLUDE_DIR}
-  ${SDL2IMAGE_INCLUDE_DIR}
-  ${SDL2TTF_INCLUDE_DIR}
+	${PROJECT_SOURCE_DIR}/SAS_GUI/include
+	${PROJECT_SOURCE_DIR}/SAS_GUI/include/GUIComponents
+	${PROJECT_SOURCE_DIR}/SAS_GUI/include/GUIDynamics
+	${PROJECT_SOURCE_DIR}/SAS_GUI/include/GUIViews
+	${PROJECT_SOURCE_DIR}/SAS_System/include/
+	${PROJECT_SOURCE_DIR}/SAS_Utils/include/
+	${SDL2_INCLUDE_DIR}
+	${SDL2IMAGE_INCLUDE_DIR}
+	${SDL2TTF_INCLUDE_DIR}
+	${Boost_INCLUDE_DIRS}
 )
 
 file( GLOB SRCS 
@@ -24,7 +26,7 @@ add_library(SAS_GUI
 	${SRCS} 
 )
 
-target_link_libraries (SAS_GUI LINK_PUBLIC SAS_System)
+target_link_libraries (SAS_GUI LINK_PUBLIC SAS_System SAS_Utils)
 
 foreach(FILE ${SRCS}) 
 	# Get the directory of the source file

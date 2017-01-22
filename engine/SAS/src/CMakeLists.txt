@@ -2,10 +2,12 @@ include_directories(
 	${SDL2_INCLUDE_DIR}
 	${SDL2IMAGE_INCLUDE_DIR}
 	${SDL2TTF_INCLUDE_DIR}
+	${Boost_INCLUDE_DIRS}
 	${PROJECT_SOURCE_DIR}/SAS_System/include
 	${PROJECT_SOURCE_DIR}/SAS_System/include/Rendering
 	${PROJECT_SOURCE_DIR}/SAS_System/include/Input
 	${PROJECT_SOURCE_DIR}/SAS_GUI/include
+	${PROJECT_SOURCE_DIR}/SAS_Utils/include
 	${PROJECT_SOURCE_DIR}/SAS/include/
 	${PROJECT_SOURCE_DIR}/SAS/include/Components
 	${PROJECT_SOURCE_DIR}/SAS/include/Config
@@ -69,7 +71,7 @@ add_executable(SAS_GAME
 	${SRCS} 
 )
 
-target_link_libraries (SAS_GAME LINK_PUBLIC ${SDL2_LIBRARY} ${SDL2IMAGE_LIB} ${SDL2TTF_LIB} SAS_System SAS_GUI )
+target_link_libraries (SAS_GAME LINK_PUBLIC ${SDL2_LIBRARY} ${SDL2IMAGE_LIB} ${SDL2TTF_LIB} SAS_System SAS_GUI SAS_Utils)
 
 foreach(FILE ${SRCS}) 
 	# Get the directory of the source file

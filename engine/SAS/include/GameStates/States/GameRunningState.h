@@ -8,39 +8,46 @@
 #include "ECSFramework/ECSManager.h"
 #include "GameMechanics/Spells/GlobalSpellbook.h"
 #include "DataManagement/ItemDatabase.h"
+#include "Config/GeneralConfig.h"
+#include "SubSystems/PlayerInput.h"
 
-#ifdef FOO
 class MonsterSpawner;
 
-class GameRunningState : public GameState
+class GameRunningState : public GameStateImpl
 {
     public:
-        GameRunningState(bool persistent);
+        GameRunningState(const GeneralConfig& config);
         virtual ~GameRunningState();
 
+		int InitializeState(SAS_System::Renderer& renderer, const SAS_System::Input& input);
+		int UpdateState(int elapsedtime, SAS_System::Renderer& renderer, const SAS_System::Input& input);
+		int TransitionIntoState(SAS_System::Renderer& renderer);
+		int TransitionFromState(SAS_System::Renderer& renderer);
+		int NextState() { return _nextstate; }
+
     private:
-        // Removed an exit state cause i dont think it is necessary, just set to exit at end of transition
-        void TransitionIntoState();
-        void InitializeState();
-        void UpdateState(int elapsedtime);
-        void TransitionFromState();
-		void InitializeECS();
+		void initializeECS(SAS_System::Renderer& renderer, const SAS_System::Input& input);
+
+		GeneralConfig _generalconfig;
+		int _nextstate;
+
+		PlayerInput _inputhandler;
+		uint64_t _player;
 
 		// Game World Objects
-        std::unique_ptr<GameWorld>		gameworld_;
-        std::unique_ptr<Camera>			camera_;
+        std::unique_ptr<GameWorld> _gameworld;
+        std::unique_ptr<Camera>	_camera;
 
 		// Game Data
-		std::unique_ptr<GlobalSpellbook> spellbook_;
+		std::unique_ptr<GlobalSpellbook> _spellbook;
 
 		// Game Object Manager
 		//std::unique_ptr<ObjectManager>	objectmanager_;
-		std::unique_ptr<ECSManager> ecsmanager_;
+		std::unique_ptr<ECSManager> _ecsmanager;
 
 		// GUI Managers
 		//std::unique_ptr<HUDManager>		hudmanager_;
-		std::unique_ptr<SAS_GUI::GUIManager>		guimanager_;
+		std::unique_ptr<SAS_GUI::GUIManager> _guimanager;
 
-		std::unique_ptr<Items::ItemDatabase> itemdatabase_;
+		std::unique_ptr<Items::ItemDatabase> _itemdatabase;
 };
-#endif
