@@ -34,10 +34,14 @@ namespace SAS_Utils {
 	}
 
 	double noise(std::vector<double>& map ,double scale, std::mt19937& rng) {
-		randomdist dist(1, scale * 100);
+		randomdist dist(0, 1);
 		double rand = dist(rng);
-		double noise = rand * scale * 2;
-		return noise;
+		double noise = rand * 2;
+		//double max = (scale + scale) / (width + width) * 3;
+		
+		//float max = num / (float)(getSize().width + getSize().height) * 3;
+		//return ((float)Math.random() - 0.5f) * max;
+		return ((rand - 0.5) * scale);
 	}
 
 	void calculateSquare(std::vector<double>& map, int x, int y, int center, int mapwidth, double scale, std::mt19937& rng) {
@@ -64,7 +68,6 @@ namespace SAS_Utils {
 		if ( (width*width) <= 4) {
 			return;
 		}
-		std::vector<Coord> diamonds;
 
 		int center = width / 2;
 		// Add Diamonds
@@ -76,23 +79,23 @@ namespace SAS_Utils {
 					CoordsToIdx(i - center, j + center, ogwidth),
 					CoordsToIdx(i + center, j + center, ogwidth)
 				) + noise(square, scale, rng);
-				diamonds.push_back(Coord{ i,j });
 			}
 		}
 
 		// Add Squares
-		for (auto& coord : diamonds) {
-			calculateSquare(square, coord.x - center, coord.y, center, ogwidth, scale, rng);
-			calculateSquare(square, coord.x + center, coord.y, center, ogwidth, scale, rng);
-			calculateSquare(square, coord.x, coord.y - center, center, ogwidth, scale, rng);
-			calculateSquare(square, coord.x, coord.y + center, center, ogwidth, scale, rng);
+		for (int i = center; i < ogwidth; i += width-1) {
+			for (int j = center; j < ogwidth; j += width-1) {
+				calculateSquare(square, i - center, j, center, ogwidth, scale, rng);
+				calculateSquare(square, i + center, j, center, ogwidth, scale, rng);
+				calculateSquare(square, i, j - center, center, ogwidth, scale, rng);
+				calculateSquare(square, i, j + center, center, ogwidth, scale, rng);
+			}
 		}
 
-		step(square, ogwidth, (width/2)+1, scale*0.7, rng);
+
+		step(square, ogwidth, (width/2)+1, scale*0.5, rng);
 
 	}
-
-	
 
 	void MovingAverageSmooth(std::vector<double>& map, int width) {
 		for (int i = 1; i < width-1; i++) {
@@ -125,11 +128,11 @@ namespace SAS_Utils {
 		heightmap[CoordsToIdx(sidelen - 1, sidelen - 1, sidelen)] = seed;
 
 		// First Diamond
-		step(heightmap, sidelen, sidelen, 1.0, rng);
+		step(heightmap, sidelen, sidelen, maxelevation, rng);
 
 		// Smooth
 		MovingAverageSmooth(heightmap, sidelen);
-		//MovingAverageSmooth(heightmap, sidelen);
+		MovingAverageSmooth(heightmap, sidelen);
 		//MovingAverageSmooth(heightmap, sidelen);
 
 		return heightmap;

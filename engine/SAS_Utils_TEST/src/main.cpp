@@ -6,7 +6,7 @@
 
 int main() {
 
-	auto hm = SAS_Utils::DiamondSquare(8, 10.0, 100);
+	auto hm = SAS_Utils::DiamondSquare(8, 10.0, 10);
 
 	SAS_Utils::WriteASCIIMapFile(hm,257 , "out.txt");
 
