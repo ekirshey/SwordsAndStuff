@@ -245,8 +245,8 @@ int main(int argc, char* argv[])
 
 	SAS_GUI::GUIManager guimanager;
 	SAS_GUI::ButtonView bv(SDL_Rect{ 200, 200, 60, 20 }, SDL_Rect{ 0,0,60,20 },
-		path + "media\\buttons\\startbutton.bmp");
-	SAS_GUI::TextView tv(18, SDL_Color{ 255,0,0 }, path + "media\\font.ttf", SDL_Rect{0,200,100,100});
+		path + "buttons\\startbutton.bmp");
+	SAS_GUI::TextView tv(18, SDL_Color{ 255,0,0 }, path + "font.ttf", SDL_Rect{0,200,100,100});
 	
 	SomeData imp(5, 32.5, "someData");
 
@@ -256,7 +256,7 @@ int main(int argc, char* argv[])
 	
 	SAS_GUI::vec_pInput inputmods; 
 	inputmods.push_back(std::make_unique<SAS_GUI::HoverModule>(SDL_Rect{ 0,0,60,20 }, SDL_Rect{ 0,20,60,20 }));
-	SAS_GUI::WindowView wv(SDL_Rect{ 0,0,600,600 }, SDL_Rect{0,0,1280,640}, path + "media\\backgrounds\\mainmenubg.bmp");
+	SAS_GUI::WindowView wv(SDL_Rect{ 0,0,600,600 }, SDL_Rect{0,0,1280,640}, path + "backgrounds\\mainmenubg.bmp");
 	auto window = std::make_unique<SAS_GUI::Window>(&renderer, "mainmenu", wv,  true);
 
 	window->AddComponent<SAS_GUI::Button>(bv, SAS_GUI::Dynamics(std::move(updatemods), std::move(inputmods)), 
@@ -279,7 +279,7 @@ int main(int argc, char* argv[])
 	tv.position = SDL_Rect{ 400, 500, 60, 20 };
 	window->AddComponent<SAS_GUI::TextBox>(tv);
 
-	SAS_GUI::WindowView wv2(SDL_Rect{ 400,400,200,200 }, SDL_Rect{0,0,200,200}, path + "media\\backgrounds\\somemenu.bmp");
+	SAS_GUI::WindowView wv2(SDL_Rect{ 400,400,200,200 }, SDL_Rect{0,0,200,200}, path + "backgrounds\\somemenu.bmp");
 	auto window2 = std::make_unique<SAS_GUI::Window>(&renderer, "somewindow", wv2,  true);
 
 	// Relative to window position? going with yes for now
@@ -337,17 +337,17 @@ int main(int argc, char* argv[])
 		input.getMouseState(mousex, mousey);
 
 		renderer.SetRenderTarget(textid);
-		renderer.RenderText(std::to_string(mousex), 100, 200, 12, SDL_Color{ 255,0,0 }, "E:\\GitHub\\SwordsAndStuff\\media\\font.ttf");
-		renderer.RenderText(std::to_string(mousey), 100, 250, 12, SDL_Color{ 255,0,0 }, "E:\\Github\\SwordsAndStuff\\media\\font.ttf");
+		renderer.RenderText(std::to_string(mousex), 100, 200, 12, SDL_Color{ 255,0,0 }, "E:\\GitHub\\SwordsAndStuff\\font.ttf");
+		renderer.RenderText(std::to_string(mousey), 100, 250, 12, SDL_Color{ 255,0,0 }, "E:\\Github\\SwordsAndStuff\\font.ttf");
 		renderer.DefaultRenderTarget();
 
 //		renderer.RenderTargetTexture(textid, 0, 0);
 
-		renderer.RenderText(stream, 300, 200, 12, SDL_Color{ 255,0,0 }, "E:\\Github\\SwordsAndStuff\\media\\font.ttf");
+		renderer.RenderText(stream, 300, 200, 12, SDL_Color{ 255,0,0 }, "E:\\Github\\SwordsAndStuff\\font.ttf");
 		renderer.RenderFillRectangle(SDL_Rect{ 50, 50, 50, 50 }, SDL_Color{ 255, 0, 0, 255 });
-		renderer.RenderText("FooBar", 100, 100, 12, SDL_Color{ 255,0,0,255 },"E:\\Github\\SwordsAndStuff\\media\\font.ttf");
+		renderer.RenderText("FooBar", 100, 100, 12, SDL_Color{ 255,0,0,255 },"E:\\Github\\SwordsAndStuff\\font.ttf");
 		SDL_Rect r = { 0,0,50,50 };
-		renderer.RenderImage("E:\\Github\\SwordsAndStuff\\media\\sprites\\Pawns.png", 300, 300, &r);
+		renderer.RenderImage("E:\\Github\\SwordsAndStuff\\sprites\\Pawns.png", 300, 300, &r);
 #endif
 
 		renderer.Update();

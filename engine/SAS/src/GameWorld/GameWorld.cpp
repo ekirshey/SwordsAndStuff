@@ -45,13 +45,13 @@ void GameWorld::BuiltTileMapFromFile(int tilesize, std::string file)
     SDL_Rect cliprect = {96,0,tilesize,tilesize};
 
     // Manually building tiles here FOR NOW
-    _uniquetiles.push_back(Tile(0,false,_mediaroot+"media\\tiles\\tileset.bmp",cliprect));
+    _uniquetiles.push_back(Tile(0,false,_mediaroot+"tiles\\tileset.bmp",cliprect));
     cliprect.x = 64;
     cliprect.y = 32;
-    _uniquetiles.push_back(Tile(1,false,_mediaroot+"media\\tiles\\tileset.bmp",cliprect));
+    _uniquetiles.push_back(Tile(1,false,_mediaroot+"tiles\\tileset.bmp",cliprect));
     cliprect.x = 32;
     cliprect.y = 64;
-    _uniquetiles.push_back(Tile(2,false,_mediaroot+"media\\tiles\\tileset.bmp",cliprect));
+    _uniquetiles.push_back(Tile(2,false,_mediaroot+"tiles\\tileset.bmp",cliprect));
 
     _tilemap = std::make_unique<TileMap>(_width/tilesize, _height/tilesize, tilesize,file, _uniquetiles);
 
@@ -62,10 +62,10 @@ void GameWorld::BuildProceduralTileMap(int tilesize)
     SDL_Rect cliprect = {608,288,tilesize,tilesize};
 	
     // Manually building tiles here FOR NOW
-    _uniquetiles.push_back(Tile(0,false,_mediaroot+"media\\tiles\\tileset2.png",cliprect));
-    _uniquetiles.push_back(Tile(1,false,_mediaroot+"media\\tiles\\tileset2.png",cliprect));
-    _uniquetiles.push_back(Tile(2,false,_mediaroot+"media\\tiles\\tileset2.png",cliprect));
-    _uniquetiles.push_back(Tile(3,false,_mediaroot+"media\\tiles\\tileset2.png",cliprect));
+    _uniquetiles.push_back(Tile(0,false,_mediaroot+"tiles\\tileset2.png",cliprect));
+    _uniquetiles.push_back(Tile(1,false,_mediaroot+"tiles\\tileset2.png",cliprect));
+    _uniquetiles.push_back(Tile(2,false,_mediaroot+"tiles\\tileset2.png",cliprect));
+    _uniquetiles.push_back(Tile(3,false,_mediaroot+"tiles\\tileset2.png",cliprect));
 	
     _tilemap = std::make_unique<TileMap>(_width/tilesize, _height/tilesize, tilesize,_uniquetiles);
 	

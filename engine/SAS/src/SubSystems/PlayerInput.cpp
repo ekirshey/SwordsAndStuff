@@ -2,10 +2,14 @@
 #include "PlayerInput.h"
 #include "Types/MessageTypes.h"
 
-PlayerInput::PlayerInput() {
+PlayerInput::PlayerInput(uint64_t playerid)
+	: _playerid(playerid)
+{
+
 }
 
-void PlayerInput::UpdateInput(const SAS_System::Input& input, InputComponent* playerinput) {
+void PlayerInput::UpdateInput(ECSManager* ecs, const SAS_System::Input& input) {
+	auto playerinput = ecs->GetEntityComponent<InputComponent*>(_playerid, InputComponentID);
 	// Update key states
 	for (auto inputid : KeyboardInputs)
 	{
@@ -21,19 +25,19 @@ void PlayerInput::UpdateInput(const SAS_System::Input& input, InputComponent* pl
 			playerinput->SetPressed(inputid, false);
 		}
 	}
-#ifdef FOO
+
 	if (playerinput->Pressed(MELEE)) {
-		GetECSManager()->SendMessage<MeleeMessage>("MeleeCreation", entity, 0);
+		ecs->SendMessage<SpellMessage>("SpellCreation", _playerid, 0);
 	}
 
+#ifdef FOO
 	// Inventory Debugging
 	if (playerinput->Pressed(INVENTORY)) {
-		auto playerinventory = GetEntityComponent<InventoryComponent*>(entity, InventoryComponent::ID);
+		auto playerinventory = ecs->GetEntityComponent<InventoryComponent*>(_playerid, InventoryComponent::ID);
 		auto inventory = &playerinventory->inventory_;
 		for (int i = 0; i < inventory->size(); i++) {
 			std::cout << "ID " << inventory->at(i)->id_ << " NAME " << inventory->at(i)->GetName() << std::endl;
 		}
 	}
 #endif
-
 }

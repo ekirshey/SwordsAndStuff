@@ -1,11 +1,11 @@
 #include <iostream>
-#include "../../include/ECSFramework/ECSManager.h"
-#include "../../include/Systems/SpellCreationSystem.h"
-#include "../../include/Types/MessageTypes.h"
-#include "../../include/Components/SpellCastingComponent.h"
-#include "../../include/Components/SpellbookComponent.h"
-#include "../../include/Components/EquipmentComponent.h"
-#include "../../include/GameMechanics/Spells/SpellFactory.h"
+#include "ECSFramework/ECSManager.h"
+#include "Systems/SpellCreationSystem.h"
+#include "Types/MessageTypes.h"
+#include "Components/SpellCastingComponent.h"
+#include "Components/SpellbookComponent.h"
+#include "Components/EquipmentComponent.h"
+#include "GameMechanics/Spells/SpellFactory.h"
 
 #include <Windows.h>
 
@@ -38,22 +38,15 @@ void SpellCreationSystem::ProcessMessage(Message* data) {
 			If spellname contains NOCAST
 				Finish processing
 	*/
-	LARGE_INTEGER StartingTime, EndingTime, ElapsedMicroseconds;
-	LARGE_INTEGER Frequency;
-
-	QueryPerformanceFrequency(&Frequency);
-	QueryPerformanceCounter(&StartingTime);
-
 	// Check for valid spell message
 	if (data->GetID() == SPELLMESSAGEID)// auto msg = dynamic_cast<SpellMessage*>(data))
 	{
 		auto msg = static_cast<SpellMessage*>(data);
-		QueryPerformanceCounter(&EndingTime);
-		ElapsedMicroseconds.QuadPart = EndingTime.QuadPart - StartingTime.QuadPart;
 		auto spellcastingcomponent = GetEntityComponent<SpellCastingComponent*>(msg->entity, SpellCastingComponentID);
 		auto spellbookcomponent = GetEntityComponent<SpellbookComponent*>(msg->entity, SpellbookComponentID);
 		auto equipmentcomponent = GetEntityComponent<EquipmentComponent*>(msg->entity, EquipmentComponentID);
 
+		// It might need to become a copy of the spell, if I'm too apply some sort of debuff/buff. I don't want to modify the base spell
 		Spell* queuedspell = spellbookcomponent->GetSpell(msg->spellId);
 
 		if (spellcastingcomponent->SpellToCast() == NO_CAST) {
@@ -73,9 +66,6 @@ void SpellCreationSystem::ProcessMessage(Message* data) {
 	else {
 		std::cout << "Invalid message type! Expected: SpellMessage Receieved: " << typeid(*data).name() << std::endl;
 	}
-
-	ElapsedMicroseconds.QuadPart *= 1000000;
-	ElapsedMicroseconds.QuadPart /= Frequency.QuadPart;
 
 	//std::cout << ElapsedMicroseconds.QuadPart << std::endl;
 

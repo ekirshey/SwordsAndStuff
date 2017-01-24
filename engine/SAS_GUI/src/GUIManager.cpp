@@ -2,7 +2,8 @@
 
 namespace SAS_GUI {
 	GUIManager::GUIManager()
-		: focusedwindow_(nullptr)
+		: _focusedWindow(nullptr)
+		, _focusedComponent(false)
 	{
 	}
 
@@ -15,24 +16,24 @@ namespace SAS_GUI {
 		bool hasFocus = false;
 
 		//Update the opened windows
-		for (auto& w : windows_) {
+		for (auto& w : _windows) {
 			hasFocus ^= w->Update(elapsedtime, input);
 		}
-
+		_focusedComponent = hasFocus;
 		// Only toggle windows if no other window has keyboard focus
 		if (!hasFocus)
 			HandleInput(input);
 	}
 
 	void GUIManager::Render(SAS_System::Renderer* renderer) {
-		for (auto& w : windows_) {
+		for (auto& w : _windows) {
 			w->Render(renderer);
 		}
 	}
 
 	void GUIManager::HandleInput(const SAS_System::Input& input) {
 		// If a component has focus then I shouldn't attempt to toggle window focus
-		for (auto it = keymap_.begin(); it != keymap_.end(); ++it) {
+		for (auto it = _keymap.begin(); it != _keymap.end(); ++it) {
 			if (input.isKeyReleased(it->first))
 				it->second->ToggleWindow();
 		}
@@ -40,20 +41,25 @@ namespace SAS_GUI {
 	}
 
 	Window* GUIManager::AddWindow(std::unique_ptr<Window> window, int key) {
-		windows_.push_back(std::move(window));
+		_windows.push_back(std::move(window));
 
-		keymap_[key] = windows_.back().get();
-		return windows_.back().get();
+		_keymap[key] = _windows.back().get();
+		return _windows.back().get();
 	}
 
 
 	Window* GUIManager::GetWindow(std::string windowname) {
-		for (auto& w : windows_) {
+		for (auto& w : _windows) {
 			if (w->WindowName() == windowname)
 				return w.get();
 		}
 
 		return nullptr;
 
+	}
+
+
+	bool GUIManager::GUIHasFocus() {
+		return _focusedComponent;
 	}
 }

@@ -46,7 +46,7 @@ void MonsterSpawner::SpawnMonsters()
         for (int i = 0; i < monsterstospawn; i++)
         {
             SDL_Rect rect = {0,0,30,30};
-            path = "media\\sprites\\monster.png";
+            path = "sprites\\monster.png";
 
             velocityy = 2;//rand() % 5 + 1;
 

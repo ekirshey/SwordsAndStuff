@@ -28,12 +28,15 @@ namespace SAS_GUI {
 
 		Window* GetWindow(std::string windowname);
 
+		bool GUIHasFocus();
+
 	private:
 		void HandleInput(const SAS_System::Input& input);
-		std::vector<std::unique_ptr<Window>> windows_;
-		std::unordered_map<int, Window*> keymap_;
+		std::vector<std::unique_ptr<Window>> _windows;
+		std::unordered_map<int, Window*> _keymap;
 		
-		Window* focusedwindow_;
+		Window* _focusedWindow;
+		bool _focusedComponent;
 	};
 
 }

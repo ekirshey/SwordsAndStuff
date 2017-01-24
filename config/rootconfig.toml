@@ -1,0 +1,14 @@
+# Base TOML config file
+
+title = "Swords And Stuff"
+configpath = "F:\\github\\SwordsAndStuff\\config\\"
+mediapath = "F:\\github\\SwordsAndStuff\\media\\"
+
+[mainmenu]
+guiconfig="gui/mainmenugui.toml"
+
+[charactercreation]
+guiconfig="charcreationgui.toml"
+
+[gamerunning]
+guiconfig="gamegui.toml"

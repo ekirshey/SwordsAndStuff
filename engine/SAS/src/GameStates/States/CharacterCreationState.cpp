@@ -26,14 +26,14 @@ CharacterCreationState::~CharacterCreationState()
 
 int CharacterCreationState::InitializeState(SAS_System::Renderer& renderer, const SAS_System::Input& input) {
 
-	SAS_GUI::WindowView wv(SDL_Rect{0,0,SCREEN_WIDTH,SCREEN_HEIGHT}, _generalconfig.mediaroot + "media\\backgrounds\\character_creation_bg.bmp");
+	SAS_GUI::WindowView wv(SDL_Rect{0,0,SCREEN_WIDTH,SCREEN_HEIGHT}, _generalconfig.mediaroot + "backgrounds\\character_creation_bg.bmp");
 	auto mainwindow = std::make_unique<SAS_GUI::Window>(SDL_Rect{ 0,0,SCREEN_WIDTH,SCREEN_HEIGHT }, &renderer, "mainmenu", wv,  true);
 
-	SAS_GUI::TextView tv(18, SDL_Color{ 255,0,0 }, _generalconfig.mediaroot + "media\\font.ttf");
+	SAS_GUI::TextView tv(18, SDL_Color{ 255,0,0 }, _generalconfig.mediaroot + "font.ttf");
 	auto namelabel = std::make_unique<SAS_GUI::Label>(SDL_Rect{50,10,100,100}, tv, "Name:");
 	
 	SAS_GUI::ButtonView dbv(SDL_Rect{ 0,0,25,25 },
-		_generalconfig.mediaroot + "media\\buttons\\arrows.bmp");
+		_generalconfig.mediaroot + "buttons\\arrows.bmp");
 
 	SAS_GUI::DropdownMenuView ddv(200, 200, SDL_Color{ 5,5,5,255 }, SDL_Color{ 0,0,0,255 }, SDL_Color{50,50,50,255}, dbv, tv);
 	mainwindow->AddComponent<SAS_GUI::DropdownMenu>(renderer, SDL_Rect{100,400,100,tv.fontsize}, ddv, std::vector<std::string>{"a", "b", "c"});
@@ -57,7 +57,7 @@ int CharacterCreationState::InitializeState(SAS_System::Renderer& renderer, cons
 	mainwindow->AddComponent<SAS_GUI::DynamicText<float>>(SDL_Rect{ 250, 70, 60, 20 }, tv, _characterstats.stats_[STRENGTH]);
 
 	SAS_GUI::ButtonView bv(SDL_Rect{ 0,0,25,25 },
-		_generalconfig.mediaroot + "media\\buttons\\arrows.bmp");
+		_generalconfig.mediaroot + "buttons\\arrows.bmp");
 
 	mainwindow->AddComponent<SAS_GUI::Button>(SDL_Rect{ 200, 200, 25, 25 }, bv, 
 		[this]() {
@@ -94,13 +94,15 @@ int CharacterCreationState::UpdateState(int elapsedtime, SAS_System::Renderer& r
 
 	_guimanager.Update(elapsedtime, input);
 	_guimanager.Render(&renderer);
-	if (input.isKeyPressed(SDL_SCANCODE_Q)) {
-		_characterdescription._name = _valuecomponentmap["NameBox"]->GetValue();
-		std::cout << _characterdescription._name << std::endl;
-	}
-	else if (input.isKeyPressed(SDL_SCANCODE_E)) {
-		_nextstate = GAMERUNNING_IDX;
-		ret = TRANSITIONOUT;
+	if (!_guimanager.GUIHasFocus()) {
+		if (input.isKeyPressed(SDL_SCANCODE_Q)) {
+			_characterdescription._name = _valuecomponentmap["NameBox"]->GetValue();
+			std::cout << _characterdescription._name << std::endl;
+		}
+		else if (input.isKeyPressed(SDL_SCANCODE_E)) {
+			_nextstate = GAMERUNNING_IDX;
+			ret = TRANSITIONOUT;
+		}
 	}
 
 	return ret;

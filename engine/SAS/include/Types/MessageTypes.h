@@ -1,14 +1,13 @@
 #pragma once
 #include <string>
-#include "../ECSFramework/MessageQueueContainer.h"
-#include "../Types/Items.h"
+#include "ECSFramework/MessageQueueContainer.h"
+#include "Types/Items.h"
 
 const int SPELLMESSAGEID = 0x01;
 const int MELEEMESSAGEID = 0x02;
 const int ITEMMESSAGEID = 0x03;
 
 enum ItemOperation { ADDITEM, REMOVE };
-
 
 struct SpellMessage : public Message
 {

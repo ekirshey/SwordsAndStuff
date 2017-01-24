@@ -1,12 +1,14 @@
 #pragma once
 #include "Components/InputComponent.h"
 #include "Input.h"
+#include "ECSManager.h"
 
 class PlayerInput 
 {
 	public:
-		PlayerInput();
-		void UpdateInput(const SAS_System::Input& input, InputComponent* playerinput);
+		PlayerInput(uint64_t playerid);
+		void UpdateInput(ECSManager* ecs, const SAS_System::Input& input);
 	private:
+		uint64_t _playerid;
 
 };

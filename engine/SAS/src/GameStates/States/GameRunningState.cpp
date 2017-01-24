@@ -64,7 +64,7 @@ int GameRunningState::InitializeState(SAS_System::Renderer& renderer, const SAS_
 		{ ScriptStep(8,0,50), ScriptStep(13,5,50), ScriptStep(18,10,200) },
 		{ ScriptStep(0,0,50), ScriptStep(-5,5,50), ScriptStep(-10,10,200) }
 	};
-	_spellbook->CreateSpell(0, "MELEE", 0, 100, 300, "../../../media/sprites/sword.png", spellscript);
+	_spellbook->CreateSpell(0, "MELEE", 0, 100, 300, _generalconfig.mediaroot + "media/sprites/sword.png", spellscript);
 
 	// Set up ECS. This was originally in some wrapper object and I dont know why I did that...
 	_ecsmanager = std::make_unique<ECSManager>();
@@ -85,34 +85,32 @@ void GameRunningState::initializeECS(SAS_System::Renderer& renderer, const SAS_S
 	int cameraindex = 0;
 
 	_ecsmanager->AddQueue("SpellCreation");
-	_ecsmanager->AddQueue("MeleeCreation");
 	_ecsmanager->AddQueue("EquipmentManagement");
 	_ecsmanager->AddQueue("InventoryManagement");
 
 	// Build systems and entities
-	//_ecsmanager->AddSystem<InputSystem>("InputSystem", priority++, input);
 	//_ecsmanager->AddSystem(std::unique_ptr<AISystem>(new AISystem()), priority++);
 	_ecsmanager->AddSystem<MovementSystem>("MovementSystem", priority++, _gameworld.get());
 	_ecsmanager->AddSystem<WaypointSystem>("WaypointSystem", priority++);	// Not 100% sure on the placement 
 	_ecsmanager->AddSystem<SpellCreationSystem>("SpellCreationSystem", priority++, _ecsmanager->GetQueue("SpellCreation"));
-	_ecsmanager->AddSystem<MeleeSystem>("MeleeSystem", priority++, _ecsmanager->GetQueue("MeleeCreation"));
 	_ecsmanager->AddSystem<CollisionSystem>("CollisionSystem", priority++, _gameworld.get());
-	//_ecsmanager->AddSystem<PlayerTargetingSystem>("PlayerTargetingSystem", priority++, GetSDLManager(), _gameworld.get() , "..\\..\\..\\media\\reticule.png");
+	//_ecsmanager->AddSystem<PlayerTargetingSystem>("PlayerTargetingSystem", priority++, GetSDLManager(), _gameworld.get() , "..\\..\\..\\reticule.png");
 	_ecsmanager->AddSystem<EquipmentSystem>("EquipmentSystem", priority++, _ecsmanager->GetQueue("EquipmentManagement"));
 	_ecsmanager->AddSystem<InventorySystem>("InventorySystem", priority++, _ecsmanager->GetQueue("InventoryManagement"));
 	cameraindex = _ecsmanager->AddSystem<CameraSystem>("CameraSystem", priority++, _camera.get());
 	_ecsmanager->AddSystem<RenderSystem>("RenderSystem", priority++, &renderer, _gameworld.get(), _camera.get());
 	// Player
 	_player = _ecsmanager->CreateEntity();
+	_inputhandler = std::make_unique<PlayerInput>(_player);
 
 	rect = { 0,0,26,26 }; // Removed top pixel due to a black line showing up when rotating
-						  //path = "media\\sprites\\shooter.png";
+						  //path = "sprites\\shooter.png";
 
 	auto playerspellbook = std::make_unique<SpellbookComponent>();
 	Spell test = _spellbook->GetSpell(0);
 	playerspellbook->AddSpell(_spellbook->GetSpell(0));
 
-	path = _generalconfig.mediaroot + "media/sprites/Player2.png";
+	path = _generalconfig.mediaroot + "sprites/Player2.png";
 
 	_ecsmanager->AddComponentToEntity<PositionComponent>(_player, (SCREEN_WIDTH / 2) - (34 / 2), 400);
 	_ecsmanager->AddComponentToEntity<InputComponent>(_player);
@@ -138,13 +136,13 @@ void GameRunningState::initializeECS(SAS_System::Renderer& renderer, const SAS_S
 
 	///////////////////////////////////////
 
-	CameraSystem* camerasystem = static_cast<CameraSystem*>(_ecsmanager->GetSystem(cameraindex));
+	CameraSystem* camerasystem = dynamic_cast<CameraSystem*>(_ecsmanager->GetSystem(cameraindex));
 	if (camerasystem != nullptr)
 		camerasystem->SetFocus(_player);
 	else
 		std::cout << "Failed to set camera focus, camera doesnt exist" << std::endl;
 
-	path = _generalconfig.mediaroot + "media/sprites/Pawns.png";
+	path = _generalconfig.mediaroot + "sprites/Pawns.png";
 	// Monster
 	int monsterentity;
 	for (int j = 0; j < 10; j++)
@@ -183,7 +181,7 @@ void GameRunningState::initializeECS(SAS_System::Renderer& renderer, const SAS_S
 	int treeentity;
 	treeentity = ecsmanager->CreateEntity();
 	rect = { 0,0,222,223 };
-	path = "..\\..\\..\\media\\sprites\\tree.png";
+	path = "..\\..\\..\\sprites\\tree.png";
 	ecsmanager->AddComponentToEntity(treeentity, new PositionComponent(300, 300)); // TODO MAgic numbers
 	ecsmanager->AddComponentToEntity(treeentity, new RenderComponent(path, rect));
 	ecsmanager->AddComponentToEntity(treeentity, new BoundingRectangleComponent(411, 411, 40, 40));
@@ -197,7 +195,7 @@ int GameRunningState::UpdateState(int elapsedtime, SAS_System::Renderer& rendere
 	int errorcode;
 
 	if (_ecsmanager->GetStatus(errorcode) && !input.isKeyPressed(SDL_SCANCODE_ESCAPE)) {	// State test
-		_inputhandler.UpdateInput(input, _ecsmanager->GetEntityComponent<InputComponent*>(_player, InputComponentID));
+		_inputhandler->UpdateInput(_ecsmanager.get(), input);
 		_ecsmanager->Update(elapsedtime);
 	}
 	else {

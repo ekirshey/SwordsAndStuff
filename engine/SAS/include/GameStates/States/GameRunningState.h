@@ -31,7 +31,7 @@ class GameRunningState : public GameStateImpl
 		GeneralConfig _generalconfig;
 		int _nextstate;
 
-		PlayerInput _inputhandler;
+		std::unique_ptr<PlayerInput> _inputhandler;
 		uint64_t _player;
 
 		// Game World Objects

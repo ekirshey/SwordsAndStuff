@@ -1,6 +1,6 @@
 #pragma once
-#include "../Systems/QueueSystem.h"
-#include "../Config/ComponentDefines.h"
+#include "Systems/QueueSystem.h"
+#include "Config/ComponentDefines.h"
 
 class MeleeSystem : public QueueSystem
 {

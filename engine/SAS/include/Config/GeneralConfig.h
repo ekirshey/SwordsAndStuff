@@ -4,4 +4,5 @@
 struct GeneralConfig {
 	std::string mediaroot;
 	std::string configroot;
+	std::string guiconfig;
 };

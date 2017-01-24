@@ -1,0 +1,32 @@
+[[window]]
+name = "main_window"
+bgtexture = "backgrounds\\mainmenubg.bmp"
+open = true
+
+[window.position]
+x = 0
+y = 0
+width = 1280
+height = 640
+
+[window.cliprect]
+x = 0
+y = 0
+width = 1280
+height = 640
+
+[[window.button]]
+name = "start_button"
+bgtexture = "buttons\\startbutton.bmp"
+
+[window.button.position]
+x = 200
+y = 200
+width = 60
+height = 20
+
+[window.button.cliprect]
+x = 0
+y = 0
+width = 60
+height = 20

@@ -10,12 +10,14 @@
 #include "GUIViews/ButtonView.h"
 #include "GUIComponents/Button.h"
 #include "GUIDynamics/Dynamics.h"
+#include "GUIBuilder.h"
 
 MainMenuState::MainMenuState(const GeneralConfig& config )
 	: _nextstate(MAINMENU_IDX)
 	, _exit(false)
 	, _generalconfig(config)
 {
+
 }
 
 MainMenuState::~MainMenuState()
@@ -25,32 +27,22 @@ MainMenuState::~MainMenuState()
 
 int MainMenuState::InitializeState(SAS_System::Renderer& renderer, const SAS_System::Input& input)
 {
-    std::cout << "Initialize" << std::endl;
-	//std::string path = "media\\backgrounds\\mainmenubg.bmp";
-	//path = "media\\buttons\\startbutton.bmp";
-    // Build systems and entities
-
-	SAS_GUI::WindowView wv( SDL_Rect{0,0,SCREEN_WIDTH,SCREEN_HEIGHT}, _generalconfig.mediaroot + "media\\backgrounds\\mainmenubg.bmp");
-	auto mainwindow = std::make_unique<SAS_GUI::Window>(SDL_Rect{ 0,0,SCREEN_WIDTH,SCREEN_HEIGHT }, &renderer, "mainmenu", wv,  true);
-
-	SAS_GUI::ButtonView bv(SDL_Rect{ 0,0,60,20 },
-		_generalconfig.mediaroot + "media\\buttons\\startbutton.bmp");
-
-	mainwindow->AddComponent<SAS_GUI::Button>(SDL_Rect{ 200, 200, 60, 20 }, bv, 
-		[this]() {
-			_nextstate = CHARCREATION_IDX;
-			_exit = true;
+	auto windowdescs = SAS_GUI::GUIBuilder::BuildGUIFromFile(&_guimanager, _generalconfig.mediaroot, _generalconfig.guiconfig);
+	for (const auto& wd : windowdescs) {
+		auto window = std::make_unique<SAS_GUI::Window>(wd.position, &renderer, wd.name, wd.wv, wd.open);
+		for (const auto& b : wd.buttons) {
+			if (b.name == "start_button") {
+				window->AddComponent<SAS_GUI::Button>(b.position, b.bv, 
+					[this]() {
+						_nextstate = CHARCREATION_IDX;
+						_exit = true;
+					}
+				);
+			}
 		}
-	);
 
-	_guimanager.AddWindow(std::move(mainwindow));
-
-#ifdef FOO
-	window->AddComponent<SAS_GUI::GUIButton>(SDL_Rect{ 610,450,60,20 }, SDL_Rect{ 0,0,60,20 }, "../../../media/buttons/startbutton.bmp", 
-		std::unique_ptr<LoadNextState<GameRunningState>>(new LoadNextState<GameRunningState>(this)));
-	//window->AddComponent<GUIButton>(SDL_Rect{ 610,500,60,20 }, SDL_Rect{ 0,0,60,20 }, "../../../media/buttons/startbutton.bmp");
-	guimanager_->AddWindow(std::move(window));
-#endif
+		_guimanager.AddWindow(std::move(window));
+	}
 	return TRANSITIONIN;
 }
 
