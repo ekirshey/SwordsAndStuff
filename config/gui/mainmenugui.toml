@@ -30,3 +30,62 @@ x = 0
 y = 0
 width = 60
 height = 20
+
+[[window.button]]
+name = "options_button"
+bgtexture = "buttons\\startbutton.bmp"
+
+[window.button.position]
+x = 200
+y = 400
+width = 60
+height = 20
+
+[window.button.cliprect]
+x = 0
+y = 0
+width = 60
+height = 20
+
+[window.button.task]
+type = "OPEN"
+target = "WINDOW"
+target_name = "options_window"
+
+[[window]]
+name = "options_window"
+bgtexture = "backgrounds\\somemenu.bmp"
+open = false
+
+[window.position]
+x = 100
+y = 100
+width = 200
+height = 200
+
+[window.cliprect]
+x = 0
+y = 0
+width = 200
+height = 200
+
+[[window.button]]
+name = "close_options_button"
+bgtexture = "buttons\\startbutton.bmp"
+
+[window.button.position]
+x = 0
+y = 0
+width = 60
+height = 20
+
+[window.button.cliprect]
+x = 0
+y = 0
+width = 60
+height = 20
+
+[window.button.task]
+type = "CLOSE"
+target = "WINDOW"
+target_name = "options_window"

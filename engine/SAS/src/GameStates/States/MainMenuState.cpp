@@ -26,23 +26,19 @@ MainMenuState::~MainMenuState()
 }
 
 int MainMenuState::InitializeState(SAS_System::Renderer& renderer, const SAS_System::Input& input)
-{
-	auto windowdescs = SAS_GUI::GUIBuilder::BuildGUIFromFile(&_guimanager, _generalconfig.mediaroot, _generalconfig.guiconfig);
-	for (const auto& wd : windowdescs) {
-		auto window = std::make_unique<SAS_GUI::Window>(wd.position, &renderer, wd.name, wd.wv, wd.open);
-		for (const auto& b : wd.buttons) {
-			if (b.name == "start_button") {
-				window->AddComponent<SAS_GUI::Button>(b.position, b.bv, 
-					[this]() {
-						_nextstate = CHARCREATION_IDX;
-						_exit = true;
-					}
-				);
-			}
+{ 
+	SAS_GUI::GUIBuilder::CallbackMap callbacks;
+	callbacks.insert({ "start_button",
+		[this]() {
+		_nextstate = CHARCREATION_IDX;
+		_exit = true;
 		}
+	});
 
-		_guimanager.AddWindow(std::move(window));
-	}
+	auto windowdescs = SAS_GUI::GUIBuilder::BuildGUIFromFile(&_guimanager, renderer, _generalconfig.mediaroot, _generalconfig.guiconfig, callbacks);
+	// First add all windows into the guimanager
+
+	
 	return TRANSITIONIN;
 }
 
