@@ -6,6 +6,7 @@
 #include "Input/Input.h"
 #include "Rendering/Renderer.h"
 #include "GUIViews/WindowView.h"
+#include "Cursor.h"
 
 namespace SAS_GUI {
 	class Window
@@ -21,6 +22,8 @@ namespace SAS_GUI {
 		template<typename T, typename... Args>
 		void AddComponent(Args&&... args) {
 			_guicomponents.push_back(std::make_unique<T>(std::forward<Args>(args)...));
+			// Make sure whoever cares about the cursor gets a pointer to it
+			_guicomponents.back()->RegisterCursor(_cursor);
 		}
 
 		void AddComponent(std::unique_ptr<Component> component) {
@@ -35,12 +38,14 @@ namespace SAS_GUI {
 		std::string WindowName() { return _windowname; }
 
 		// For internal use
-		void _registerInternalGUIQueue(std::vector<Message>* internalqueue) { _internalGUIQueue = internalqueue; }
+		void _registerCursor(Cursor* cursor);
 		void _registerExternalGUIQueue(std::vector<Message>* externalqueue) { _externalGUIQueue = externalqueue; }
+
 	private:
 		SDL_Rect _position;
 		std::string _windowname;
 		WindowView _view;
+		Cursor* _cursor;
 		std::vector<Message>* _internalGUIQueue;
 		std::vector<Message>* _externalGUIQueue;
 

@@ -3,10 +3,8 @@
 namespace SAS_GUI {
 	GUIManager::GUIManager()
 		: _receivedMessages(MAXMESSAGES)
-		, _internalMessages(MAXMESSAGES)
 		, _externalMessages(MAXMESSAGES)
 		, _messageCount(0)
-		, _displayCursor(false)
 		, _focusedWindow(nullptr)
 		, _focusedComponent(false)
 	{
@@ -18,15 +16,12 @@ namespace SAS_GUI {
 
 	void GUIManager::Update(int elapsedtime, const SAS_System::Input& input)
 	{
-		_internalMessages.clear();
 		bool hasFocus = false;
 		int x, y;
 		input.getMouseState(x, y);
 		// Update Cursor position
-		if (_displayCursor) {
-			_cursorcoords.x = x;
-			_cursorcoords.y = y;
-		}
+		_cursorcoords.x = x;
+		_cursorcoords.y = y;
 
 		//Update the opened windows
 		for (auto& w : _windows) {
@@ -39,21 +34,6 @@ namespace SAS_GUI {
 		if (!hasFocus)
 			HandleInput(input);
 
-		for (auto& m : _internalMessages) {
-			if (m.destid == GUIMANAGERID) {
-				if ( m.data.type == CURSORTYPE) {
-					if (m.messagetype == MESSAGETYPE::ADD) {
-						_cursor = m.data;
-						_displayCursor = true;
-						_cursorcoords.x = x;
-						_cursorcoords.y = y;
-					}
-					else if (m.messagetype == MESSAGETYPE::DELETE) {
-						_displayCursor = false;
-					}
-				}
-			}
-		}
 	}
 
 	void GUIManager::Render(SAS_System::Renderer* renderer) {
@@ -61,9 +41,10 @@ namespace SAS_GUI {
 			w->Render(renderer);
 		}
 
-		if (_displayCursor) {
-			renderer->RenderImage(_cursor.texture, _cursorcoords.x, _cursorcoords.y, &_cursor.cliprect);
+		if (!_cursor.clear) {
+			renderer->RenderImage(_cursor.data.texture, _cursorcoords.x, _cursorcoords.y, &_cursor.data.cliprect);
 		}
+
 	}
 
 	void GUIManager::HandleInput(const SAS_System::Input& input) {
@@ -76,8 +57,8 @@ namespace SAS_GUI {
 	}
 
 	Window* GUIManager::AddWindow(std::unique_ptr<Window> window, int key) {
-		window->_registerInternalGUIQueue(&_internalMessages);
 		window->_registerExternalGUIQueue(&_externalMessages);
+		window->_registerCursor(&_cursor);
 		_windows.push_back(std::move(window));
 
 		_keymap[key] = _windows.back().get();

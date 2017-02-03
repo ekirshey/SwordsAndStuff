@@ -9,6 +9,7 @@
 #include "Input/Input.h"
 #include "Rendering/Renderer.h"
 #include "GUIMessaging.h"
+#include "GUIComponents/Cursor.h"
 
 namespace SAS_GUI {
 
@@ -38,13 +39,11 @@ namespace SAS_GUI {
 		void HandleInput(const SAS_System::Input& input);
 		std::vector<std::unique_ptr<Window>> _windows;
 		std::vector<Message> _receivedMessages;
-		std::vector<Message> _internalMessages;
 		std::vector<Message> _externalMessages;
 		int _messageCount;
 		std::unordered_map<int, Window*> _keymap;
-		Payload _cursor;
+		Cursor _cursor;
 		SDL_Point _cursorcoords;
-		bool _displayCursor;
 
 		Window* _focusedWindow;
 		bool _focusedComponent;

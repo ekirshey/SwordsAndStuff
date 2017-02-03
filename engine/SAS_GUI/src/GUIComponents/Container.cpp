@@ -11,6 +11,8 @@ namespace SAS_GUI {
 		, _selecteditem(-1)
 		, _releasedItem(false)
 		, _itemlifted(false)
+		, _cursor(nullptr)
+		, _clearCursor(false)
 		, _position(position)
 		, _view(view)
 		, _items(_view.maxHorizontalSlots * _view.maxVerticalSlots)
@@ -44,56 +46,92 @@ namespace SAS_GUI {
 	void Container::Update(const SDL_Rect& windowrect, const SAS_System::Input& input, bool& hasFocus, int elapsedtime) {
 		int x, y;
 		bool released = false;
-		int prevselection = -1;
 		_releasedItem = false;
 		input.getMouseState(x, y);
-
+		// Deferred clear so any other container can still use the cursor contents
+		if (_clearCursor) {
+			if (!_cursor->locked) {
+				_cursor->clear = true;
+			}
+			_clearCursor = false;
+		}
 		if (UTILS::isMouseOver(windowrect, _position, x, y)) {
 			int relx = x - windowrect.x - _position.x;
 			int rely = y - windowrect.y - _position.y;
 
+			_hovereditem = _getHoveredItem(relx, rely);
 			// Is item being held?
 			if (_selecteditem != -1) {
 				if (!input.leftMouseReleased()) {
 					_hovereditem = -1;
+					if (_cursor->clear) {
+						_cursor->clear = false;
+						_cursor->data = _items[_selecteditem];
+					}
 					_itemlifted = true;
 					return;
 				}
 				else {
 					_itemlifted = false;
 					released = true;
-					prevselection = _selecteditem;
+					Payload temp;
+					_cursor->locked = false;
+					if (_hovereditem != -1 && _hovereditem < _items.size()) {
+						temp = _items[_hovereditem];
+						_items[_hovereditem] = _items[_selecteditem];
+						_items[_selecteditem].type = EMPTY_PAYLOAD;
+						if (temp.type != EMPTY_PAYLOAD) {
+							_cursor->data = temp;
+							_cursor->locked = true;
+						}
+						else {
+							_clearCursor = true;
+						}
+					}
+
+					_releasedItem = true;
 				}
+			}
+			else if (!_cursor->clear && input.leftMouseReleased()) {
+				// Received an item from a different container
+				if (_hovereditem != -1) {
+					if (_items[_hovereditem].type != EMPTY_PAYLOAD) {
+						Payload temp;
+						temp = _items[_hovereditem];
+						_items[_hovereditem] = _cursor->data;
+						_cursor->data = temp;
+						_cursor->locked = true;
+					}
+					else {
+						_items[_hovereditem] = _cursor->data;
+						_cursor->locked = false;
+						_clearCursor = true;
+					}
+				}
+				else {
+					_clearCursor = true;
+				}
+
 			}
 
 			_selecteditem = -1;
-			_hovereditem = _getHoveredItem(relx, rely);
-			if (input.leftMousePressed()) {
+			if (input.leftMousePressed() && _hovereditem != -1 
+				&& _items[_hovereditem].type != EMPTY_PAYLOAD) 
+			{
 				_selecteditem = _hovereditem;
-			}
-
-			if (released) {
-				Payload temp;
-				if (_hovereditem != -1 && _hovereditem < _items.size()) {
-					temp = _items[_hovereditem];
-					_items[_hovereditem] = _items[prevselection];
-					if (temp.type != EMPTY_PAYLOAD)
-						_items[prevselection] = temp;
-					else
-						_items[prevselection].type = EMPTY_PAYLOAD;
-				}
-				else
-					_items[prevselection].type = EMPTY_PAYLOAD;
-
-				_releasedItem = true;
 			}
 		}
 		else {
 			_hovereditem = -1;
 			if (_selecteditem != -1 && input.leftMouseReleased()) {
+				_items[_selecteditem].type = EMPTY_PAYLOAD;
+				if (_selecteditem < _openslot)
+					_openslot = _selecteditem;
 				_selecteditem = -1;
 				_itemlifted = false;
 				_releasedItem = true;
+				// Only clear the cursor if you are in full control of where it's going. That is
+				// why I'm not clearing it here.
 			}
 		}
 	}
@@ -116,7 +154,7 @@ namespace SAS_GUI {
 		}
 
 		// Render selection box
-		if ((_hovereditem != -1 && _hovereditem < _openslot) && !_itemlifted) {
+		if ((_hovereditem != -1 && _items[_hovereditem].type != EMPTY_PAYLOAD) && !_itemlifted) {
 			int row = (_hovereditem / _view.maxHorizontalSlots);
 			int xshift = _hovereditem - (row*_view.maxHorizontalSlots);
 			renderer->RenderOutlineRectangle(SDL_Rect{
@@ -146,20 +184,8 @@ namespace SAS_GUI {
 		}
 	}
 
-	void Container::SendInternalMessage(std::vector<Message>* messages) {
-		// Update Cursor
-		if (_itemlifted) {
-			std::cout << "item lifted?" << std::endl;
-			Payload p(_items[_selecteditem]);
-			p.type = CURSORTYPE;
-			messages->push_back(Message(_id, GUIMANAGERID, MESSAGETYPE::ADD, p));
-		}
-		else if (_releasedItem) {
-			std::cout << "stop cursor!" << std::endl;
-			Payload p;
-			p.type = CURSORTYPE;
-			messages->push_back(Message(_id, GUIMANAGERID, MESSAGETYPE::DELETE, p));
-		}
+	void Container::RegisterCursor(Cursor* cursor) {
+		_cursor = cursor;
 	}
 
 	void Container::SendExternalMessage(std::vector<Message>* messages) {

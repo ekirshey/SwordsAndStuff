@@ -1,5 +1,6 @@
 #include "Window.h"
 #include <iostream>
+
 namespace SAS_GUI {
 	Window::Window(SDL_Rect position, SAS_System::Renderer* renderer, std::string windowname, const WindowView& view, bool open) 
 		: _position(position)
@@ -19,12 +20,12 @@ namespace SAS_GUI {
 	bool Window::Update(int elapsedtime, const SAS_System::Input& input, std::vector<Message> receiveQueue, int queuesize) {
 		bool hasFocus = false;
 		bool tempFocus;
-		if (IsOpen()) {
-			for (auto i = 0; i < _guicomponents.size(); i++) {
-				tempFocus = false;
-				_guicomponents[i]->ReceiveMessages(receiveQueue, queuesize);
+		for (auto i = 0; i < _guicomponents.size(); i++) {
+			tempFocus = false;
+			// Always receive messages but only update if the window is open
+			_guicomponents[i]->ReceiveMessages(receiveQueue, queuesize);
+			if (IsOpen()) {
 				_guicomponents[i]->Update(_position, input, tempFocus, elapsedtime);
-				_guicomponents[i]->SendInternalMessage(_internalGUIQueue);
 				_guicomponents[i]->SendExternalMessage(_externalGUIQueue);
 				hasFocus ^= tempFocus;
 			}
@@ -44,6 +45,13 @@ namespace SAS_GUI {
 
 			renderer->DefaultRenderTarget();
 			renderer->RenderTargetTexture(_guitexture, _position.x, _position.y);
+		}
+	}
+
+	void Window::_registerCursor(Cursor* cursor) {
+		_cursor = cursor;
+		for (auto& c : _guicomponents) {
+			c->RegisterCursor(_cursor);
 		}
 	}
 }

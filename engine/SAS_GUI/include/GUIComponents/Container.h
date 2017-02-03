@@ -2,6 +2,7 @@
 #include "Component.h"
 #include "ContainerView.h"
 #include "GUIMessaging.h"
+#include "Cursor.h"
 
 namespace SAS_GUI {
 
@@ -11,8 +12,8 @@ namespace SAS_GUI {
 			void Update(const SDL_Rect& windowrect, const SAS_System::Input& input, bool& hasFocus, int elapsedtime);
 			void Render(SAS_System::Renderer* renderer);
 
+			void RegisterCursor(Cursor* cursor);
 			void ReceiveMessages(const std::vector<Message>& messages, int messagect);
-			void SendInternalMessage(std::vector<Message>* messages);
 			void SendExternalMessage(std::vector<Message>* messages);
 
 		private:
@@ -23,6 +24,8 @@ namespace SAS_GUI {
 			int _selecteditem;
 			bool _releasedItem;
 			bool _itemlifted;
+			Cursor* _cursor;
+			bool _clearCursor;
 			SDL_Rect _position;
 			ContainerView _view;
 			std::vector <Payload> _items;

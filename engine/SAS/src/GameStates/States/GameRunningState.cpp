@@ -82,7 +82,14 @@ int GameRunningState::InitializeState(SAS_System::Renderer& renderer, const SAS_
 	SAS_GUI::ContainerView cv(SDL_Rect{ 0,0,400,200}, 2, 5, 16, 16, 19, 8, _generalconfig.mediaroot + "backgrounds\\inventorycontainer.bmp");
 	invwin->AddComponent<SAS_GUI::Container>(1, 1, SDL_Rect{ 0,200,400,200 }, cv);
 
+	SAS_GUI::WindowView wv2(SDL_Rect{0,0,400,400}, _generalconfig.mediaroot + "backgrounds\\inventory.bmp");
+	auto invwin2 = std::make_unique<SAS_GUI::Window>(SDL_Rect{ 700,100,400,400 }, &renderer, "inventory", wv2,  false);
+
+	SAS_GUI::ContainerView cv2(SDL_Rect{ 0,0,400,200}, 2, 5, 16, 16, 19, 8, _generalconfig.mediaroot + "backgrounds\\inventorycontainer.bmp");
+	invwin2->AddComponent<SAS_GUI::Container>(2, 1, SDL_Rect{ 0,200,400,200 }, cv2);
+
 	_guimanager->AddWindow(std::move(invwin), SDL_SCANCODE_I);
+	_guimanager->AddWindow(std::move(invwin2), SDL_SCANCODE_G);
 	
 	return TRANSITIONIN;
 }
@@ -206,7 +213,8 @@ int GameRunningState::UpdateState(int elapsedtime, SAS_System::Renderer& rendere
 
 	if (_ecsmanager->GetStatus(errorcode) && !input.isKeyPressed(SDL_SCANCODE_ESCAPE)) {	// State test
 
-		if (input.isKeyPressed(SDL_SCANCODE_1) || input.isKeyPressed(SDL_SCANCODE_2)) {
+		if (input.isKeyPressed(SDL_SCANCODE_1) || input.isKeyPressed(SDL_SCANCODE_2) || 
+			input.isKeyPressed(SDL_SCANCODE_3) || input.isKeyPressed(SDL_SCANCODE_4)) {
 			SAS_GUI::Message msg;
 			SAS_GUI::Payload data;
 			data.cliprect = SDL_Rect{ 0,0,16,16 };
@@ -216,7 +224,12 @@ int GameRunningState::UpdateState(int elapsedtime, SAS_System::Renderer& rendere
 				data.texture = _generalconfig.mediaroot + "sprites\\swordicon.bmp";
 			else
 				data.texture = _generalconfig.mediaroot + "sprites\\shieldicon.bmp";
-			msg.destid = 1;
+
+			if (input.isKeyPressed(SDL_SCANCODE_3) || input.isKeyPressed(SDL_SCANCODE_4))
+				msg.destid = 2;
+			else
+				msg.destid = 1;
+
 			msg.messagetype = SAS_GUI::MESSAGETYPE::ADD;
 			msg.senderid = 2;
 			msg.data = data;
