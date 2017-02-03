@@ -35,8 +35,7 @@ int MainMenuState::InitializeState(SAS_System::Renderer& renderer, const SAS_Sys
 		}
 	});
 
-	auto windowdescs = SAS_GUI::GUIBuilder::BuildGUIFromFile(&_guimanager, renderer, _generalconfig.mediaroot, _generalconfig.guiconfig, callbacks);
-	// First add all windows into the guimanager
+	SAS_GUI::GUIBuilder::BuildGUIFromFile(&_guimanager, renderer, _generalconfig.mediaroot, _generalconfig.guiconfig, callbacks);
 
 	
 	return TRANSITIONIN;

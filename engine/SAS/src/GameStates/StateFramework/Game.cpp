@@ -59,6 +59,10 @@ void Game::Run()
 			_renderer.Update();
 		}
 
+/*
+		if ((currenttime -previoustime) >0 )
+			std::cout << 1000/(currenttime - previoustime) << std::endl;
+*/
 		framecounter++;
 	}   // End Main Loop
 

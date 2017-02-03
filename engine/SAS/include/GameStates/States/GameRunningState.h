@@ -46,7 +46,6 @@ class GameRunningState : public GameStateImpl
 		std::unique_ptr<ECSManager> _ecsmanager;
 
 		// GUI Managers
-		//std::unique_ptr<HUDManager>		hudmanager_;
 		std::unique_ptr<SAS_GUI::GUIManager> _guimanager;
 
 		std::unique_ptr<Items::ItemDatabase> _itemdatabase;

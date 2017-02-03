@@ -15,7 +15,7 @@ namespace SAS_GUI {
 
 		~Window();
 
-		bool Update(int elapsedtime, const SAS_System::Input& input);
+		bool Update(int elapsedtime, const SAS_System::Input& input, std::vector<Message> receiveQueue, int queuesize);
 		void Render(SAS_System::Renderer* renderer);
 
 		template<typename T, typename... Args>
@@ -33,10 +33,16 @@ namespace SAS_GUI {
 		void ToggleWindow() { _open = !_open; }
 
 		std::string WindowName() { return _windowname; }
+
+		// For internal use
+		void _registerInternalGUIQueue(std::vector<Message>* internalqueue) { _internalGUIQueue = internalqueue; }
+		void _registerExternalGUIQueue(std::vector<Message>* externalqueue) { _externalGUIQueue = externalqueue; }
 	private:
 		SDL_Rect _position;
 		std::string _windowname;
 		WindowView _view;
+		std::vector<Message>* _internalGUIQueue;
+		std::vector<Message>* _externalGUIQueue;
 
 		std::vector<std::unique_ptr<Component>> _guicomponents;
 		int _guitexture;

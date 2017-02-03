@@ -132,6 +132,12 @@ namespace SAS_GUI {
 										target->CloseWindow();
 									});
 							}
+							else if (b.task.task == BUTTON_TASKS::TOGGLE) {
+							}
+							else if (b.task.task == BUTTON_TASKS::DISABLE) {
+							}
+							else if (b.task.task == BUTTON_TASKS::UNDISABLE) {
+							}						
 						}
 					}
 					else {
@@ -141,7 +147,7 @@ namespace SAS_GUI {
 			}
 		}
 
-		std::vector<WindowDescription> BuildGUIFromFile(GUIManager* guimanager, SAS_System::Renderer& renderer, std::string mediaroot, std::string file, const CallbackMap& callbacks) 
+		void BuildGUIFromFile(GUIManager* guimanager, SAS_System::Renderer& renderer, std::string mediaroot, std::string file, const CallbackMap& callbacks) 
 		{
 			std::vector<WindowDescription> windowDescriptions;
 			// First parse the gui file with cpptoml
@@ -154,7 +160,6 @@ namespace SAS_GUI {
 			}
 			
 			PopulateGUIManager(guimanager, renderer, windowDescriptions, callbacks);
-			return windowDescriptions;
 		}
 	}
 }

@@ -59,7 +59,7 @@ namespace SAS_GUI {
 			}
 		};
 
-		std::vector<WindowDescription> BuildGUIFromFile(GUIManager* guimanager, SAS_System::Renderer& renderer, std::string mediaroot, std::string file, const CallbackMap& callbacks);
+		void BuildGUIFromFile(GUIManager* guimanager, SAS_System::Renderer& renderer, std::string mediaroot, std::string file, const CallbackMap& callbacks);
 
 	}
 }

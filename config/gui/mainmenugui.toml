@@ -1,3 +1,4 @@
+#MAIN MENU CONFIG
 [[window]]
 name = "main_window"
 bgtexture = "backgrounds\\mainmenubg.bmp"

@@ -8,7 +8,6 @@
 namespace SAS_GUI {
 
 #define DEFAULTDEBOUNCECOUNT 200
-	class Model;
 
 	class Button : public Component
 	{

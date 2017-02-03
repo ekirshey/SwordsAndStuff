@@ -8,9 +8,11 @@
 #include "GUIComponents/Window.h"
 #include "Input/Input.h"
 #include "Rendering/Renderer.h"
+#include "GUIMessaging.h"
 
 namespace SAS_GUI {
 
+	#define MAXMESSAGES 100
 	/*
 	If a window is added without an associated key, then it's assumed the window will always be in it's initial state
 	*/
@@ -30,11 +32,20 @@ namespace SAS_GUI {
 
 		bool GUIHasFocus();
 
+		void ReceiveMessage(const Message& msg);
+
 	private:
 		void HandleInput(const SAS_System::Input& input);
 		std::vector<std::unique_ptr<Window>> _windows;
+		std::vector<Message> _receivedMessages;
+		std::vector<Message> _internalMessages;
+		std::vector<Message> _externalMessages;
+		int _messageCount;
 		std::unordered_map<int, Window*> _keymap;
-		
+		Payload _cursor;
+		SDL_Point _cursorcoords;
+		bool _displayCursor;
+
 		Window* _focusedWindow;
 		bool _focusedComponent;
 	};

@@ -9,7 +9,6 @@ namespace SAS_GUI {
 		SDL_Color menucolor;
 		SDL_Color dropdowncolor;
 		SDL_Color highlightcolor;
-		ButtonView buttonview;
 		TextView textview;
 
 		DropdownMenuView(int mw, int mh, SDL_Color mc, SDL_Color dpc, SDL_Color hlc, ButtonView b, TextView tv) 
@@ -18,7 +17,6 @@ namespace SAS_GUI {
 			, menucolor(mc)
 			, dropdowncolor(dpc)
 			, highlightcolor(hlc)
-			, buttonview(b)
 			, textview(tv)
 		{
 

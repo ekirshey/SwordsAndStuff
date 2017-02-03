@@ -16,14 +16,16 @@ namespace SAS_GUI {
 	{
 	}
 
-	bool Window::Update(int elapsedtime, const SAS_System::Input& input) {
+	bool Window::Update(int elapsedtime, const SAS_System::Input& input, std::vector<Message> receiveQueue, int queuesize) {
 		bool hasFocus = false;
 		bool tempFocus;
 		if (IsOpen()) {
 			for (auto i = 0; i < _guicomponents.size(); i++) {
 				tempFocus = false;
-				// Split up input and render handling for some hypothetical future where input in a window is disabled
+				_guicomponents[i]->ReceiveMessages(receiveQueue, queuesize);
 				_guicomponents[i]->Update(_position, input, tempFocus, elapsedtime);
+				_guicomponents[i]->SendInternalMessage(_internalGUIQueue);
+				_guicomponents[i]->SendExternalMessage(_externalGUIQueue);
 				hasFocus ^= tempFocus;
 			}
 		}

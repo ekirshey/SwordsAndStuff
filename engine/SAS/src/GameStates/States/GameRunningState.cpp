@@ -30,6 +30,10 @@
 
 #include "Types/MessageTypes.h"
 
+// GUI Components
+#include "GUIComponents/Container.h"
+
+
 using namespace Items;
 GameRunningState::GameRunningState(const GeneralConfig& config)
 	: _generalconfig(config)
@@ -70,10 +74,16 @@ int GameRunningState::InitializeState(SAS_System::Renderer& renderer, const SAS_
 	_ecsmanager = std::make_unique<ECSManager>();
 	this->initializeECS(renderer, input);
 
-	// GUI Setup HUD and GUI separate for now
-    //hudmanager_ = std::unique_ptr<HUDManager>(new HUDManager(objectmanager_.get(), GetSDLManager()));
-	//guimanager_ = std::unique_ptr<GUIManager>(new GUIManager(GetSDLManager(), "keymapfile.txt","guifile.txt"));
+	// Set up the gui
+	_guimanager = std::make_unique<SAS_GUI::GUIManager>();
+	SAS_GUI::WindowView wv(SDL_Rect{0,0,400,400}, _generalconfig.mediaroot + "backgrounds\\inventory.bmp");
+	auto invwin = std::make_unique<SAS_GUI::Window>(SDL_Rect{ 100,100,400,400 }, &renderer, "inventory", wv,  false);
 
+	SAS_GUI::ContainerView cv(SDL_Rect{ 0,0,400,200}, 2, 5, 16, 16, 19, 8, _generalconfig.mediaroot + "backgrounds\\inventorycontainer.bmp");
+	invwin->AddComponent<SAS_GUI::Container>(1, 1, SDL_Rect{ 0,200,400,200 }, cv);
+
+	_guimanager->AddWindow(std::move(invwin), SDL_SCANCODE_I);
+	
 	return TRANSITIONIN;
 }
 
@@ -195,8 +205,29 @@ int GameRunningState::UpdateState(int elapsedtime, SAS_System::Renderer& rendere
 	int errorcode;
 
 	if (_ecsmanager->GetStatus(errorcode) && !input.isKeyPressed(SDL_SCANCODE_ESCAPE)) {	// State test
+
+		if (input.isKeyPressed(SDL_SCANCODE_1) || input.isKeyPressed(SDL_SCANCODE_2)) {
+			SAS_GUI::Message msg;
+			SAS_GUI::Payload data;
+			data.cliprect = SDL_Rect{ 0,0,16,16 };
+			data.type = 1;
+			data.description = "test";
+			if (input.isKeyPressed(SDL_SCANCODE_1))
+				data.texture = _generalconfig.mediaroot + "sprites\\swordicon.bmp";
+			else
+				data.texture = _generalconfig.mediaroot + "sprites\\shieldicon.bmp";
+			msg.destid = 1;
+			msg.messagetype = SAS_GUI::MESSAGETYPE::ADD;
+			msg.senderid = 2;
+			msg.data = data;
+			_guimanager->ReceiveMessage(msg);
+		}
 		_inputhandler->UpdateInput(_ecsmanager.get(), input);
 		_ecsmanager->Update(elapsedtime);
+
+		// GUI Manager update
+		_guimanager->Update(elapsedtime, input);
+		_guimanager->Render(&renderer);
 	}
 	else {
 		ret = TRANSITIONOUT;
