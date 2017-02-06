@@ -4,18 +4,18 @@
 #include "../../include/Components/ScriptComponent.h"	
 #include "../../include/Components/PositionComponent.h"
 
-WaypointSystem::WaypointSystem(std::string systemname, ECSManager* ecsmanager) :
+ScriptedEntitySystem::ScriptedEntitySystem(std::string systemname, ECSManager* ecsmanager) :
 	ProcessingSystem(systemname, ecsmanager)
 {
 	
 }
 
 
-WaypointSystem::~WaypointSystem() {
+ScriptedEntitySystem::~ScriptedEntitySystem() {
 
 }
 
-void WaypointSystem::ProcessEntity(uint_fast64_t entity) {
+void ScriptedEntitySystem::ProcessEntity(uint_fast64_t entity) {
 
 	auto script = GetEntityComponent<ScriptComponent*>(entity, ScriptComponentID);
 	auto entityposition = GetEntityComponent<PositionComponent*>(entity, PositionComponentID);

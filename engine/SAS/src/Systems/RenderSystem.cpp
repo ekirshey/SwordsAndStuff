@@ -96,7 +96,7 @@ void RenderSystem::ProcessEntity(uint_fast64_t entity)
 		{
 			if (rendercomponent->RenderAngle() != 0.0)
 			{
-				SAS_Utils::Point center = { (cliprect.w / 2), (cliprect.h / 2) };
+				SDL_Point center = { (cliprect.w / 2), (cliprect.h / 2) };
 				_renderer->RenderImage(rendercomponent->ImagePath(), positioncomponent->x_ - _camera->X(), positioncomponent->y_ - _camera->Y(), &cliprect, rendercomponent->RenderAngle(), center, SDL_FLIP_NONE);
 			}
 			else

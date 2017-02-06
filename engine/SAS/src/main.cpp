@@ -14,7 +14,10 @@ int main(int argc, char *argv[])
 	// Initialize SDL and subsystems
 	SAS_System::InitializeSystem();
 
-	std::string rootconfigloc = argv[1];
+	std::string rootconfigloc = "";
+	if (argc > 1)
+		rootconfigloc = argv[1];
+
 	// Default paths
 	const std::string laptoppath  = "C:\\cygwin64\\home\\prome\\code\\SwordsAndStuff\\";
 	const std::string desktoppath = "F:\\github\\SwordsAndStuff\\";

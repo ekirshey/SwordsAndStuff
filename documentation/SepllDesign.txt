@@ -1,0 +1,48 @@
+Component based spell system:
+
+store components in global spellbook. Store created spells in global spellbook.
+Unlock different component types as you progress different skills.
+
+That means, the spellbook is a list of NON-MUTABLE spells that the player would
+have a reference to. The only time a new copy is placed in the spellbook is after
+the spell is made by a player.
+
+Load spell components by toml file.
+Most likely just define the component types in code but have the coefficients
+defined in the toml file. I don't think Im going to have spell components be
+defined from within the toml since that seems a bit more effort than is necessary.
+
+Base:
+Projectile 1/2/3/4/5
+ X vel
+ Y vel 
+ Lifetime
+
+"Bullet" type
+ Pierce
+ Blunt
+ 
+Element
+ Fire
+  Burn
+ Ice
+  Slow
+ Lightning
+  Shock
+   
+Contact Physics
+ Explosion
+  Explosion Size
+ Fragmentation
+  Amount of bullets that fragment
+ Bounce
+  Speed it bounces
+  
+  
+SpellComponent
+ 
+
+GlobalSpellbook
+ Holds components and created spell
+ std::unordered_map<SpellComponentID, SpellComponent> _spellcomponents;
+ std::unordered_map<ComposedSpellID, ComposedSpell> _composedspells;

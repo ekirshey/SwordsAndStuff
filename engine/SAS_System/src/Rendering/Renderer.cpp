@@ -2,7 +2,6 @@
 #include <SDL_image.h>
 #include <SDL_ttf.h>
 #include "Renderer.h"
-#include "TypeConversions.h"
 
 namespace SAS_System {
 
@@ -138,10 +137,9 @@ namespace SAS_System {
 		texture->Render(_renderer, x, y, clip);
 	}
 
-	void Renderer::RenderImage(const std::string& image, int x, int y, SDL_Rect* clip, double angle, const SAS_Utils::Point& center, SDL_RendererFlip flip) {
+	void Renderer::RenderImage(const std::string& image, int x, int y, SDL_Rect* clip, double angle, SDL_Point& center, SDL_RendererFlip flip) {
 		Texture* texture = _texturemanager->GetTexture(image);
-		auto p = SASPointToSDLPoint(center);
-		texture->Render(_renderer, x, y, clip, angle, &p, flip);
+		texture->Render(_renderer, x, y, clip, angle, &center, flip);
 	}
 
 	/*************** Target texture function handling *********************************************/

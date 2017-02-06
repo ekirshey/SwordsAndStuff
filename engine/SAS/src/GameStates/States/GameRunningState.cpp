@@ -62,13 +62,13 @@ int GameRunningState::InitializeState(SAS_System::Renderer& renderer, const SAS_
 	// Name, Cast time, cooldown, duration (milliseconds)
 	// Account for anchor orientation in script
 	// Vector of vectors: each vector is the script steps for a facing
-	std::vector<std::vector<ScriptStep>> spellscript = {
+	ScriptedMotion::Script spellscript = {
 		{ ScriptStep(0,0,50), ScriptStep(-5,5,50), ScriptStep(-10,10,200) },
 		{ ScriptStep(0,0,50), ScriptStep(-5,5,50), ScriptStep(-10,10,200) },
 		{ ScriptStep(8,0,50), ScriptStep(13,5,50), ScriptStep(18,10,200) },
 		{ ScriptStep(0,0,50), ScriptStep(-5,5,50), ScriptStep(-10,10,200) }
 	};
-	_spellbook->CreateSpell(0, "MELEE", 0, 100, 300, _generalconfig.mediaroot + "media/sprites/sword.png", spellscript);
+	_spellbook->CreateSpell(0, "MELEE", 0, 100, 300, _generalconfig.mediaroot + "sprites/sword.png", spellscript);
 
 	// Set up ECS. This was originally in some wrapper object and I dont know why I did that...
 	_ecsmanager = std::make_unique<ECSManager>();
@@ -108,7 +108,7 @@ void GameRunningState::initializeECS(SAS_System::Renderer& renderer, const SAS_S
 	// Build systems and entities
 	//_ecsmanager->AddSystem(std::unique_ptr<AISystem>(new AISystem()), priority++);
 	_ecsmanager->AddSystem<MovementSystem>("MovementSystem", priority++, _gameworld.get());
-	_ecsmanager->AddSystem<WaypointSystem>("WaypointSystem", priority++);	// Not 100% sure on the placement 
+	_ecsmanager->AddSystem<ScriptedEntitySystem>("ScriptedEntitySystem", priority++);	// Not 100% sure on the placement 
 	_ecsmanager->AddSystem<SpellCreationSystem>("SpellCreationSystem", priority++, _ecsmanager->GetQueue("SpellCreation"));
 	_ecsmanager->AddSystem<CollisionSystem>("CollisionSystem", priority++, _gameworld.get());
 	//_ecsmanager->AddSystem<PlayerTargetingSystem>("PlayerTargetingSystem", priority++, GetSDLManager(), _gameworld.get() , "..\\..\\..\\reticule.png");

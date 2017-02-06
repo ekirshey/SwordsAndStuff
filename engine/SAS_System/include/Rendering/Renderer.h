@@ -23,7 +23,7 @@ namespace SAS_System {
 		// Textures from image file
 		void DECLSPEC RenderImage(const std::string& image, int x, int y, SDL_Rect* clip = 0);
 		void DECLSPEC RenderImage(const std::string& image, int x, int y, SDL_Rect* clip, 
-			double angle, const SAS_Utils::Point& center, SDL_RendererFlip flip);
+			double angle, SDL_Point& center, SDL_RendererFlip flip);
 
 		void SetRenderDrawBlendMode(SDL_BlendMode blendmode);
 		void FillRenderingTarget(SDL_Color color);

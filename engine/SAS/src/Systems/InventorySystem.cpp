@@ -1,7 +1,7 @@
-#include "../../include/Systems/InventorySystem.h"
-#include "../../include/Components/InventoryComponent.h"
-#include "../../include/Types/MessageTypes.h"
-#include "../../include/ECSFramework/ECSManager.h"
+#include "Systems/InventorySystem.h"
+#include "Components/InventoryComponent.h"
+#include "Types/MessageTypes.h"
+#include "ECSFramework/ECSManager.h"
 
 InventorySystem::InventorySystem(std::string systemname, ECSManager* ecsmanager, MessageQueue* messagequeue) : 
 	QueueSystem(systemname, ecsmanager, messagequeue) {

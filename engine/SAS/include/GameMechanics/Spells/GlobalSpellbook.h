@@ -8,13 +8,13 @@ class GlobalSpellbook
 	public:
 		GlobalSpellbook() {}
 
-		void CreateSpell(int spellId, std::string name, int casttime, int cooldown, int duration, std::string graphic, std::vector<std::vector<ScriptStep>> script) {
-			spellbook_[spellId] = Spell(spellId, name, casttime, cooldown, duration, graphic, script);
+		void CreateSpell(int spellId, std::string name, int casttime, int cooldown, int duration, std::string graphic, const ScriptedMotion::Script& script) {
+			spellbook_.insert({ spellId, Spell(spellId, name, casttime, cooldown, duration, graphic, script) });
 		}
 
 		// Returns a copy of a global spell
 		Spell GetSpell(int spellId) { 
-			return spellbook_[spellId]; 
+			return spellbook_[spellId];
 		}
 
 	private:

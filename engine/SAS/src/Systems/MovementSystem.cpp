@@ -54,7 +54,6 @@ void MovementSystem::AfterObjectProcessing()
 
 void MovementSystem::ProcessEntity(uint_fast64_t entity)
 {
-
     // Components to use
     PositionComponent* positioncomponent;
     VelocityComponent* velocitycomponent;

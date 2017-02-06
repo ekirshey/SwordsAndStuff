@@ -17,7 +17,7 @@ class SpellbookComponent : public Component
 		uint_fast64_t UniqueBits() const { return ID; }
 
 		void AddSpell(const Spell& spell) {
-			spellbook_[spell.spellId] = spell;
+			spellbook_.insert({ spell.spellId, spell });
 		}
 
 		Spell* GetSpell(int id) { 

@@ -1,0 +1,14 @@
+# Base TOML config file
+
+title = "Swords And Stuff"
+configpath = "C:\\cygwin64\\home\\prome\\code\\SwordsAndStuff\\config\\"
+mediapath = "C:\\cygwin64\\home\\prome\\code\\SwordsAndStuff\\media\\"
+
+[mainmenu]
+guiconfig="gui/mainmenugui.toml"
+
+[charactercreation]
+guiconfig="charcreationgui.toml"
+
+[gamerunning]
+guiconfig="gamegui.toml"

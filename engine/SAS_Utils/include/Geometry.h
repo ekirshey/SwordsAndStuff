@@ -1,4 +1,5 @@
 #pragma once
+#ifdef FOO
 #include <boost/polygon/point_data.hpp>
 #include <boost/polygon/segment_data.hpp>
 #include <boost/polygon/voronoi_diagram.hpp>
@@ -28,3 +29,4 @@ namespace SAS_Utils {
 	};
 #endif
 }
+#endif
