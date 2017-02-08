@@ -18,3 +18,4 @@
 #define AIComponentID					  0x8000
 #define ScriptComponentID			      0x10000
 #define DescriptionComponentID			  0x20000
+#define TTLComponentID					  0x40000

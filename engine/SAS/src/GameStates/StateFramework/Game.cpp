@@ -36,6 +36,10 @@ void Game::Run()
 	int currenttime = 0;
 	int previoustime = 0;
 	int framecounter = 0;
+	double lowfps = 10000;
+	double highfps = 0;
+	double fps = 0;
+	double samples = 0;
 
 	// If everything initialized ok then enter main game loop
 	std::cout << "Finished Game Init" << std::endl;
@@ -56,13 +60,24 @@ void Game::Run()
 		_gamerunning = !_input.Quit();
 		if (_gamerunning) {
 			Update(currenttime - previoustime);
+//#ifdef DEBUGINFO
+			_renderer.RenderText("Low: " + std::to_string(lowfps), _renderer.ScreenWidth()-150, 0, 20, SDL_Color{ 255,255,255,255 }, "F:\\github\\SwordsAndStuff\\media\\font.TTF");
+			_renderer.RenderText("Avg: " + std::to_string(fps), _renderer.ScreenWidth()-150, 20, 20, SDL_Color{ 255,255,255,255 }, "F:\\github\\SwordsAndStuff\\media\\font.TTF");
+			_renderer.RenderText("High: " + std::to_string(fps), _renderer.ScreenWidth()-150, 40, 20, SDL_Color{ 255,255,255,255 }, "F:\\github\\SwordsAndStuff\\media\\font.TTF");
+//#endif
 			_renderer.Update();
 		}
 
-/*
-		if ((currenttime -previoustime) >0 )
-			std::cout << 1000/(currenttime - previoustime) << std::endl;
-*/
+		if ((currenttime - previoustime) > 0) {
+			++samples;
+			auto t = 1000 / (currenttime - previoustime);
+			if (t < lowfps && t != 0)
+				lowfps = t;
+			if (t > highfps)
+				highfps = t;
+			fps = t;
+		}
+
 		framecounter++;
 	}   // End Main Loop
 

@@ -5,7 +5,7 @@
 #include <string>
 
 namespace SAS_System {
-
+	#define MAXKEYS 1000
 	class Input
 	{
 		public:
@@ -45,7 +45,7 @@ namespace SAS_System {
 			// Numbers chosen above the max 512 button defined in SDL
 			enum MouseButtons {LEFT = 800, RIGHT = 801, MIDDLE = 802};
 			std::unique_ptr<std::vector<Input::KeyState*>> _toupdate; // pointer to do warnings about exposing std in a dll. different platforms have different implementations
-			KeyState _activekeys[1000]; // At least all the SDL_SCANCODES and room for possibly more?
+			KeyState _activekeys[MAXKEYS]; // At least all the SDL_SCANCODES and room for possibly more?
 
 			std::vector<RecordStream> _recordstreams;
 			int _activestringlength;

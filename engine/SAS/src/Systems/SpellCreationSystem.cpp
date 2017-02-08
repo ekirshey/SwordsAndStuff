@@ -7,7 +7,11 @@
 #include "Components/EquipmentComponent.h"
 #include "GameMechanics/Spells/SpellFactory.h"
 
-#include <Windows.h>
+/*
+	Note: Not sure if this should exist in some sort of separate object outside of the ECS. I'm leaning towards it being here since it needs to update the cast
+	times each loop. It's also dependent on the ECS queue system which I would need to pull out separately to move the queue type systems out. Not sure it that's
+	warranted.
+*/
 
 SpellCreationSystem::SpellCreationSystem(std::string systemname, ECSManager* ecsmanager, MessageQueue* messagequeue) : 
 	QueueSystem(systemname, ecsmanager, messagequeue) {
@@ -47,16 +51,17 @@ void SpellCreationSystem::ProcessMessage(Message* data) {
 		auto equipmentcomponent = GetEntityComponent<EquipmentComponent*>(msg->entity, EquipmentComponentID);
 
 		// It might need to become a copy of the spell, if I'm too apply some sort of debuff/buff. I don't want to modify the base spell
-		Spell* queuedspell = spellbookcomponent->GetSpell(msg->spellId);
+		GlobalSpellbook::SpellReference queuedspell = spellbookcomponent->GetSpell(msg->spellId);
 
-		if (spellcastingcomponent->SpellToCast() == NO_CAST) {
+		if (spellcastingcomponent->spelltocast == NO_CAST) {
+			int lastcast = spellcastingcomponent->FindSpellLastCast(msg->spellId);
 			// Check if spell is still coolingdown
-			if (((TimeRunning() - queuedspell->lastcast) >= (queuedspell->cooldown + queuedspell->duration))) {
+			if (((TimeRunning() - lastcast) >= (queuedspell->Cooldown() + queuedspell->Duration()))) {
 				// Check any other spell casting requirements
-				spellcastingcomponent->SetSpellToCast(msg->spellId);
-				spellcastingcomponent->SetCastTime(queuedspell->casttime);
-				spellcastingcomponent->SetStartTimeOfCast(TimeRunning());
-				spellcastingcomponent->SetCancelable(queuedspell->cancelable);
+				spellcastingcomponent->spelltocast = msg->spellId;
+				spellcastingcomponent->casttime = queuedspell->Casttime();
+				spellcastingcomponent->starttimeofcast = TimeRunning();
+				spellcastingcomponent->cancelable = queuedspell->isCancelable();
 				castspells_.push_back(msg->entity);
 
 			}
@@ -74,7 +79,7 @@ void SpellCreationSystem::ProcessMessage(Message* data) {
 void SpellCreationSystem::AfterObjectProcessing() {
 	
 	int castspellId;
-	Spell* spell;
+	GlobalSpellbook::SpellReference spell;
 	int spellid = -1;
 
 	for (int i = castspells_.size()-1; i >= 0; i--) {
@@ -82,16 +87,15 @@ void SpellCreationSystem::AfterObjectProcessing() {
 		SpellCastingComponent* spellcastingcomponent = GetEntityComponent<SpellCastingComponent*>(castspells_[i], SpellCastingComponentID);
 		SpellbookComponent* spellbookcomponent = GetEntityComponent<SpellbookComponent*>(castspells_[i], SpellbookComponentID);
 
-		castspellId = spellcastingcomponent->SpellToCast();
+		castspellId = spellcastingcomponent->spelltocast;
 		spell = spellbookcomponent->GetSpell(castspellId);
 		
-		if (spellcastingcomponent->CastTime() <= (TimeRunning() - spellcastingcomponent->StartTimeOfCast()) ) {
+		if (spellcastingcomponent->casttime <= (TimeRunning() - spellcastingcomponent->starttimeofcast) ) {
 			// Create spell
-			spellid = SpellFactory::CreateSpellEntity(GetECSManager(), castspells_[i], *spell); 
+			spell->CreateSpell(GetECSManager(), castspells_[i], TimeRunning());
 
 			// Reset Spell
-			spellcastingcomponent->SetSpellToCast(NO_CAST);
-			spell->lastcast = TimeRunning();
+			spellcastingcomponent->Reset(TimeRunning());
 			castspells_.pop_back();
 
 		}

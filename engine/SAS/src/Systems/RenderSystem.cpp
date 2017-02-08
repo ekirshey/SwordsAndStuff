@@ -40,22 +40,11 @@ void RenderSystem::BeforeObjectProcessing()
 
 void RenderSystem::AfterObjectProcessing()
 {
-	std::ostringstream strs;
-	if (FrameTime() > 0)
-	{
-		strs << 1000 / FrameTime();
-		strs << " ";
-		strs << GetECSManager()->EntityCount();
-		std::string str = "FPS: " + strs.str();
-		//_renderer->RenderText(str);
-	}
-
 	//_gameworld->DrawSparseGrid(_renderer);
 }
 
 void RenderSystem::ProcessEntity(uint_fast64_t entity)
 {
-
     SDL_Rect camerarect = _camera->GetCameraRect();
     RenderComponent* rendercomponent = nullptr;
     PositionComponent* positioncomponent = nullptr;
@@ -88,7 +77,6 @@ void RenderSystem::ProcessEntity(uint_fast64_t entity)
 		}
 	}
 */
-
     // TODO This implies that you NEED a camera. Is this true? I dont think it should be
 	if (rendercomponent != nullptr)
 	{
@@ -99,8 +87,10 @@ void RenderSystem::ProcessEntity(uint_fast64_t entity)
 				SDL_Point center = { (cliprect.w / 2), (cliprect.h / 2) };
 				_renderer->RenderImage(rendercomponent->ImagePath(), positioncomponent->x_ - _camera->X(), positioncomponent->y_ - _camera->Y(), &cliprect, rendercomponent->RenderAngle(), center, SDL_FLIP_NONE);
 			}
-			else
+			else {
+
 				_renderer->RenderImage(rendercomponent->ImagePath(), positioncomponent->x_ - _camera->X(), positioncomponent->y_ - _camera->Y(), &cliprect);
+			}
 		}
 
 	}

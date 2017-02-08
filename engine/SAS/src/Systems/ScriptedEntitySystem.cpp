@@ -1,8 +1,8 @@
 #include <iostream>
-#include "../../include/Systems/ScriptedEntitySystem.h"
-#include "../../include/ECSFramework/ECSManager.h"
-#include "../../include/Components/ScriptComponent.h"	
-#include "../../include/Components/PositionComponent.h"
+#include "Systems/ScriptedEntitySystem.h"
+#include "ECSFramework/ECSManager.h"
+#include "Components/ScriptComponent.h"	
+#include "Components/PositionComponent.h"
 
 ScriptedEntitySystem::ScriptedEntitySystem(std::string systemname, ECSManager* ecsmanager) :
 	ProcessingSystem(systemname, ecsmanager)

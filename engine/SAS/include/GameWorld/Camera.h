@@ -1,5 +1,4 @@
-#ifndef CAMERA_H
-#define CAMERA_H
+#pragma once
 
 #include <vector>
 #include <cstdint>
@@ -12,31 +11,38 @@ class Camera
 {
     public:
         Camera();
+        Camera(int gameworldwidth, int gameworldheight, SDL_Rect camerarect, PositionComponent* focusposition, VelocityComponent* focusvelocity);
         Camera(int gameworldwidth, int gameworldheight, SDL_Rect camerarect);
 
         virtual ~Camera();
 
-        void Update(const PositionComponent& focus, const VelocityComponent& focusvelocity);
+        void Update();
 
         void setCameraPosition(int camerax, int cameray, int level)
         {
-            camerarect_.x = camerax;
-            camerarect_.y = cameray;
-            currentlevel_ = level;
+            _camerarect.x = camerax;
+            _camerarect.y = cameray;
+            _currentlevel = level;
         }
 
-        SDL_Rect GetCameraRect() { return camerarect_;}
+		void setFocus(PositionComponent* position, VelocityComponent* velocity) {
+			_focusposition = position;
+			_focusvelocity = velocity;
+		}
 
-        int X() {return camerarect_.x;}
-        int Y() {return camerarect_.y;}
-        int Width() {return camerarect_.w;}
-        int Height() {return camerarect_.h;}
+        SDL_Rect GetCameraRect() { return _camerarect;}
+
+        int X() {return _camerarect.x;}
+        int Y() {return _camerarect.y;}
+        int Width() {return _camerarect.w;}
+        int Height() {return _camerarect.h;}
 
     private:
-        int gameworldwidth_;
-        int gameworldheight_;
-        int currentlevel_;
-        SDL_Rect camerarect_;
+        int _gameworldwidth;
+        int _gameworldheight;
+        int _currentlevel;
+        SDL_Rect _camerarect;
+		PositionComponent* _focusposition;
+		VelocityComponent* _focusvelocity;
 };
 
-#endif // CAMERA_H

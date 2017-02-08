@@ -6,29 +6,31 @@
 
 #define NO_CAST -1
 
-// NOTE: Determine actual spell format
-class SpellCastingComponent : public Component
+struct SpellCastingComponent : public Component
 {
-	public:
 		static const uint_fast64_t ID = SpellCastingComponentID;
-		SpellCastingComponent() : spelltocast_(NO_CAST), cancelable_(true) { }
+		SpellCastingComponent() : spelltocast(NO_CAST), cancelable(true) { }
 		~SpellCastingComponent() {}
 
 		uint_fast64_t UniqueBits() const { return ID; }
 
-		int SpellToCast() { return spelltocast_; }
-		double CastTime() { return casttime_; }
-		double StartTimeOfCast() { return starttimeofcast_; }
-		bool Cancelable() { return cancelable_;  }
+		int FindSpellLastCast(int spellid) {
+			auto i = lastcastmap.find(spellid);
+			if (i != lastcastmap.end()) {
+				return i->second;
+			}
+			else
+				return 0;
+		}
 
-		void SetSpellToCast(int spelltocast) { spelltocast_ = spelltocast; }
-		void SetCastTime(double casttime) { casttime_ = casttime; }
-		void SetStartTimeOfCast(double starttimeofcast) { starttimeofcast_ = starttimeofcast; }
-		void SetCancelable(bool cancelable) { cancelable_ = cancelable;  }
+		void Reset(int currenttime) {
+			lastcastmap.insert({spelltocast, currenttime});
+			spelltocast = NO_CAST;
+		}
 
-	private:
-		int spelltocast_;
-		bool cancelable_;
-		double casttime_;
-		double starttimeofcast_;
+		std::unordered_map<int, int> lastcastmap;
+		int spelltocast;
+		bool cancelable;
+		double casttime;
+		double starttimeofcast;
 };

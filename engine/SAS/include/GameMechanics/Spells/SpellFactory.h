@@ -1,6 +1,6 @@
 #pragma once
 #include <cstdint>
-#include "Types/Spells.h"
+#include "Types/Spell.h"
 
 class ECSManager;
 

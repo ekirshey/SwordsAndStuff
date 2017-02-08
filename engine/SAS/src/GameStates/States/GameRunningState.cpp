@@ -6,7 +6,6 @@
 #include "Systems/RenderSystem.h"
 #include "Systems/MovementSystem.h"
 #include "Systems/CollisionSystem.h"
-#include "Systems/CameraSystem.h"
 #include "Systems/PlayerTargetingSystem.h"
 #include "Systems/SpellCreationSystem.h"
 #include "Systems/MeleeSystem.h"
@@ -14,6 +13,7 @@
 #include "Systems/ScriptedEntitySystem.h"
 #include "Systems/EquipmentSystem.h"
 #include "Systems/InventorySystem.h"
+#include "Systems/TimeToLiveSystem.h"
 
 #include "Components/BoundingRectangleComponent.h"
 #include "Components/RenderComponent.h"
@@ -47,13 +47,13 @@ GameRunningState::~GameRunningState()
 }
 
 int GameRunningState::InitializeState(SAS_System::Renderer& renderer, const SAS_System::Input& input) {
-    SDL_Rect camerarect = {0,0,SCREEN_WIDTH,SCREEN_HEIGHT};
-
+	SDL_Rect camerarect = {0,0,SCREEN_WIDTH,SCREEN_HEIGHT};
     // Create Game World and Camera
     _gameworld = std::make_unique<GameWorld>(renderer, 3072,2560, _generalconfig.mediaroot);
     _gameworld->BuildProceduralTileMap(32);
 	_gameworld->BuildTileMapTexture(&renderer);
-    _camera = std::make_unique<Camera>(3072, 2560, camerarect );
+
+    _camera = std::make_unique<Camera>(3072, 2560, camerarect);
 
 	_itemdatabase = std::make_unique<Items::ItemDatabase>();
 
@@ -62,6 +62,9 @@ int GameRunningState::InitializeState(SAS_System::Renderer& renderer, const SAS_
 	// Name, Cast time, cooldown, duration (milliseconds)
 	// Account for anchor orientation in script
 	// Vector of vectors: each vector is the script steps for a facing
+	_spellbook->CreateSpellShape<SpellShape>(0, 1, 0, 10, 1000);
+	_spellbook->CreateSpell(0, "PROJECTILE", 0, false, 100, 300, _generalconfig.mediaroot + "sprites/sword.png", 0, std::vector<int>{});
+/*
 	ScriptedMotion::Script spellscript = {
 		{ ScriptStep(0,0,50), ScriptStep(-5,5,50), ScriptStep(-10,10,200) },
 		{ ScriptStep(0,0,50), ScriptStep(-5,5,50), ScriptStep(-10,10,200) },
@@ -69,6 +72,7 @@ int GameRunningState::InitializeState(SAS_System::Renderer& renderer, const SAS_
 		{ ScriptStep(0,0,50), ScriptStep(-5,5,50), ScriptStep(-10,10,200) }
 	};
 	_spellbook->CreateSpell(0, "MELEE", 0, 100, 300, _generalconfig.mediaroot + "sprites/sword.png", spellscript);
+*/
 
 	// Set up ECS. This was originally in some wrapper object and I dont know why I did that...
 	_ecsmanager = std::make_unique<ECSManager>();
@@ -107,6 +111,7 @@ void GameRunningState::initializeECS(SAS_System::Renderer& renderer, const SAS_S
 
 	// Build systems and entities
 	//_ecsmanager->AddSystem(std::unique_ptr<AISystem>(new AISystem()), priority++);
+	_ecsmanager->AddSystem<TimeToLiveSystem>("TTLSystem", priority++);
 	_ecsmanager->AddSystem<MovementSystem>("MovementSystem", priority++, _gameworld.get());
 	_ecsmanager->AddSystem<ScriptedEntitySystem>("ScriptedEntitySystem", priority++);	// Not 100% sure on the placement 
 	_ecsmanager->AddSystem<SpellCreationSystem>("SpellCreationSystem", priority++, _ecsmanager->GetQueue("SpellCreation"));
@@ -114,7 +119,6 @@ void GameRunningState::initializeECS(SAS_System::Renderer& renderer, const SAS_S
 	//_ecsmanager->AddSystem<PlayerTargetingSystem>("PlayerTargetingSystem", priority++, GetSDLManager(), _gameworld.get() , "..\\..\\..\\reticule.png");
 	_ecsmanager->AddSystem<EquipmentSystem>("EquipmentSystem", priority++, _ecsmanager->GetQueue("EquipmentManagement"));
 	_ecsmanager->AddSystem<InventorySystem>("InventorySystem", priority++, _ecsmanager->GetQueue("InventoryManagement"));
-	cameraindex = _ecsmanager->AddSystem<CameraSystem>("CameraSystem", priority++, _camera.get());
 	_ecsmanager->AddSystem<RenderSystem>("RenderSystem", priority++, &renderer, _gameworld.get(), _camera.get());
 	// Player
 	_player = _ecsmanager->CreateEntity();
@@ -124,8 +128,9 @@ void GameRunningState::initializeECS(SAS_System::Renderer& renderer, const SAS_S
 						  //path = "sprites\\shooter.png";
 
 	auto playerspellbook = std::make_unique<SpellbookComponent>();
-	Spell test = _spellbook->GetSpell(0);
-	playerspellbook->AddSpell(_spellbook->GetSpell(0));
+	GlobalSpellbook::SpellReference test = _spellbook->GetSpell(0);
+	if (test != nullptr)
+		playerspellbook->AddSpell(0, test);
 
 	path = _generalconfig.mediaroot + "sprites/Player2.png";
 
@@ -143,6 +148,12 @@ void GameRunningState::initializeECS(SAS_System::Renderer& renderer, const SAS_S
 	_ecsmanager->AssignEntityTag(_player, "PLAYER");
 
 	///////////////////////////////////////
+	// Initialize camera to focus on player
+	auto playerpos = _ecsmanager->GetEntityComponent<PositionComponent*>(_player, PositionComponentID);
+	auto playervel = _ecsmanager->GetEntityComponent<VelocityComponent*>(_player, VelocityComponentID);
+	_camera->setFocus(playerpos, playervel);
+
+/* Example of adding an item
 	Items::Item* itemptr = _itemdatabase->CreateItem(
 		Items::ItemStats(),
 		Items::ItemProperties(),
@@ -151,13 +162,7 @@ void GameRunningState::initializeECS(SAS_System::Renderer& renderer, const SAS_S
 
 	_ecsmanager->SendMessage<ItemMessage>("InventoryManagement", _player, itemptr, ADDITEM);
 
-	///////////////////////////////////////
-
-	CameraSystem* camerasystem = dynamic_cast<CameraSystem*>(_ecsmanager->GetSystem(cameraindex));
-	if (camerasystem != nullptr)
-		camerasystem->SetFocus(_player);
-	else
-		std::cout << "Failed to set camera focus, camera doesnt exist" << std::endl;
+*/
 
 	path = _generalconfig.mediaroot + "sprites/Pawns.png";
 	// Monster
@@ -236,6 +241,9 @@ int GameRunningState::UpdateState(int elapsedtime, SAS_System::Renderer& rendere
 			_guimanager->ReceiveMessage(msg);
 		}
 		_inputhandler->UpdateInput(_ecsmanager.get(), input);
+		// Move the camera
+		_camera->Update();
+		// Update ECS
 		_ecsmanager->Update(elapsedtime);
 
 		// GUI Manager update
@@ -246,6 +254,9 @@ int GameRunningState::UpdateState(int elapsedtime, SAS_System::Renderer& rendere
 		ret = TRANSITIONOUT;
 	}
 
+#ifdef DEBUGINFO
+	renderer.RenderText(std::to_string(_ecsmanager->EntityCount()), renderer.ScreenWidth()-150, 60, 20, SDL_Color{ 255,255,255,255 }, "F:\\github\\SwordsAndStuff\\media\\font.TTF");
+#endif
 	return ret;
 }
 

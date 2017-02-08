@@ -1,9 +1,9 @@
 #include <iostream>
-#include "../../include/ECSFramework/ECSManager.h"
-#include "../../include/Systems/CollisionSystem.h"
-#include "../../include/Components/PositionComponent.h"
-#include "../../include/Components/VelocityComponent.h"
-#include "../../include/Components/BoundingRectangleComponent.h"
+#include "ECSFramework/ECSManager.h"
+#include "Systems/CollisionSystem.h"
+#include "Components/PositionComponent.h"
+#include "Components/VelocityComponent.h"
+#include "Components/BoundingRectangleComponent.h"
 
 CollisionSystem::CollisionSystem(std::string systemname, ECSManager* ecsmanager, GameWorld* gameworld) : 
 	ProcessingSystem(systemname, ecsmanager), gameworld_(gameworld)
@@ -86,7 +86,7 @@ void CollisionSystem::ProcessEntity(uint_fast64_t entity)
 	BoundingRectangleComponent* boundingrectangle  = GetEntityComponent<BoundingRectangleComponent*>(entity, BoundingRectangleComponentID);
 
 	std::vector<QuadElement> elements = gameworld_->SparseGridQueryRange(boundingrectangle->Rectangle());
-	
+
 	for (int i = 0; i < elements.size(); i++)
 	{
 		if (elements[i].entityid != entity)

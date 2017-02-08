@@ -4,29 +4,28 @@
 #include <unordered_map>
 #include "ECSFramework/Component.h"
 #include "Config/ComponentDefines.h"
-#include "Types/Spells.h"
+#include "Types/Spell.h"
+#include "GameMechanics/Spells/GlobalSpellbook.h"
 
 class SpellbookComponent : public Component
 {
 	public:
 		static const uint_fast64_t ID = SpellbookComponentID;
 		SpellbookComponent() {}
-		SpellbookComponent(const SpellbookComponent& s) : spellbook_(s.spellbook_) {}
+		SpellbookComponent(const SpellbookComponent& s) : _spellbook(s._spellbook) {}
 		~SpellbookComponent() {}
 
 		uint_fast64_t UniqueBits() const { return ID; }
 
-		void AddSpell(const Spell& spell) {
-			spellbook_.insert({ spell.spellId, spell });
+		void AddSpell(int spellId, GlobalSpellbook::SpellReference spell) {
+			_spellbook.insert({ spellId, spell });
 		}
 
-		Spell* GetSpell(int id) { 
-			return &spellbook_[id]; 
+		GlobalSpellbook::SpellReference GetSpell(int id) { 
+			return _spellbook[id]; 
 		}
 
 	private:
-		// String or int??
-		// Hold spells somewhere else and store a list of indices?
-		std::unordered_map<int, Spell> spellbook_;
+		std::unordered_map<int, GlobalSpellbook::SpellReference> _spellbook;
 };
 

@@ -72,12 +72,11 @@ void MovementSystem::ProcessEntity(uint_fast64_t entity)
 	spellcastingcomponent = GetEntityComponent<SpellCastingComponent*>(entity, SpellCastingComponentID);
 
 	// This is the player so adjust his velocity based on inputs
-
 	if (inputcomponent != nullptr)
 	{
 		bool canmove = true;
 		if (spellcastingcomponent != nullptr) {
-			if (spellcastingcomponent->SpellToCast() != NO_CAST && !spellcastingcomponent->Cancelable())
+			if (spellcastingcomponent->spelltocast != NO_CAST && !spellcastingcomponent->cancelable)
 				canmove = false;
 		}
 

@@ -6,8 +6,10 @@ namespace SAS_System {
 		, _activestringlength(0)
 		, _activestream(-1)
 	{
-
 		_toupdate = std::make_unique<std::vector<Input::KeyState*>>();
+		for (int i = 0; i < MAXKEYS; i++) {
+			_activekeys[i] = KeyState::STILL;
+		}
 	}
 
 	Input::~Input() {

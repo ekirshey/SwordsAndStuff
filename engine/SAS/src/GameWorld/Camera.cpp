@@ -9,49 +9,63 @@ Camera::Camera()
     //ctor
 }
 
-Camera::Camera(int gameworldwidth, int gameworldheight, SDL_Rect camerarect) :
-    gameworldwidth_(gameworldwidth), gameworldheight_(gameworldheight), currentlevel_(0), camerarect_(camerarect)
+Camera::Camera(int gameworldwidth, int gameworldheight, SDL_Rect camerarect, PositionComponent* focusposition, VelocityComponent* focusvelocity)
+	: _gameworldwidth(gameworldwidth)
+	, _gameworldheight(gameworldheight)
+	, _camerarect(camerarect)
+	, _focusposition(focusposition)
+	, _focusvelocity(focusvelocity)
 {
 
 }
+
+Camera::Camera(int gameworldwidth, int gameworldheight, SDL_Rect camerarect)
+	: _gameworldwidth(gameworldwidth)
+	, _gameworldheight(gameworldheight)
+	, _camerarect(camerarect)
+{
+
+}
+
+
 
 Camera::~Camera()
 {
     //dtor
 }
 
-void Camera::Update(const PositionComponent& focus, const VelocityComponent& focusvelocity)
+void Camera::Update()
 {
     int cameramovement;
 
-    if ((focusvelocity.XVelocity() < 0) && 
-		(focus.x_ - camerarect_.x) < camerarect_.w * .33 )
+    if ((_focusvelocity->XVelocity() < 0) && 
+		(_focusposition->x_ - _camerarect.x) < _camerarect.w * .33 )
     {
-        cameramovement = camerarect_.x - abs(focusvelocity.XVelocity());
+        cameramovement = _camerarect.x - abs(_focusvelocity->XVelocity());
         if ( (cameramovement > 0) )
-            camerarect_.x = cameramovement;
+            _camerarect.x = cameramovement;
     }
-	else if ((focusvelocity.XVelocity() > 0) && 
-		(focus.x_ - camerarect_.x) > (camerarect_.w * .66))
+	else if ((_focusvelocity->XVelocity() > 0) && 
+		(_focusposition->x_ - _camerarect.x) > (_camerarect.w * .66))
 	{
-		cameramovement = (camerarect_.x + focusvelocity.XVelocity());
-		if ((cameramovement + camerarect_.w) < gameworldwidth_)
-			camerarect_.x = cameramovement;
+		cameramovement = (_camerarect.x + _focusvelocity->XVelocity());
+		if ((cameramovement + _camerarect.w) < _gameworldwidth)
+			_camerarect.x = cameramovement;
 	}
 
-	if ((focusvelocity.YVelocity() < 0) &&
-		(focus.y_ - camerarect_.y) < camerarect_.h * .33)
+	if ((_focusvelocity->YVelocity() < 0) &&
+		(_focusposition->y_ - _camerarect.y) < _camerarect.h * .33)
 	{
-		cameramovement = camerarect_.y - abs(focusvelocity.YVelocity());
+		cameramovement = _camerarect.y - abs(_focusvelocity->YVelocity());
 		if ((cameramovement > 0))
-			camerarect_.y = cameramovement;
+			_camerarect.y = cameramovement;
 	}
-	else if ((focusvelocity.YVelocity() > 0) &&
-		(focus.y_ - camerarect_.y) > (camerarect_.h * .66))
+	else if ((_focusvelocity->YVelocity() > 0) &&
+		(_focusposition->y_ - _camerarect.y) > (_camerarect.h * .66))
 	{
-		cameramovement = (camerarect_.y + focusvelocity.YVelocity());
-		if ((cameramovement + camerarect_.h) < gameworldheight_)
-			camerarect_.y = cameramovement;
+		cameramovement = (_camerarect.y + _focusvelocity->YVelocity());
+		if ((cameramovement + _camerarect.h) < _gameworldheight)
+			_camerarect.y = cameramovement;
 	}
 
 }

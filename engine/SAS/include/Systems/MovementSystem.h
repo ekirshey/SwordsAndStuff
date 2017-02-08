@@ -1,9 +1,9 @@
 #ifndef MOVEMENTSYSTEM_H
 #define MOVEMENTSYSTEM_H
 
-#include "../Systems/ProcessingSystem.h"
-#include "../Config/ComponentDefines.h"
-#include "../GameWorld/GameWorld.h"
+#include "Systems/ProcessingSystem.h"
+#include "Config/ComponentDefines.h"
+#include "GameWorld/GameWorld.h"
 
 class MovementSystem : public ProcessingSystem
 {

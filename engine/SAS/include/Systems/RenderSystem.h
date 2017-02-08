@@ -3,6 +3,7 @@
 
 #include "ProcessingSystem.h"
 #include "Renderer.h"
+#include "ComponentDefines.h"
 
 class GameWorld;
 class Camera;
@@ -10,7 +11,7 @@ class Camera;
 class RenderSystem : public ProcessingSystem
 {
     public:
-        static const uint_fast64_t COMPONENTIDS = 0x5;      // This means the System operates on all Entities with a "1" Component. In this example thats position
+        static const uint_fast64_t COMPONENTIDS = PositionComponentID | RenderComponentID;      // This means the System operates on all Entities with a "1" Component. In this example thats position
                                                             // Unlike the component ID this can be duplicated
         RenderSystem(std::string systemname, ECSManager* ecsmanager, SAS_System::Renderer* renderer);
         RenderSystem(std::string systemname, ECSManager* ecsmanager, SAS_System::Renderer* renderer, GameWorld* gameworld, Camera* camera);
