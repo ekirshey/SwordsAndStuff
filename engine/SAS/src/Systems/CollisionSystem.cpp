@@ -27,7 +27,8 @@ void CollisionSystem::HandleCollision(uint_fast64_t entityA, uint_fast64_t entit
 	// e.g. if it has a damaging component then transfer the damage to the other entity and vice versa
 	if (entityAcomponents & entityBcomponents)	// Both entity A and entity B have spatial coordinates
 	{
-		SpatialCollision(entityA, entityB);
+		if (entityA != 0 && entityB != 0)
+			SpatialCollision(entityA, entityB);
 	}
 
 }

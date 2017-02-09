@@ -3,45 +3,47 @@
 #include "Components/PositionComponent.h"
 #include "Components/VelocityComponent.h"
 #include "Components/BoundingRectangleComponent.h"
-#include "Components/TTLComponent.h"
-
+// Make pure interface
 class SpellShape{
 	public:
-		SpellShape(int spellentities, int xvel, int yvel, int ttl)
-			: _entitiestocreate(spellentities)
-			, _xvel(xvel)
-			, _yvel(yvel)
-			, _ttl(ttl)
+		virtual ~SpellShape() {}
+
+		virtual std::vector<uint_fast64_t> CreateSpellEntities(ECSManager* ecs, uint_fast64_t casterid) const = 0;
+};
+
+class XShape : public SpellShape{
+	public:
+		XShape(int vel)
+			: _vel(vel)
 		{
 		
 		}
 
 		// It's not unrealistic to think further dervied shape classes would be needed, so it's virtual
-		virtual std::vector<uint_fast64_t> CreateSpellEntities(ECSManager* ecs, uint_fast64_t casterid, int currenttime) const {
+		virtual std::vector<uint_fast64_t> CreateSpellEntities(ECSManager* ecs, uint_fast64_t casterid) const {
+			std::vector<int> multx = { 1, 1, -1 , -1};
+			std::vector<int> multy = { 1, -1 , 1, -1};
+			int ct = 0;
 			std::vector<uint_fast64_t> createdentities;
-			for (int i = 0; i < _entitiestocreate; i++) {
+			for (int i = 0; i < 4; i++) {
 				createdentities.push_back(ecs->CreateEntity());
 				PositionComponent* casterposition = ecs->GetEntityComponent<PositionComponent*>(casterid, PositionComponentID);
 				PositionComponent spellposition(*casterposition);
-				TTLComponent ttl(_ttl, currenttime);
 
-				VelocityComponent spellvelocity(_xvel, _yvel);
+				VelocityComponent spellvelocity(multx[ct]*_vel, multy[ct]*_vel);
 				BoundingRectangleComponent boundingrect(spellposition.x_, spellposition.y_, 16, 16);
 
 				ecs->AddComponentToEntity<PositionComponent>(createdentities.back(), spellposition);
 				ecs->AddComponentToEntity<VelocityComponent>(createdentities.back(), spellvelocity);
 				ecs->AddComponentToEntity<BoundingRectangleComponent>(createdentities.back(), boundingrect);
-				ecs->AddComponentToEntity<TTLComponent>(createdentities.back(), ttl);
+				ct++;
 			}
 
 			return createdentities;
 		}
 
 	private:
-		int _entitiestocreate;
-		int _xvel;
-		int _yvel;
-		int _ttl;
+		int _vel;
 };
 
 class SpellComponent {

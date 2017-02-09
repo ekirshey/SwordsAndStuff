@@ -6,7 +6,6 @@
 static const int ENTITY_LIST_STEP_SIZE = 500;
 static const int MAX_COMPONENT_LIST = 64;
 
-
 EntityManager::EntityManager() : entitylistsize_(MAXOBJECTS)
 {
     entitycount_ = 0;
@@ -49,7 +48,8 @@ uint_fast64_t EntityManager::GetNewEntityUUID()
 
 void EntityManager::RemoveEntity(uint_fast64_t UUID)
 {
-    entitylist_[UUID].clear();
+	// EKTEMP I think if you are moving new unique_ptr's into it then you dont need to clear
+    //entitylist_[UUID].clear();
     entitycomponentbits_[UUID] = 0;
 
     availableids_.push(UUID);

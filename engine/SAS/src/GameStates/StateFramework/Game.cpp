@@ -60,11 +60,12 @@ void Game::Run()
 		_gamerunning = !_input.Quit();
 		if (_gamerunning) {
 			Update(currenttime - previoustime);
-//#ifdef DEBUGINFO
-			_renderer.RenderText("Low: " + std::to_string(lowfps), _renderer.ScreenWidth()-150, 0, 20, SDL_Color{ 255,255,255,255 }, "F:\\github\\SwordsAndStuff\\media\\font.TTF");
-			_renderer.RenderText("Avg: " + std::to_string(fps), _renderer.ScreenWidth()-150, 20, 20, SDL_Color{ 255,255,255,255 }, "F:\\github\\SwordsAndStuff\\media\\font.TTF");
-			_renderer.RenderText("High: " + std::to_string(fps), _renderer.ScreenWidth()-150, 40, 20, SDL_Color{ 255,255,255,255 }, "F:\\github\\SwordsAndStuff\\media\\font.TTF");
-//#endif
+
+			_renderer.RenderText("FPS: " + std::to_string(fps), _renderer.ScreenWidth()-150, 0, 20, SDL_Color{ 255,255,255,255 }, "F:\\github\\SwordsAndStuff\\media\\font.TTF");
+			if (fps < 50) {
+				_renderer.RenderText("LOW FPS", _renderer.ScreenWidth()-150, 20, 20, SDL_Color{ 255,255,255,255 }, "F:\\github\\SwordsAndStuff\\media\\font.TTF");
+				std::cout << "LOW FPS" << std::endl;
+			}
 			_renderer.Update();
 		}
 

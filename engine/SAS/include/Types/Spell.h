@@ -1,6 +1,7 @@
 #pragma once
 #include "SpellComponent.h"
-#include "RenderComponent.h"
+#include "Components/RenderComponent.h"
+#include "Components/TTLComponent.h"
 
 // Master copy of each spell lives in the Global Spellbook
 class Spell {
@@ -38,10 +39,12 @@ class Spell {
 		}
 
 		void CreateSpell(ECSManager* ecsmanager, uint_fast64_t caster, int currenttime) const{
-			auto createdentities = _spellshape->CreateSpellEntities(ecsmanager, caster, currenttime);
+			auto createdentities = _spellshape->CreateSpellEntities(ecsmanager, caster);
 
 			for (auto id : createdentities) {
 				SDL_Rect rect = { 0,0,16,16 };
+
+				ecsmanager->AddComponentToEntity<TTLComponent>(id, _duration, currenttime);
 				ecsmanager->AddComponentToEntity<RenderComponent>(id, _graphic, rect);
 			}
 		}

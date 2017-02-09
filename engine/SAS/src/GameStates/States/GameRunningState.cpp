@@ -62,8 +62,8 @@ int GameRunningState::InitializeState(SAS_System::Renderer& renderer, const SAS_
 	// Name, Cast time, cooldown, duration (milliseconds)
 	// Account for anchor orientation in script
 	// Vector of vectors: each vector is the script steps for a facing
-	_spellbook->CreateSpellShape<SpellShape>(0, 1, 0, 10, 1000);
-	_spellbook->CreateSpell(0, "PROJECTILE", 0, false, 100, 300, _generalconfig.mediaroot + "sprites/sword.png", 0, std::vector<int>{});
+	_spellbook->CreateSpellShape<XShape>(0, 10);
+	_spellbook->CreateSpell(0, "PROJECTILE", 10, false, 1000, 1000, _generalconfig.mediaroot + "sprites/sword.png", 0, std::vector<int>{});
 /*
 	ScriptedMotion::Script spellscript = {
 		{ ScriptStep(0,0,50), ScriptStep(-5,5,50), ScriptStep(-10,10,200) },
@@ -254,9 +254,9 @@ int GameRunningState::UpdateState(int elapsedtime, SAS_System::Renderer& rendere
 		ret = TRANSITIONOUT;
 	}
 
-#ifdef DEBUGINFO
+//#ifdef DEBUGINFO
 	renderer.RenderText(std::to_string(_ecsmanager->EntityCount()), renderer.ScreenWidth()-150, 60, 20, SDL_Color{ 255,255,255,255 }, "F:\\github\\SwordsAndStuff\\media\\font.TTF");
-#endif
+//#endif
 	return ret;
 }
 
