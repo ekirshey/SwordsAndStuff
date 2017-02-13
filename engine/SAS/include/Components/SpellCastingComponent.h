@@ -20,11 +20,16 @@ struct SpellCastingComponent : public Component
 				return i->second;
 			}
 			else
-				return 0;
+				return -1;
 		}
 
 		void Reset(int currenttime) {
-			lastcastmap.insert({spelltocast, currenttime});
+			auto i = lastcastmap.find(spelltocast);
+			if (i != lastcastmap.end()) {
+				lastcastmap[spelltocast] = currenttime;
+			}
+			else
+				lastcastmap.insert({spelltocast, currenttime});
 			spelltocast = NO_CAST;
 		}
 

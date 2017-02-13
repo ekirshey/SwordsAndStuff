@@ -88,7 +88,6 @@ void RenderSystem::ProcessEntity(uint_fast64_t entity)
 				_renderer->RenderImage(rendercomponent->ImagePath(), positioncomponent->x_ - _camera->X(), positioncomponent->y_ - _camera->Y(), &cliprect, rendercomponent->RenderAngle(), center, SDL_FLIP_NONE);
 			}
 			else {
-
 				_renderer->RenderImage(rendercomponent->ImagePath(), positioncomponent->x_ - _camera->X(), positioncomponent->y_ - _camera->Y(), &cliprect);
 			}
 		}

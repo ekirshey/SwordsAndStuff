@@ -3,14 +3,16 @@
 #include "GUIManager.h"
 #include "StateFramework/GameState.h"
 #include "Components/DescriptionComponent.h"
-#include "Components/RPGStatsComponent.h"
+#include "Components/StatsComponent.h"
 #include "Config/GeneralConfig.h"
 #include "GUIComponents/ValueComponent.h"
+#include "GameMechanics/StatGenerator.h"
 
+struct PlayerInfo;
 class CharacterCreationState : public GameStateImpl
 {
 public:
-	CharacterCreationState(const GeneralConfig& config);
+	CharacterCreationState(const GeneralConfig& config, PlayerInfo* player);
 	~CharacterCreationState();
 
 	int InitializeState(SAS_System::Renderer& renderer, const SAS_System::Input& input);
@@ -30,7 +32,9 @@ private:
 
 	// Character Components
 	DescriptionComponent _characterdescription;
-	RPGStatsComponent _characterstats;
+	MainStatMap _defaultstats;
+	PlayerInfo* _playerinfo;	// Player info shared between states
+	StatGenerator _generator;
 	std::unordered_map<std::string, SAS_GUI::ValueComponent<std::string>*> _valuecomponentmap;
 
 };

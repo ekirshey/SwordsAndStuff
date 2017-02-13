@@ -5,7 +5,6 @@
 #include "Components/SpellCastingComponent.h"
 #include "Components/SpellbookComponent.h"
 #include "Components/EquipmentComponent.h"
-#include "GameMechanics/Spells/SpellFactory.h"
 
 /*
 	Note: Not sure if this should exist in some sort of separate object outside of the ECS. I'm leaning towards it being here since it needs to update the cast
@@ -56,7 +55,8 @@ void SpellCreationSystem::ProcessMessage(Message* data) {
 		if (spellcastingcomponent->spelltocast == NO_CAST) {
 			int lastcast = spellcastingcomponent->FindSpellLastCast(msg->spellId);
 			// Check if spell is still coolingdown
-			if (((TimeRunning() - lastcast) >= (queuedspell->Cooldown() + queuedspell->Duration()))) {
+			
+			if (lastcast < 0 || ((TimeRunning() - lastcast) >= queuedspell->Cooldown())) {
 				// Check any other spell casting requirements
 				spellcastingcomponent->spelltocast = msg->spellId;
 				spellcastingcomponent->casttime = queuedspell->Casttime();

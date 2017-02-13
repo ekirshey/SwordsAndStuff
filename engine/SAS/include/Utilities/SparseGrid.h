@@ -14,11 +14,11 @@ public:
 	SparseGrid(const SDL_Rect& boundary, int cellwidth, int cellheight);
 	~SparseGrid();
 
-	bool Insert(QuadElement entity);
+	bool Insert(const QuadElement& entity);
 	void clear();
 	void Draw(SAS_System::Renderer* renderer);
 
-	std::vector<QuadElement> QueryRange(const SDL_Rect& boundary) const;
+	void QueryRange(const SDL_Rect& boundary, std::vector<QuadElement>& entitiesinrange) const;
 private:
 	SDL_Rect boundary_;
 
@@ -30,6 +30,6 @@ private:
 	int gridwidth_;
 	int gridheight_;
 
-	std::vector<std::vector<QuadElement>> grid_;
+	std::vector<QuadElements> grid_;
 };
 

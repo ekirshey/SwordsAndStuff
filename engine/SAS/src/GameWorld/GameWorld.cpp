@@ -14,7 +14,7 @@ GameWorld::GameWorld(SAS_System::Renderer& renderer, int width, int height, std:
 	, _mediaroot(mediaroot)
 {
 	//quadtree_ = std::unique_ptr<QuadTree>(new QuadTree(SDL_Rect{0,0,SCREEN_WIDTH,SCREEN_HEIGHT },4,6));
-	_sparsegrid = std::make_unique<SparseGrid>(SDL_Rect{ 0,0,SCREEN_WIDTH,SCREEN_HEIGHT }, SCREEN_WIDTH/32, SCREEN_HEIGHT/32);
+	_sparsegrid = std::make_unique<SparseGrid>(SDL_Rect{ 0,0,width,height }, width/32, height/32);
 	_tilemaptexture = renderer.CreateTargetTexture(_width, _height);
 }
 

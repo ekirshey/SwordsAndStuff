@@ -2,17 +2,20 @@
 #include <iostream>
 #include <algorithm>
 
-
-SparseGrid::SparseGrid(const SDL_Rect& boundary, int cellwidth, int cellheight) :
-	boundary_(boundary), cellwidth_(cellwidth), cellheight_(cellheight), gridwidth_(boundary_.w / cellwidth_), gridheight_(boundary_.h / cellheight_)
+#define MAXOBJECTSINGRID 200
+SparseGrid::SparseGrid(const SDL_Rect& boundary, int cellwidth, int cellheight) 
+	: boundary_(boundary)
+	, cellwidth_(cellwidth)
+	, cellheight_(cellheight)
+	, gridwidth_(boundary_.w / cellwidth_)
+	, gridheight_(boundary_.h / cellheight_)
+	, grid_(gridwidth_*gridheight_, QuadElements(MAXOBJECTSINGRID))
 {
 	if ((boundary_.w % cellwidth_ != 0) ||
 		(boundary_.h % cellheight_ != 0))
 	{
 		std::cout << "Incorrect Dimensions" << std::endl;
 	}
-
-	grid_.resize(gridwidth_*gridheight_);
 	
 }
 
@@ -21,7 +24,7 @@ SparseGrid::~SparseGrid()
 {
 }
 
-bool SparseGrid::Insert(QuadElement entity)
+bool SparseGrid::Insert(const QuadElement& entity)
 {
 	bool inserted = false;
 
@@ -37,28 +40,28 @@ bool SparseGrid::Insert(QuadElement entity)
 	int gridbottom = ((rect.y + rect.h) / cellheight_);
 
 	if ((gridleft >= 0 && gridright < gridwidth_) &&
-			(gridtop >= 0 && gridbottom < gridheight_))
+		(gridtop >= 0 && gridbottom < gridheight_))
 	{
 		if (gridleft != gridright && gridtop != gridbottom)
 		{
 			for (int j = gridtop; j <= gridbottom; j++)
 			{
 				for (int i = gridleft; i <= gridright; i++)
-					grid_[(gridwidth_*j) + i].push_back(entity);
+					grid_[(gridwidth_*j) + i].insert(entity);
 			}
 		}
 		else if (gridleft != gridright)
 		{
 			for (int i = gridleft; i <= gridright; i++)
-				grid_[(gridwidth_*gridtop) + i].push_back(entity);
+				grid_[(gridwidth_*gridtop) + i].insert(entity);
 		}
 		else if (gridtop != gridbottom)
 		{
 			for (int j = gridtop; j <= gridbottom; j++)
-				grid_[(gridwidth_*j) + gridleft].push_back(entity);
+				grid_[(gridwidth_*j) + gridleft].insert(entity);
 		}
 		else
-			grid_[(gridwidth_*gridtop) + gridleft].push_back(entity);
+			grid_[(gridwidth_*gridtop) + gridleft].insert(entity);
 	}
 
 	return inserted;
@@ -66,10 +69,12 @@ bool SparseGrid::Insert(QuadElement entity)
 
 void SparseGrid::clear()
 {
-	grid_.clear();
-	grid_.resize(gridwidth_*gridheight_);
+	for (auto& e : grid_) {
+		e.clear();
+	}
 }
 
+// Utility draw function
 void SparseGrid::Draw(SAS_System::Renderer* renderer)
 {
 	for (int j = 0; j < gridheight_; j++)
@@ -83,14 +88,12 @@ void SparseGrid::Draw(SAS_System::Renderer* renderer)
 	}
 }
 
-std::vector<QuadElement> SparseGrid::QueryRange(const SDL_Rect& boundary) const
+void SparseGrid::QueryRange(const SDL_Rect& boundary, std::vector<QuadElement>& entitiesinrange) const
 {
-	std::vector<QuadElement> entitiesinrange;
-
 	// Check each corner of the rectangle
 
 	if (!SDL_HasIntersection(&boundary, &boundary_))
-		return entitiesinrange;
+		return;
 
 	int gridleft = (boundary.x / cellwidth_);
 	int gridright = ((boundary.x + boundary.w) / cellwidth_);
@@ -124,8 +127,6 @@ std::vector<QuadElement> SparseGrid::QueryRange(const SDL_Rect& boundary) const
 
 	//EKNOTE: Try to make this better...
 	// Remove duplicates
-	std::sort(entitiesinrange.begin(), entitiesinrange.end());
-	entitiesinrange.erase(std::unique(entitiesinrange.begin(), entitiesinrange.end()), entitiesinrange.end());
-
-	return entitiesinrange;
+	//std::sort(entitiesinrange.begin(), entitiesinrange.end());
+	//entitiesinrange.erase(std::unique(entitiesinrange.begin(), entitiesinrange.end()), entitiesinrange.end());
 }

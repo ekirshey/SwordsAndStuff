@@ -18,13 +18,11 @@ class CollisionSystem : public ProcessingSystem
         uint_fast64_t ComponentBits() {return CollisionSystem::COMPONENTIDS;}
 
         void ProcessEntity(uint_fast64_t entity);
+		void AfterObjectProcessing();
 	private:
-		void HandleCollision(uint_fast64_t entityA, uint_fast64_t entityB);
 		std::unordered_map<uint_fast64_t, std::function<void(int, int)>> collisioncallbacks_;
 
-		void SpatialCollision(uint_fast64_t entityA, uint_fast64_t entityB);
-
-		GameWorld* gameworld_;
+		GameWorld* _gameworld;
 };
 
 

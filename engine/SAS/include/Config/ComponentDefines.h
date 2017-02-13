@@ -10,7 +10,7 @@
 #define BoundingRectangleComponentID      0x80
 #define InventoryComponentID              0x100
 #define ItemStatsComponentID              0x200       // NOT SURE IF THIS WILL STAY A COMPONENT
-#define RPGStatsComponentID               0x400
+#define StatsComponentID               0x400
 #define CollisionComponentID			  0x800
 #define SpellbookComponentID			  0x1000
 #define SpellCastingComponentID			  0x2000
@@ -19,3 +19,4 @@
 #define ScriptComponentID			      0x10000
 #define DescriptionComponentID			  0x20000
 #define TTLComponentID					  0x40000
+#define DamageComponentID				  0x80000

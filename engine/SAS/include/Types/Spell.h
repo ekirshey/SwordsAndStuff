@@ -14,7 +14,7 @@ class Spell {
 			, _duration(duration)
 			, _graphic(graphic)
 			, _spellshape(shape)
-			, _spelleffects(effects)
+			, _spellcomponents(effects)
 		{
 		}
 
@@ -44,6 +44,9 @@ class Spell {
 			for (auto id : createdentities) {
 				SDL_Rect rect = { 0,0,16,16 };
 
+				for (auto sc : _spellcomponents) {
+					sc->SetEntityComponents(ecsmanager, id, caster);
+				}
 				ecsmanager->AddComponentToEntity<TTLComponent>(id, _duration, currenttime);
 				ecsmanager->AddComponentToEntity<RenderComponent>(id, _graphic, rect);
 			}
@@ -58,5 +61,5 @@ class Spell {
 		std::string _graphic; // This should and will probably be set by the spellshape component
 
 		SpellShape* _spellshape;
-		std::vector<SpellComponent*> _spelleffects;
+		std::vector<SpellComponent*> _spellcomponents;
 };

@@ -38,7 +38,7 @@ class GlobalSpellbook
 
 		template<typename T, typename... Args>
 		void CreateSpellComponent(int id, Args&&... args) {
-			_spellcomponents.insert({id, std::make_unique<T>(std::forward<Args>(args)...)})
+			_spellcomponents.insert({ id, std::make_unique<T>(std::forward<Args>(args)...) });
 		}
 
 		template<typename T, typename... Args>

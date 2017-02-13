@@ -32,9 +32,9 @@ uint_fast64_t EntityManager::GetNewEntityUUID()
     uint_fast64_t entityid = 0;
 
     if (!availableids_.empty())
-    {
-        entityid = availableids_.front();
-        availableids_.pop();
+   { 
+        entityid = *availableids_.begin();
+        availableids_.erase(availableids_.begin());
 
         // Reset the component vector TODO probably not an issue now but idk if this is slow
         entitylist_[entityid] = std::vector<std::unique_ptr<Component>>();
@@ -52,7 +52,7 @@ void EntityManager::RemoveEntity(uint_fast64_t UUID)
     //entitylist_[UUID].clear();
     entitycomponentbits_[UUID] = 0;
 
-    availableids_.push(UUID);
+    availableids_.insert(UUID);
 }
 
 // If a component is ADDED to an entity then the SystemManager needs to be made aware

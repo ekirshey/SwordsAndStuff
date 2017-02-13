@@ -5,7 +5,7 @@
 #include "../Config/ComponentDefines.h"
 #include <iostream>
 
-enum Facing {SOUTH = 0, WEST, EAST, NORTH};
+enum Facing {NORTH = 0, EAST, SOUTH, WEST};
 
 class PositionComponent : public Component
 {
@@ -13,7 +13,7 @@ class PositionComponent : public Component
         static const uint_fast64_t ID = PositionComponentID;
 
         PositionComponent() {}
-		PositionComponent(int x, int y) : x_(x), y_(y), facing_(SOUTH) {}
+		PositionComponent(int x, int y) : x_(x), y_(y), facing_(NORTH) {}
         PositionComponent(int x, int y, int facing) : x_(x), y_(y), facing_(facing) {}
         PositionComponent(const PositionComponent& c) : x_(c.x_), y_(c.y_), facing_(c.facing_) {
 

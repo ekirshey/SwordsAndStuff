@@ -3,7 +3,7 @@
 
 #include <memory>
 #include <vector>
-#include <queue>
+#include <unordered_set>
 #include <cstdint>
 #include "Component.h"
 
@@ -46,14 +46,13 @@ class EntityManager
         uint_fast64_t GetEntityComponentBits(uint_fast64_t UUID) {return entitycomponentbits_[UUID];}
 
     private:
-        //SystemManager* systemmanager_;
         // The index of the vector will be the UUID of the entity
         // The component vector will have a size of 64
         // I'll know what slot to place an added component in by ddoing logbase2 of UniqueBits returned from the component
         std::vector<std::unique_ptr<Component>> entitylist_[MAXOBJECTS];    // unique_ptr due to object slicing
         uint_fast64_t entitycomponentbits_[MAXOBJECTS];                     // Keeps a running update of whcih components are in the entity
                                                                              // Used specifically for adding entities to systems
-        std::queue<uint_fast64_t> availableids_;
+        std::unordered_set<uint_fast64_t> availableids_;
         uint_fast64_t entitycount_;
 		int entitylistsize_;
 };

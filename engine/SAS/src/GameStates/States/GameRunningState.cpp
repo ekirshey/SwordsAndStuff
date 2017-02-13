@@ -6,7 +6,6 @@
 #include "Systems/RenderSystem.h"
 #include "Systems/MovementSystem.h"
 #include "Systems/CollisionSystem.h"
-#include "Systems/PlayerTargetingSystem.h"
 #include "Systems/SpellCreationSystem.h"
 #include "Systems/MeleeSystem.h"
 #include "Systems/AISystem.h"
@@ -23,21 +22,26 @@
 #include "Components/VelocityComponent.h"
 #include "Components/SpellCastingComponent.h"
 #include "Components/SpellbookComponent.h"
-#include "Components/RPGStatsComponent.h"
+#include "Components/StatsComponent.h"
 #include "Components/InventoryComponent.h"
-#include "Components/TargetingComponent.h"
 #include "Components/EquipmentComponent.h"
 
 #include "Types/MessageTypes.h"
 
+#include "Types/DamageAttributes.h"
+#include "GameMechanics/StatGenerator.h"
+
 // GUI Components
 #include "GUIComponents/Container.h"
 
+#include "Types/PlayerInfo.h"
+
 
 using namespace Items;
-GameRunningState::GameRunningState(const GeneralConfig& config)
+GameRunningState::GameRunningState(const GeneralConfig& config, PlayerInfo* playerinfo)
 	: _generalconfig(config)
 	, _nextstate(GameStates::MAINMENU_IDX)
+	, _playerinfo(playerinfo)
 {
 }
 
@@ -62,8 +66,9 @@ int GameRunningState::InitializeState(SAS_System::Renderer& renderer, const SAS_
 	// Name, Cast time, cooldown, duration (milliseconds)
 	// Account for anchor orientation in script
 	// Vector of vectors: each vector is the script steps for a facing
-	_spellbook->CreateSpellShape<XShape>(0, 10);
-	_spellbook->CreateSpell(0, "PROJECTILE", 10, false, 1000, 1000, _generalconfig.mediaroot + "sprites/sword.png", 0, std::vector<int>{});
+	_spellbook->CreateSpellShape<Projectile>(0, 10);
+	_spellbook->CreateSpellComponent<SpellDamage>(0, DamageAttributes::FIRE, 50.0);
+	_spellbook->CreateSpell(0, "PROJECTILE", 0, false, 250, 1000, _generalconfig.mediaroot + "sprites/sword.png", 0, std::vector<int>{0});
 /*
 	ScriptedMotion::Script spellscript = {
 		{ ScriptStep(0,0,50), ScriptStep(-5,5,50), ScriptStep(-10,10,200) },
@@ -116,13 +121,19 @@ void GameRunningState::initializeECS(SAS_System::Renderer& renderer, const SAS_S
 	_ecsmanager->AddSystem<ScriptedEntitySystem>("ScriptedEntitySystem", priority++);	// Not 100% sure on the placement 
 	_ecsmanager->AddSystem<SpellCreationSystem>("SpellCreationSystem", priority++, _ecsmanager->GetQueue("SpellCreation"));
 	_ecsmanager->AddSystem<CollisionSystem>("CollisionSystem", priority++, _gameworld.get());
-	//_ecsmanager->AddSystem<PlayerTargetingSystem>("PlayerTargetingSystem", priority++, GetSDLManager(), _gameworld.get() , "..\\..\\..\\reticule.png");
+	//_ecsmanager->AddSystem<PlayerTargetingSystem>("PlayerTargetingSystem", priority++, _gameworld.get() , "..\\..\\..\\reticule.png");
 	_ecsmanager->AddSystem<EquipmentSystem>("EquipmentSystem", priority++, _ecsmanager->GetQueue("EquipmentManagement"));
 	_ecsmanager->AddSystem<InventorySystem>("InventorySystem", priority++, _ecsmanager->GetQueue("InventoryManagement"));
 	_ecsmanager->AddSystem<RenderSystem>("RenderSystem", priority++, &renderer, _gameworld.get(), _camera.get());
 	// Player
 	_player = _ecsmanager->CreateEntity();
-	_inputhandler = std::make_unique<PlayerInput>(_player);
+	auto targetreticuleid = _ecsmanager->CreateEntity();
+	_inputhandler = std::make_unique<PlayerInput>(_player, targetreticuleid, _gameworld.get());
+	
+	// Build target reticule
+	SDL_Rect targetrect = { 0,0,26,26 };
+	_ecsmanager->AddComponentToEntity<PositionComponent>(targetreticuleid, -100, -100); 
+	_ecsmanager->AddComponentToEntity<RenderComponent>(targetreticuleid, _generalconfig.mediaroot + "reticule.png", targetrect, 0.0);
 
 	rect = { 0,0,26,26 }; // Removed top pixel due to a black line showing up when rotating
 						  //path = "sprites\\shooter.png";
@@ -132,7 +143,9 @@ void GameRunningState::initializeECS(SAS_System::Renderer& renderer, const SAS_S
 	if (test != nullptr)
 		playerspellbook->AddSpell(0, test);
 
-	path = _generalconfig.mediaroot + "sprites/Player2.png";
+	path = _generalconfig.mediaroot + "sprites/Player2.png"; 
+	StatGenerator generator("something");
+	StatsComponent stats = generator.GenerateStats(_playerinfo->mainstats);
 
 	_ecsmanager->AddComponentToEntity<PositionComponent>(_player, (SCREEN_WIDTH / 2) - (34 / 2), 400);
 	_ecsmanager->AddComponentToEntity<InputComponent>(_player);
@@ -142,9 +155,8 @@ void GameRunningState::initializeECS(SAS_System::Renderer& renderer, const SAS_S
 	_ecsmanager->AddComponentToEntity<SpellCastingComponent>(_player);
 	_ecsmanager->AddComponentToEntity<EquipmentComponent>(_player);
 	_ecsmanager->AddComponentToEntity<InventoryComponent>(_player, 10);
-	_ecsmanager->AddComponentToEntity<RPGStatsComponent>(_player);
+	_ecsmanager->AddComponentToEntity<StatsComponent>(_player, stats);
 	_ecsmanager->AddComponentToEntity(_player, std::move(playerspellbook));
-	_ecsmanager->AddComponentToEntity<TargetingComponent>(_player);
 	_ecsmanager->AssignEntityTag(_player, "PLAYER");
 
 	///////////////////////////////////////
@@ -178,6 +190,7 @@ void GameRunningState::initializeECS(SAS_System::Renderer& renderer, const SAS_S
 			_ecsmanager->AddComponentToEntity<VelocityComponent>(monsterentity, 0, 0 );
 			_ecsmanager->AddComponentToEntity<BoundingRectangleComponent>(monsterentity, (55 + i * 40) + i * 23, 55 + j * 29, 20, 21);//30,30
 			_ecsmanager->AddComponentToEntity<RenderComponent>(monsterentity, path, rect, 0.0 );
+			_ecsmanager->AddComponentToEntity<StatsComponent>(monsterentity, stats);
 			_ecsmanager->AssignEntityTag(monsterentity, "MONSTER");
 			//std::cout << monsterentity << std::endl;
 			// EKNOTE Would actually check this in the future even though for one frame idk if it matters
@@ -255,7 +268,7 @@ int GameRunningState::UpdateState(int elapsedtime, SAS_System::Renderer& rendere
 	}
 
 //#ifdef DEBUGINFO
-	renderer.RenderText(std::to_string(_ecsmanager->EntityCount()), renderer.ScreenWidth()-150, 60, 20, SDL_Color{ 255,255,255,255 }, "F:\\github\\SwordsAndStuff\\media\\font.TTF");
+	//renderer.RenderText(std::to_string(_ecsmanager->EntityCount()), renderer.ScreenWidth()-150, 60, 20, SDL_Color{ 255,255,255,255 }, "F:\\github\\SwordsAndStuff\\media\\font.TTF");
 //#endif
 	return ret;
 }

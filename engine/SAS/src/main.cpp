@@ -7,7 +7,8 @@
 #include "SystemControl.h"
 #include "Config/GameDefines.h"
 #include "Config/GeneralConfig.h"
-#include <stdio.h>
+#include "Types/PlayerInfo.h"
+
 
 int main(int argc, char *argv[])
 {
@@ -32,15 +33,18 @@ int main(int argc, char *argv[])
     // Set up the Game State Manager
     Game gamestatemanager(SCREEN_WIDTH, SCREEN_HEIGHT);
 	
+	// Create player info that will need to be shared between the character creation state and game running state
+	PlayerInfo playerinfo;
+
     // Add states
 	config.guiconfig = config.configroot + rootconfig->get_qualified_as<std::string>("mainmenu.guiconfig").value_or(desktoppath + "config\\gui\\mainmenugui.toml");
 	gamestatemanager.AddState<MainMenuState>(true, MAINMENU_IDX, config);
 
 	config.guiconfig = config.configroot + rootconfig->get_qualified_as<std::string>("charactercreation.guiconfig").value_or(desktoppath + "config\\gui\\charcreationgui.toml");
-	gamestatemanager.AddState<CharacterCreationState>(false, CHARCREATION_IDX, config);
+	gamestatemanager.AddState<CharacterCreationState>(false, CHARCREATION_IDX, config, &playerinfo);
 
 	config.guiconfig = config.configroot + rootconfig->get_qualified_as<std::string>("gamerunning.guiconfig").value_or(desktoppath + "config\\gui\\gamegui.toml");
-	gamestatemanager.AddState<GameRunningState>(false, GAMERUNNING_IDX, config);
+	gamestatemanager.AddState<GameRunningState>(false, GAMERUNNING_IDX, config, &playerinfo);
 
     // Loop forever
     gamestatemanager.Run();

@@ -11,11 +11,15 @@
 #include "GUIComponents/Button.h"
 #include "GUIComponents/DynamicText.h"
 #include "GUIComponents/DropdownMenu.h"
+#include "Types/PlayerInfo.h"
 
-CharacterCreationState::CharacterCreationState(const GeneralConfig& config)
+CharacterCreationState::CharacterCreationState(const GeneralConfig& config, PlayerInfo* playerinfo)
 	: _generalconfig(config)
 	, _nextstate(CHARCREATION_IDX)
 	, _availablestatpoints(10)
+	, _defaultstats(MainStatMap{ {MainStatType::INTELLIGENCE, StatValue(10.0)}, {MainStatType::STRENGTH, StatValue(10.0)} })
+	, _generator("something")
+	, _playerinfo(playerinfo)
 {
 }
 
@@ -53,8 +57,10 @@ int CharacterCreationState::InitializeState(SAS_System::Renderer& renderer, cons
 
 	// Stat Labels
 	mainwindow->AddComponent<SAS_GUI::Label>(SDL_Rect{ 50, 70, 60, 20 }, tv, "Strength:");
+	mainwindow->AddComponent<SAS_GUI::DynamicText<double>>(SDL_Rect{ 250, 70, 60, 20 }, tv, _playerinfo->mainstats[MainStatType::STRENGTH].maxstat);
 
-	mainwindow->AddComponent<SAS_GUI::DynamicText<float>>(SDL_Rect{ 250, 70, 60, 20 }, tv, _characterstats.stats_[STRENGTH]);
+	mainwindow->AddComponent<SAS_GUI::Label>(SDL_Rect{ 50, 90, 60, 20 }, tv, "Intelligence:");
+	mainwindow->AddComponent<SAS_GUI::DynamicText<double>>(SDL_Rect{ 250, 90, 60, 20 }, tv, _playerinfo->mainstats[MainStatType::INTELLIGENCE].maxstat);
 
 	SAS_GUI::ButtonView bv(SDL_Rect{ 0,0,25,25 },
 		_generalconfig.mediaroot + "buttons\\arrows.bmp");
@@ -63,7 +69,8 @@ int CharacterCreationState::InitializeState(SAS_System::Renderer& renderer, cons
 		[this]() {
 			if (_availablestatpoints > 0) {
 				_availablestatpoints--;
-				_characterstats.SetStat(STRENGTH, _characterstats.GetStat(STRENGTH) + 1);
+				_playerinfo->mainstats[MainStatType::STRENGTH].maxstat += 1.0;
+				_playerinfo->mainstats[MainStatType::STRENGTH].currentstat += 1.0;
 			}
 		}
 	);
@@ -72,17 +79,11 @@ int CharacterCreationState::InitializeState(SAS_System::Renderer& renderer, cons
 		[this]() {
 			if (_availablestatpoints > 0) {
 				_availablestatpoints--;
-				_characterstats.SetStat(INTELLIGENCE, _characterstats.GetStat(INTELLIGENCE) + 1);
+				_playerinfo->mainstats[MainStatType::INTELLIGENCE].maxstat += 1.0;
+				_playerinfo->mainstats[MainStatType::INTELLIGENCE].currentstat += 1.0;
 			}
 		}
 	);
-
-	mainwindow->AddComponent<SAS_GUI::Label>(SDL_Rect{ 50, 90, 60, 20 }, tv, "Intelligence:");
-	mainwindow->AddComponent<SAS_GUI::DynamicText<float>>(SDL_Rect{ 250, 90, 60, 20 }, tv, _characterstats.stats_[INTELLIGENCE]);
-	mainwindow->AddComponent<SAS_GUI::Label>(SDL_Rect{ 50, 110, 60, 20 }, tv, "Health:");
-	mainwindow->AddComponent<SAS_GUI::DynamicText<float>>(SDL_Rect{ 250, 110, 60, 20 }, tv, _characterstats.stats_[HEALTH]);
-	mainwindow->AddComponent<SAS_GUI::Label>(SDL_Rect{ 50, 130, 60, 20 }, tv, "Mana:");
-	mainwindow->AddComponent<SAS_GUI::DynamicText<float>>(SDL_Rect{ 250, 130, 60, 20 }, tv, _characterstats.stats_[MANA]);
 
 	_guimanager.AddWindow(std::move(mainwindow));
 

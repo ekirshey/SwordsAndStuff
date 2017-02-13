@@ -12,11 +12,11 @@
 #include "SubSystems/PlayerInput.h"
 
 class MonsterSpawner;
-
+struct PlayerInfo;
 class GameRunningState : public GameStateImpl
 {
     public:
-        GameRunningState(const GeneralConfig& config);
+        GameRunningState(const GeneralConfig& config, PlayerInfo* playerinfo);
         virtual ~GameRunningState();
 
 		int InitializeState(SAS_System::Renderer& renderer, const SAS_System::Input& input);
@@ -32,6 +32,7 @@ class GameRunningState : public GameStateImpl
 		int _nextstate;
 
 		std::unique_ptr<PlayerInput> _inputhandler;
+		PlayerInfo* _playerinfo;
 		uint64_t _player;
 
 		// Game World Objects

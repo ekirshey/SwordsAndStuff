@@ -29,8 +29,8 @@ class GameWorld
 		void Render(SAS_System::Renderer* sdlmanager, const SDL_Rect* camera);
 
 		// Temp SparseGrid functions
-		bool SparseGridInsert(QuadElement entity) { return _sparsegrid->Insert(entity); }
-		std::vector<QuadElement> SparseGridQueryRange(const SDL_Rect& rect) const { return _sparsegrid->QueryRange(rect); }
+		bool SparseGridInsert(const QuadElement& entity) { return _sparsegrid->Insert(entity); }
+		void SparseGridQueryRange(const SDL_Rect& rect, std::vector<QuadElement>& elements) const { return _sparsegrid->QueryRange(rect, elements); }
 		void ClearSparseGrid() { _sparsegrid->clear(); }
 		void DrawSparseGrid(SAS_System::Renderer* renderer) { _sparsegrid->Draw(renderer); }
 
