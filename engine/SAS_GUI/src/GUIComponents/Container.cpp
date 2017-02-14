@@ -26,14 +26,14 @@ namespace SAS_GUI {
 		// A better way??
 		int xindex, yindex;
 		int retval = -1;
-		double x_d = static_cast<double>(relativex) / (_view.slotWidth + _view.horizontalSlotSeparation);
-		int xremainder = ((x_d - static_cast<int>(x_d)) * (_view.slotWidth + _view.horizontalSlotSeparation));
+		double _xd = static_cast<double>(relativex) / (_view.slotWidth + _view.horizontalSlotSeparation);
+		int xremainder = ((_xd - static_cast<int>(_xd)) * (_view.slotWidth + _view.horizontalSlotSeparation));
 		if ( xremainder >= _view.horizontalSlotSeparation) {
-			xindex = static_cast<int>(x_d);
-			double y_d = static_cast<double>(relativey) / (_view.slotHeight + _view.verticalSlotSeparation);
-			int yremainder = ((y_d - static_cast<int>(y_d)) * (_view.slotHeight + _view.verticalSlotSeparation));
+			xindex = static_cast<int>(_xd);
+			double _yd = static_cast<double>(relativey) / (_view.slotHeight + _view.verticalSlotSeparation);
+			int yremainder = ((_yd - static_cast<int>(_yd)) * (_view.slotHeight + _view.verticalSlotSeparation));
 			if (yremainder >= _view.verticalSlotSeparation) {
-				yindex = static_cast<int>(y_d);
+				yindex = static_cast<int>(_yd);
 				int tempselection = (yindex*_view.maxHorizontalSlots) + xindex;
 				if (tempselection < _items.size())  {
 					retval = tempselection;
@@ -79,8 +79,8 @@ namespace SAS_GUI {
 					if (_hovereditem != -1 && _hovereditem < _items.size()) {
 						temp = _items[_hovereditem];
 						_items[_hovereditem] = _items[_selecteditem];
-						_items[_selecteditem].type = EMPTY_PAYLOAD;
-						if (temp.type != EMPTY_PAYLOAD) {
+						_items[_selecteditem].type = EMPTYPAYLOAD;
+						if (temp.type != EMPTYPAYLOAD) {
 							_cursor->data = temp;
 							_cursor->locked = true;
 						}
@@ -95,7 +95,7 @@ namespace SAS_GUI {
 			else if (!_cursor->clear && input.leftMouseReleased()) {
 				// Received an item from a different container
 				if (_hovereditem != -1) {
-					if (_items[_hovereditem].type != EMPTY_PAYLOAD) {
+					if (_items[_hovereditem].type != EMPTYPAYLOAD) {
 						Payload temp;
 						temp = _items[_hovereditem];
 						_items[_hovereditem] = _cursor->data;
@@ -116,7 +116,7 @@ namespace SAS_GUI {
 
 			_selecteditem = -1;
 			if (input.leftMousePressed() && _hovereditem != -1 
-				&& _items[_hovereditem].type != EMPTY_PAYLOAD) 
+				&& _items[_hovereditem].type != EMPTYPAYLOAD) 
 			{
 				_selecteditem = _hovereditem;
 			}
@@ -124,7 +124,7 @@ namespace SAS_GUI {
 		else {
 			_hovereditem = -1;
 			if (_selecteditem != -1 && input.leftMouseReleased()) {
-				_items[_selecteditem].type = EMPTY_PAYLOAD;
+				_items[_selecteditem].type = EMPTYPAYLOAD;
 				if (_selecteditem < _openslot)
 					_openslot = _selecteditem;
 				_selecteditem = -1;
@@ -145,7 +145,7 @@ namespace SAS_GUI {
 			int row = (i / _view.maxHorizontalSlots);
 			int xshift = i - (row*_view.maxHorizontalSlots);
 			// Don't render if lifted item
-			if ( (i != _selecteditem || !_itemlifted) && _items[i].type != EMPTY_PAYLOAD) {
+			if ( (i != _selecteditem || !_itemlifted) && _items[i].type != EMPTYPAYLOAD) {
 				renderer->RenderImage(_items[i].texture
 					, _position.x + _view.slotWidth * (xshift)+_view.horizontalSlotSeparation * (xshift + 1)
 					, row*_view.slotHeight + _position.y + _view.verticalSlotSeparation * (row + 1)
@@ -154,7 +154,7 @@ namespace SAS_GUI {
 		}
 
 		// Render selection box
-		if ((_hovereditem != -1 && _items[_hovereditem].type != EMPTY_PAYLOAD) && !_itemlifted) {
+		if ((_hovereditem != -1 && _items[_hovereditem].type != EMPTYPAYLOAD) && !_itemlifted) {
 			int row = (_hovereditem / _view.maxHorizontalSlots);
 			int xshift = _hovereditem - (row*_view.maxHorizontalSlots);
 			renderer->RenderOutlineRectangle(SDL_Rect{
@@ -175,7 +175,7 @@ namespace SAS_GUI {
 				if (messages[i].data.type == _itemtype) {
 					if (messages[i].messagetype == MESSAGETYPE::ADD) {
 						if (_openslot < _items.size()) {
-							while (_items[_openslot].type != EMPTY_PAYLOAD) _openslot++;
+							while (_items[_openslot].type != EMPTYPAYLOAD) _openslot++;
 							_items[_openslot] = messages[i].data;
 						}
 					}

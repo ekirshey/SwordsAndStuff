@@ -59,36 +59,23 @@ void RenderSystem::ProcessEntity(uint_fast64_t entity)
 
     SDL_Rect cliprect = rendercomponent->ClipRect();
 
-	// Adjust cliprect for facing
-	cliprect.x = cliprect.x + (positioncomponent->facing_ * cliprect.w);
+	SDL_Rect cullrect = {positioncomponent->_x, positioncomponent->_y, cliprect.w, cliprect.h};
 
-	SDL_Rect cullrect = {positioncomponent->x_, positioncomponent->y_, cliprect.w, cliprect.h};
 
-/*
-	if (entity == 0)
-	{
-		std::vector<QuadElement> elements = _gameworld->SparseGridQueryRange(entityrect->Rectangle());
-
-		for (int i = 0; i < elements.size(); i++)
-		{
-			SDL_Rect rect{ elements[i].boundingrectangle->Rectangle().x - _camera->x_,elements[i].boundingrectangle->Rectangle().y - _camera->y_,
-				elements[i].boundingrectangle->Rectangle().w,elements[i].boundingrectangle->Rectangle().h };
-			_renderer->RenderOutlineRectangle(rect, 0x00, 0x00, 0x00, 0xFF);
-		}
-	}
-*/
     // TODO This implies that you NEED a camera. Is this true? I dont think it should be
 	if (rendercomponent != nullptr)
 	{
 		if (SDL_HasIntersection(&cullrect, &camerarect))
 		{
-			if (rendercomponent->RenderAngle() != 0.0)
+			//if (entityrect != nullptr)
+			//	_renderer->RenderOutlineRectangle(entityrect->Rectangle(), SDL_Color{ 0x00, 0x00, 0x00, 0xFF });
+			if (positioncomponent->_angle != 0.0)
 			{
 				SDL_Point center = { (cliprect.w / 2), (cliprect.h / 2) };
-				_renderer->RenderImage(rendercomponent->ImagePath(), positioncomponent->x_ - _camera->X(), positioncomponent->y_ - _camera->Y(), &cliprect, rendercomponent->RenderAngle(), center, SDL_FLIP_NONE);
+				_renderer->RenderImage(rendercomponent->ImagePath(), positioncomponent->_x - _camera->X(), positioncomponent->_y - _camera->Y(), &cliprect, positioncomponent->_angle + 90.0, center, SDL_FLIP_NONE);
 			}
 			else {
-				_renderer->RenderImage(rendercomponent->ImagePath(), positioncomponent->x_ - _camera->X(), positioncomponent->y_ - _camera->Y(), &cliprect);
+				_renderer->RenderImage(rendercomponent->ImagePath(), positioncomponent->_x - _camera->X(), positioncomponent->_y - _camera->Y(), &cliprect);
 			}
 		}
 

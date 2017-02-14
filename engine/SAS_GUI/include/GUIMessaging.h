@@ -5,7 +5,7 @@ namespace SAS_GUI {
 
 	#define CURSORTYPE 0xC
 	#define GUIMANAGERID 0xBEEF
-	#define EMPTY_PAYLOAD -100
+	#define EMPTYPAYLOAD -100
 
 	enum class MESSAGETYPE {ADD, MODIFY, DELETE};
 
@@ -16,7 +16,7 @@ namespace SAS_GUI {
 		std::string description;
 
 		Payload() 
-			:type(EMPTY_PAYLOAD)
+			:type(EMPTYPAYLOAD)
 		{
 
 		}

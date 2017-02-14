@@ -1,4 +1,4 @@
-#include "..\..\include\Utilities\SparseGrid.h"
+#include "Utilities\SparseGrid.h"
 #include <iostream>
 #include <algorithm>
 
@@ -7,7 +7,7 @@ SparseGrid::SparseGrid(const SDL_Rect& boundary, int cellwidth, int cellheight)
 	: boundary_(boundary)
 	, cellwidth_(cellwidth)
 	, cellheight_(cellheight)
-	, gridwidth_(boundary_.w / cellwidth_)
+	, gridwidth_(boundary.w / cellwidth_)
 	, gridheight_(boundary_.h / cellheight_)
 	, grid_(gridwidth_*gridheight_, QuadElements(MAXOBJECTSINGRID))
 {
@@ -92,7 +92,7 @@ void SparseGrid::QueryRange(const SDL_Rect& boundary, std::vector<QuadElement>& 
 {
 	// Check each corner of the rectangle
 
-	if (!SDL_HasIntersection(&boundary, &boundary_))
+	if (!SDL_HasIntersection(&boundary, &boundary))
 		return;
 
 	int gridleft = (boundary.x / cellwidth_);

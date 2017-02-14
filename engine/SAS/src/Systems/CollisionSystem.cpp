@@ -42,7 +42,7 @@ void CollisionSystem::ProcessEntity(uint_fast64_t entity)
 			collision = false;
 			SDL_Rect elementrect = elements[i].boundingrectangle->Rectangle();
 			if (SDL_HasIntersection(&boundingrectangle->Rectangle(), &elementrect))
-				CollisionResolver::Resolve(GetECSManager(), entity, elements[i].entityid );
+				_resolver.Resolve(GetECSManager(), entity, elements[i].entityid );
 
 		}
 	}
@@ -51,6 +51,6 @@ void CollisionSystem::ProcessEntity(uint_fast64_t entity)
 
 
 void CollisionSystem::AfterObjectProcessing() {
-
+	_resolver.Cleaup(GetECSManager());
 }
 

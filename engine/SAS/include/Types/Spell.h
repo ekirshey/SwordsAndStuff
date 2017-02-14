@@ -42,7 +42,7 @@ class Spell {
 			auto createdentities = _spellshape->CreateSpellEntities(ecsmanager, caster);
 
 			for (auto id : createdentities) {
-				SDL_Rect rect = { 0,0,16,16 };
+				SDL_Rect rect = { 0,0,9,16 };
 
 				for (auto sc : _spellcomponents) {
 					sc->SetEntityComponents(ecsmanager, id, caster);

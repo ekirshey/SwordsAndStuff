@@ -31,6 +31,14 @@ namespace SAS_System {
 		return _activekeys[MouseButtons::LEFT] == KeyState::RELEASED;
 	}
 
+	bool Input::rightMousePressed() const {
+		return _activekeys[MouseButtons::RIGHT] == KeyState::PRESSED;
+	}
+
+	bool Input::rightMouseReleased() const {
+		return _activekeys[MouseButtons::RIGHT] == KeyState::RELEASED;
+	}
+
 	bool Input::Quit() {
 		return _quit;
 	}

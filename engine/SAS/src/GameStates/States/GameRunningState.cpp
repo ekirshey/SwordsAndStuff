@@ -67,8 +67,11 @@ int GameRunningState::InitializeState(SAS_System::Renderer& renderer, const SAS_
 	// Account for anchor orientation in script
 	// Vector of vectors: each vector is the script steps for a facing
 	_spellbook->CreateSpellShape<Projectile>(0, 10);
+	_spellbook->CreateSpellShape<XPattern>(1, 10);
 	_spellbook->CreateSpellComponent<SpellDamage>(0, DamageAttributes::FIRE, 50.0);
+
 	_spellbook->CreateSpell(0, "PROJECTILE", 0, false, 250, 1000, _generalconfig.mediaroot + "sprites/sword.png", 0, std::vector<int>{0});
+	_spellbook->CreateSpell(1, "XPATTERN", 0, false, 250, 1000, _generalconfig.mediaroot + "sprites/sword.png", 1, std::vector<int>{0});
 /*
 	ScriptedMotion::Script spellscript = {
 		{ ScriptStep(0,0,50), ScriptStep(-5,5,50), ScriptStep(-10,10,200) },
@@ -128,7 +131,6 @@ void GameRunningState::initializeECS(SAS_System::Renderer& renderer, const SAS_S
 	// Player
 	_player = _ecsmanager->CreateEntity();
 	auto targetreticuleid = _ecsmanager->CreateEntity();
-	_inputhandler = std::make_unique<PlayerInput>(_player, targetreticuleid, _gameworld.get());
 	
 	// Build target reticule
 	SDL_Rect targetrect = { 0,0,26,26 };
@@ -139,9 +141,13 @@ void GameRunningState::initializeECS(SAS_System::Renderer& renderer, const SAS_S
 						  //path = "sprites\\shooter.png";
 
 	auto playerspellbook = std::make_unique<SpellbookComponent>();
-	GlobalSpellbook::SpellReference test = _spellbook->GetSpell(0);
-	if (test != nullptr)
-		playerspellbook->AddSpell(0, test);
+	GlobalSpellbook::SpellReference spell1 = _spellbook->GetSpell(0);
+	if (spell1 != nullptr)
+		playerspellbook->AddSpell(0, spell1);
+
+	GlobalSpellbook::SpellReference spell2 = _spellbook->GetSpell(1);
+	if (spell2 != nullptr)
+		playerspellbook->AddSpell(1, spell2);
 
 	path = _generalconfig.mediaroot + "sprites/Player2.png"; 
 	StatGenerator generator("something");
@@ -158,6 +164,8 @@ void GameRunningState::initializeECS(SAS_System::Renderer& renderer, const SAS_S
 	_ecsmanager->AddComponentToEntity<StatsComponent>(_player, stats);
 	_ecsmanager->AddComponentToEntity(_player, std::move(playerspellbook));
 	_ecsmanager->AssignEntityTag(_player, "PLAYER");
+
+	_inputhandler = std::make_unique<PlayerInput>(_player, targetreticuleid, _gameworld.get());
 
 	///////////////////////////////////////
 	// Initialize camera to focus on player
@@ -189,7 +197,7 @@ void GameRunningState::initializeECS(SAS_System::Renderer& renderer, const SAS_S
 			_ecsmanager->AddComponentToEntity<PositionComponent>(monsterentity, (50 + i * 40) + i * 23, 50 + j * 29); // TODO MAgic numbers
 			_ecsmanager->AddComponentToEntity<VelocityComponent>(monsterentity, 0, 0 );
 			_ecsmanager->AddComponentToEntity<BoundingRectangleComponent>(monsterentity, (55 + i * 40) + i * 23, 55 + j * 29, 20, 21);//30,30
-			_ecsmanager->AddComponentToEntity<RenderComponent>(monsterentity, path, rect, 0.0 );
+			_ecsmanager->AddComponentToEntity<RenderComponent>(monsterentity, path, rect, 90.0 );
 			_ecsmanager->AddComponentToEntity<StatsComponent>(monsterentity, stats);
 			_ecsmanager->AssignEntityTag(monsterentity, "MONSTER");
 			//std::cout << monsterentity << std::endl;
@@ -253,7 +261,7 @@ int GameRunningState::UpdateState(int elapsedtime, SAS_System::Renderer& rendere
 			msg.data = data;
 			_guimanager->ReceiveMessage(msg);
 		}
-		_inputhandler->UpdateInput(_ecsmanager.get(), input);
+		_inputhandler->UpdateInput(_ecsmanager.get(), _camera.get(), input);
 		// Move the camera
 		_camera->Update();
 		// Update ECS

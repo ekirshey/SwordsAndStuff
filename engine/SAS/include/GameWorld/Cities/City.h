@@ -1,5 +1,5 @@
-#ifndef CITY_H
-#define CITY_H
+#ifndef CIT_yH
+#define CIT_yH
 
 struct Road
 {
@@ -16,4 +16,4 @@ class City
     private:
 };
 
-#endif // CITY_H
+#endif // CIT_yH

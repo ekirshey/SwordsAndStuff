@@ -3,20 +3,20 @@
 #include "../../include/ECSFramework/EntityManager.h"
 #include <chrono>
 
-static const int ENTITY_LIST_STEP_SIZE = 500;
-static const int MAX_COMPONENT_LIST = 64;
+static const int ENTIT_yLIST_STEP_SIZE = 500;
+static const int MA_xCOMPONENT_LIST = 64;
 
 EntityManager::EntityManager() : entitylistsize_(MAXOBJECTS)
 {
     entitycount_ = 0;
 
-    //entitylist_.resize(ENTITY_LIST_STEP_SIZE);
-    //entitycomponentbits_.resize(ENTITY_LIST_STEP_SIZE);
+    //entitylist_.resize(ENTIT_yLIST_STEP_SIZE);
+    //entitycomponentbits_.resize(ENTIT_yLIST_STEP_SIZE);
 
     for( unsigned int i = 0; i < entitylistsize_; i++)
     {
         entitylist_[i] = std::vector<std::unique_ptr<Component>>();
-        entitylist_[i].resize(MAX_COMPONENT_LIST);
+        entitylist_[i].resize(MA_xCOMPONENT_LIST);
         entitycomponentbits_[i] = 0;
     }
 
@@ -38,7 +38,7 @@ uint_fast64_t EntityManager::GetNewEntityUUID()
 
         // Reset the component vector TODO probably not an issue now but idk if this is slow
         entitylist_[entityid] = std::vector<std::unique_ptr<Component>>();
-        entitylist_[entityid].resize(MAX_COMPONENT_LIST);
+        entitylist_[entityid].resize(MA_xCOMPONENT_LIST);
     }
     else
         entityid = entitycount_++;

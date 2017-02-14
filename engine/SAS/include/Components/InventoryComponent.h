@@ -19,7 +19,7 @@ struct InventoryComponent : public Component
 
         uint_fast64_t UniqueBits() const {return ID;}
 
-        std::vector<Items::Item*> inventory_;
+        std::vector<Items::Item*> inventor_y;
         int maxinventorysize_;
 };
 

@@ -6,7 +6,7 @@
 #include "Input.h"
 #include <unordered_map>
 
-enum INPUTS { MOVE_LEFT, MOVE_RIGHT, MOVE_UP, MOVE_DOWN, MELEE, INVENTORY };
+enum INPUTS { MOVE_LEFT, MOVE_RIGHT, MOVE_UP, MOVE_DOWN, MELEE, INVENTORY, SELECT_SPELL0, SELECT_SPELL1 };
 
 const std::vector<int> KeyboardInputs{
 	MOVE_LEFT, 
@@ -14,7 +14,9 @@ const std::vector<int> KeyboardInputs{
 	MOVE_UP, 
 	MOVE_DOWN, 
 	MELEE,
-	INVENTORY
+	INVENTORY,
+	SELECT_SPELL0,
+	SELECT_SPELL1
 };
 
 struct Key
@@ -39,8 +41,10 @@ class InputComponent : public Component
 			keyboardinput_.insert({ MOVE_RIGHT, Key(SDL_SCANCODE_D) });
 			keyboardinput_.insert({ MOVE_UP, Key(SDL_SCANCODE_W) });
 			keyboardinput_.insert({ MOVE_DOWN, Key(SDL_SCANCODE_S) });
-			keyboardinput_.insert({ MELEE, Key(SDL_SCANCODE_E) });
+			keyboardinput_.insert({ MELEE, Key(SDL_SCANCODE_SPACE) });
 			keyboardinput_.insert({ INVENTORY, Key(SDL_SCANCODE_I) });
+			keyboardinput_.insert({ SELECT_SPELL0, Key(SDL_SCANCODE_1) });
+			keyboardinput_.insert({ SELECT_SPELL1, Key(SDL_SCANCODE_2) });
 		}
 
         InputComponent(const InputComponent& c) {}
@@ -58,7 +62,11 @@ class InputComponent : public Component
 		void SetPressed(int input, bool state) { keyboardinput_.at(input).pressed = state; }
 		void SetHeld(int input, bool state) { keyboardinput_.at(input).held = state; }
 
+		void SetMousePosition(int x, int y) { _x = x; _y = y; }
+		void GetMousePosition(int& x, int& y) { x = _x; y = _y; }
     private:
+		int _x;
+		int _y;
 		std::unordered_map<int, Key> keyboardinput_;
 
 };

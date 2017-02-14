@@ -1,11 +1,7 @@
-#ifndef POSITIONCOMPONENT_H
-#define POSITIONCOMPONENT_H
+#pragma once
 
-#include "../../include/ECSFramework/Component.h"
-#include "../Config/ComponentDefines.h"
-#include <iostream>
-
-enum Facing {NORTH = 0, EAST, SOUTH, WEST};
+#include "ECSFramework/Component.h"
+#include "Config/ComponentDefines.h"
 
 class PositionComponent : public Component
 {
@@ -13,9 +9,9 @@ class PositionComponent : public Component
         static const uint_fast64_t ID = PositionComponentID;
 
         PositionComponent() {}
-		PositionComponent(int x, int y) : x_(x), y_(y), facing_(NORTH) {}
-        PositionComponent(int x, int y, int facing) : x_(x), y_(y), facing_(facing) {}
-        PositionComponent(const PositionComponent& c) : x_(c.x_), y_(c.y_), facing_(c.facing_) {
+		PositionComponent(int x, int y) : _x(x), _y(y), _angle(0.0){}
+        PositionComponent(int x, int y, double angle) : _x(x), _y(y), _angle(angle) {}
+        PositionComponent(const PositionComponent& c) : _x(c._x), _y(c._y), _angle(c._angle) {
 
 		}
 
@@ -23,10 +19,8 @@ class PositionComponent : public Component
 
         uint_fast64_t UniqueBits() const {return ID;}
 
-        int x_;
-        int y_;
-		int facing_;
+        int _x;
+        int _y;
+		double _angle;
 
 };
-
-#endif // POSITIONCOMPONENT_H

@@ -20,7 +20,7 @@ file( GLOB SRCS
 	${PROJECT_SOURCE_DIR}/SAS_System/src/Input/*.cpp
 )
 
-#SET( CMAKE_CXX_FLAGS "-g -std=c++11 -DASIO_STANDALONE")
+#SET( CMAKE_CX_xFLAGS "-g -std=c++11 -DASIO_STANDALONE")
 
 add_library(SAS_System ${SRCS} )
 

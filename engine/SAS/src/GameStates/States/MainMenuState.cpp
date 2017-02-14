@@ -27,6 +27,7 @@ MainMenuState::~MainMenuState()
 
 int MainMenuState::InitializeState(SAS_System::Renderer& renderer, const SAS_System::Input& input)
 { 
+	std::cout << "Initialize Main Menu" << std::endl;
 	SAS_GUI::GUIBuilder::CallbackMap callbacks;
 	callbacks.insert({ "start_button",
 		[this]() {

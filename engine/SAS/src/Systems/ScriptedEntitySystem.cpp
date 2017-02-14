@@ -42,15 +42,15 @@ void ScriptedEntitySystem::ProcessEntity(uint_fast64_t entity) {
 		if (script->GetAnchor() != -1) {
 			auto anchorposition = GetEntityComponent<PositionComponent*>(script->GetAnchor(), PositionComponentID);
 			if (anchorposition != nullptr) {
-				entityposition->x_ = anchorposition->x_ + steps[currentstep].dX;
-				entityposition->y_ = anchorposition->y_ + steps[currentstep].dY;
+				entityposition->_x = anchorposition->_x + steps[currentstep].dX;
+				entityposition->_y = anchorposition->_y + steps[currentstep].dY;
 			}
 			else
 				std::cout << "Invalid script anchor " << std::endl;
 		}
 		else {
-			entityposition->x_ = steps[currentstep].dX;
-			entityposition->y_ = steps[currentstep].dY;
+			entityposition->_x = steps[currentstep].dX;
+			entityposition->_y = steps[currentstep].dY;
 		}
 	}
 

@@ -3,10 +3,10 @@
 
 #include <unordered_map>
 #include <functional>
-#include "../Systems/ProcessingSystem.h"
-#include "../Config/CollisionCallbacks.h"
-#include "../Config/ComponentDefines.h"
-#include "../GameWorld/GameWorld.h"
+#include "Systems/ProcessingSystem.h"
+#include "Config/CollisionCallbacks.h"
+#include "Config/ComponentDefines.h"
+#include "GameWorld/GameWorld.h"
 
 class CollisionSystem : public ProcessingSystem
 {
@@ -21,8 +21,8 @@ class CollisionSystem : public ProcessingSystem
 		void AfterObjectProcessing();
 	private:
 		std::unordered_map<uint_fast64_t, std::function<void(int, int)>> collisioncallbacks_;
-
 		GameWorld* _gameworld;
+		CollisionResolver _resolver;
 };
 
 

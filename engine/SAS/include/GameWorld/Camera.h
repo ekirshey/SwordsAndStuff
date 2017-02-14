@@ -30,12 +30,12 @@ class Camera
 			_focusvelocity = velocity;
 		}
 
-        SDL_Rect GetCameraRect() { return _camerarect;}
+        SDL_Rect GetCameraRect() const { return _camerarect;}
 
-        int X() {return _camerarect.x;}
-        int Y() {return _camerarect.y;}
-        int Width() {return _camerarect.w;}
-        int Height() {return _camerarect.h;}
+        int X() const {return _camerarect.x;}
+        int Y() const {return _camerarect.y;}
+        int Width() const {return _camerarect.w;}
+        int Height() const {return _camerarect.h;}
 
     private:
         int _gameworldwidth;

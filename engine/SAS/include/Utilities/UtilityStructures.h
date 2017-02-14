@@ -41,8 +41,6 @@ class QuadElements {
 		void insert(const QuadElement& ele) {
 			if (_size < _elements.size())
 				_elements[_size++] = ele;
-			else
-				std::cout << "how? " << std::endl;
 		}
 
 		void clear() {
@@ -61,7 +59,7 @@ class QuadElements {
 
 		std::vector<QuadElement>::const_iterator end() const {
 			if (_size > 0)
-				return _elements.begin() + (_size - 1);
+				return _elements.begin() + (_size);
 			else
 				return _elements.begin();
 		}

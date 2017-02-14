@@ -1,15 +1,15 @@
 #include <iostream>
-#include "../../include/ECSFramework/ECSManager.h"
-#include "../../include/Systems/MovementSystem.h"
-#include "../../include/Components/PositionComponent.h"
-#include "../../include/Components/VelocityComponent.h"
-#include "../../include/Components/BoundingRectangleComponent.h"
-#include "../../include/Components/InputComponent.h"
-#include "../../include/Components/SpellCastingComponent.h"
-#include "../../include/Config/ComponentDefines.h"
-
-
-#include <chrono>
+#define _USE_MATH_DEFINES
+#include <math.h>
+#include <cmath>
+#include "ECSFramework/ECSManager.h"
+#include "Systems/MovementSystem.h"
+#include "Components/PositionComponent.h"
+#include "Components/VelocityComponent.h"
+#include "Components/BoundingRectangleComponent.h"
+#include "Components/InputComponent.h"
+#include "Components/SpellCastingComponent.h"
+#include "Config/ComponentDefines.h"
 
 MovementSystem::MovementSystem(std::string systemname, ECSManager* ecsmanager, GameWorld* gameworld) : 
 	ProcessingSystem(systemname, ecsmanager), gameworld_(gameworld)
@@ -86,31 +86,38 @@ void MovementSystem::ProcessEntity(uint_fast64_t entity)
 			velocitycomponent->SetXVelocity(0);
 			if (inputcomponent->Pressed(MOVE_LEFT)) {
 				velocitycomponent->SetXVelocity(-1 * velocity);
-				positioncomponent->facing_ = WEST;
 			}
 			if (inputcomponent->Pressed(MOVE_RIGHT)) {
 				velocitycomponent->SetXVelocity(velocity);
-				positioncomponent->facing_ = EAST;
 			}
 
 			velocitycomponent->SetYVelocity(0);
 			if (inputcomponent->Pressed(MOVE_UP)) {
 				velocitycomponent->SetYVelocity(-1 * velocity);
-				positioncomponent->facing_ = NORTH;
 			}
 			if (inputcomponent->Pressed(MOVE_DOWN)) {
 				velocitycomponent->SetYVelocity(velocity);
-				positioncomponent->facing_ = SOUTH;
 			}
+
+			// Update angle based on mouse position
+			int mx, my;
+			inputcomponent->GetMousePosition(mx, my);
+			double diffx = mx - positioncomponent->_x;
+			double diffy = -1 * (my - positioncomponent->_y);
+			double hyp = std::sqrt((diffx*diffx) + (diffy*diffy));
+			// Quick performance checks show this as a minor hit. Move to lookup table if necessary
+			positioncomponent->_angle = (180/M_PI)*std::atan2(diffy , diffx)*-1;
+			if (positioncomponent->_angle < 0)
+				positioncomponent->_angle += 360;
 		}
 	}
 
     // Update position
-    positioncomponent->x_ = (positioncomponent->x_ + velocitycomponent->XVelocity());
-    positioncomponent->y_ = (positioncomponent->y_ + velocitycomponent->YVelocity());
+    positioncomponent->_x = (positioncomponent->_x + velocitycomponent->XVelocity());
+    positioncomponent->_y = (positioncomponent->_y + velocitycomponent->YVelocity());
 
-    boundingrectanglecomponent->x_ = (boundingrectanglecomponent->x_ + velocitycomponent->XVelocity());
-    boundingrectanglecomponent->y_ = (boundingrectanglecomponent->y_ + velocitycomponent->YVelocity());
+    boundingrectanglecomponent->_x = (boundingrectanglecomponent->_x + velocitycomponent->XVelocity());
+    boundingrectanglecomponent->_y = (boundingrectanglecomponent->_y + velocitycomponent->YVelocity());
 
 
 	// Insert new coords into sparse grid

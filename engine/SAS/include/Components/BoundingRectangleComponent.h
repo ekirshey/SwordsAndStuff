@@ -11,17 +11,17 @@ class BoundingRectangleComponent : public Component
         static const uint_fast64_t ID = BoundingRectangleComponentID;
 
 		BoundingRectangleComponent() {}
-		BoundingRectangleComponent(int x, int y, int width, int height) : x_(x), y_(y), width_(width), height_(height) {}
-		BoundingRectangleComponent(const BoundingRectangleComponent& c) : x_(c.x_), y_(c.y_), width_(c.width_), height_(c.height_) {}
+		BoundingRectangleComponent(int x, int y, int width, int height) : _x(x), _y(y), width_(width), height_(height) {}
+		BoundingRectangleComponent(const BoundingRectangleComponent& c) : _x(c._x), _y(c._y), width_(c.width_), height_(c.height_) {}
 
 		~BoundingRectangleComponent() {}
 
 		uint_fast64_t UniqueBits() const { return ID; }
 
-		SDL_Rect Rectangle() const { return SDL_Rect{ x_, y_, width_, height_ }; }
+		SDL_Rect Rectangle() const { return SDL_Rect{ _x, _y, width_, height_ }; }
 
-		int x_;
-		int y_;
+		int _x;
+		int _y;
 		int width_;
 		int height_;
 

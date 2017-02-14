@@ -22,7 +22,7 @@ void InventorySystem::ProcessMessage(Message* data) {
 	if (data->GetID() == ITEMMESSAGEID) {
 		auto msg = static_cast<ItemMessage*>(data);
 		auto inventorycomponent = GetEntityComponent<InventoryComponent*>(msg->entity, InventoryComponent::ID);
-		auto inventory = &inventorycomponent->inventory_;
+		auto inventory = &inventorycomponent->inventor_y;
 
 		if (inventory->size() < inventorycomponent->maxinventorysize_) {
 			// Add to specific slot if one was specified
